@@ -34,6 +34,7 @@ namespace CyberToCGS
 
         private string servicesToken = "/authentication-service/oauth/token";
         private string serviceReq = "/bank/authentication-service/oauth/token";
+        private string serviceIndirecPost = "/request-service/api/external/request";
 
         public void AuthenticationBasics(ref string token,string url)
         {
@@ -68,6 +69,40 @@ namespace CyberToCGS
                     ex.InnerException.Message.ToString();
                 }
             }
+        }
+        /*
+         * เซอร์วิสสำหรับบันทึกคำขอแบบ Indirect
+         */
+        public void IndirectPost(string Token,string url)
+        {
+            string token = Token;
+            var restClient = new RestSharp.RestClient(url);
+                 restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
+
+            RestRequest restRequest = new RestRequest(serviceIndirecPost,Method.POST);
+            restRequest.RequestFormat = DataFormat.Json;
+            restRequest.AddHeader("Content-Type","application/json");
+            restRequest.AddHeader("Authorization","Bearer" + token);
+
+            /*
+             *Parameter Here
+             *
+             */
+           // restRequest.AddParameter(0);
+            try {
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                JObject obj = JObject.Parse(restResponse.Content);
+
+            
+            } catch(Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    ex.InnerException.Message.ToString();
+                }
+            }
+
+
         }
     }
 }

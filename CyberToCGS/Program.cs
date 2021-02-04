@@ -37,7 +37,7 @@ namespace CyberToCGS
                 /* ---------------------------------
                  * เริ่ม Call API ตรงนี้
                  * htt://<HOST_NAME>/request-service/api/external/request
-                 *
+                 *6. บันทึกคำขอแบบ indirect
                  *----------------------------------
                 */
                 //GetDetais(token);
