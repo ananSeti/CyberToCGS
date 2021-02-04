@@ -40,7 +40,7 @@ namespace CyberToCGS
                  *6. บันทึกคำขอแบบ indirect
                  *----------------------------------
                 */
-                //GetDetais(token);
+                cgs.IndirectPost(token, urlSME);
             }
 
 

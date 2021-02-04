@@ -88,7 +88,76 @@ namespace CyberToCGS
              *Parameter Here
              *
              */
-           // restRequest.AddParameter(0);
+            IndirectRequest indirectRequest = new IndirectRequest();
+           
+            /* 
+             * Product
+             * 
+             */
+            Product p = new Product() {
+            preReqStatus= "07",
+            productId= 215,
+            roundId= 1,
+            guaAmount= "20000000",
+            prdPayFeeType= 1,
+            prdReduGuaType = null,
+            refNo1= null,
+            refNo2 = null,
+            refNo3 = null,
+            advFeeYearId = null
+            };     
+            Bank b = new Bank() {
+
+             bankId = 4,
+             bankBrnUseLimit= 1687,
+             bankBrnSendOper = 1687,
+             guaCareName= "ม้า",
+             guaCareMobile= "0336569898",
+             guaCarePhone= "0336569898",
+             guaCareEmail= "nn@zz.com",
+             guaApproveEmail= "nn@zz.com",
+             guaRemark= ""
+            };
+            var cust = new List<Customer>()
+            {
+                new Customer()
+                {
+                     identification= "4081299709357",
+                    identificationType= "C",
+                    customerStatus =null,
+                    customerType= "02",
+                    customerGrade= null,
+                    customerScore= null,
+                    raceId = null,
+                    raceStr = null,
+                    nationalityId = null,
+                    nationalityStr = null,
+                    refReqNumber = null,
+                    customerId = 3375,
+                    borrowerType = "01",
+                    titleId = 10,
+                    cusNameTh = "สุนิติ",
+                    cusSurnameTh = "ฟามาระ",
+                    cusNameEn = null,
+                    cusSurnameEn = null,
+                    gender= "M",
+                    marriedStatus= "01",
+                    birthDate = Convert.ToDateTime("1965-09-13"),
+                    educationLevel= "7"
+                }
+            };
+             
+
+            indirectRequest.product = p;
+            indirectRequest.bank = b;
+            indirectRequest.customer = cust;
+                            
+                   
+                          
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
+             restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
+            restRequest.RequestFormat = DataFormat.Json;
+
             try {
                 IRestResponse restResponse = restClient.Execute(restRequest);
                 JObject obj = JObject.Parse(restResponse.Content);

@@ -1,0 +1,276 @@
+
+"product": {
+        "preReqStatus": "07",
+        "productId": 215,
+        "roundId": 1,
+        "guaAmount": "20000000",
+        "prdPayFeeType": 1,
+        "prdReduGuaType": null,
+        "refNo1": null,
+        "refNo2": null,
+        "refNo3": null,
+        "advFeeYearId": null
+    },
+       
+"bank": {
+        "bankId": 4,
+        "bankBrnUseLimit": 1687,
+        "bankBrnSendOper": 1687,
+        "guaCareName": "ม้า",
+        "guaCareMobile": "0336569898",
+        "guaCarePhone": "0336569898",
+        "guaCareEmail": "nn@zz.com",
+        "guaApproveEmail": "nn@zz.com",
+        "guaRemark": ""
+    },
+    "customer": [
+        {
+            "customerUserType": null,
+            "identification": "4081299709357",
+            "identificationType": "C",
+            "customerStatus": null,
+            "customerType": "02",
+            "customerGrade": null,
+            "customerScore": null,
+            "raceId": null,
+            "raceStr": null,
+            "nationalityId": null,
+            "nationalityStr": null,
+            "refReqNumber": null,
+            "customerId": 3375,
+            "borrowerType": "01",
+            "titleId": 10,
+            "cusNameTh": "สุนิติ",
+            "cusSurnameTh": "ฟามาระ",
+            "cusNameEn": null,
+            "cusSurnameEn": null,
+            "gender": "M",
+            "marriedStatus": "01",
+            "birthDate": "1965-09-13T17:00:00.000Z",
+            "educationLevel": "7",
+            "career": [
+                94
+            ],
+            "telephoneNo": "0223635478",
+            "mobilePhoneNo": "0223635478",
+            "faxNo": null,
+            "email": null,
+            "depLevelId": 1,
+            "proveDate": "2020-06-01T00:00:00.000Z",
+            "businessExp": "10",
+            "registerDate": null,
+            "registerCapital": "0",
+            "certificateDate": null,
+            "customerAlive": "1",
+            "amountCol": null,
+            "kycResult": null,
+            "kycDate": null,
+            "guarantorRelationCode": null,
+            "guarantorRelationStr": null,
+            "seq": null,
+            "address": [
+                {
+                    "active": true,
+                    "addressType": "C",
+                    "addressNo": "112",
+                    "addressMoo": null,
+                    "addressAlley": null,
+                    "addressRoad": null,
+                    "subDistrictId": 673,
+                    "districtId": 192,
+                    "provinceId": 16,
+                    "postalCode": "25140",
+                    "countryId": null,
+                    "addressOversea": null
+                }
+            ],
+            "relation": [],
+            "spouse": {
+                "identification": "7073584478224",
+                "identificationType": "C",
+                "titleId": 11,
+                "cusNameTh": "อรจิรา",
+                "cusSurnameTh": "ฟามาระ",
+                "cusNameEn": null,
+                "cusSurnameEn": null,
+                "birthDate": "1972-12-07T00:00:00.000Z",
+                "telephoneNo": "0114578969",
+                "mobilePhoneNo": "0114578969",
+                "faxNo": null,
+                "email": null,
+                "registerCapital": "0",
+                "address": [
+                    {
+                        "active": true,
+                        "addressType": "C",
+                        "addressNo": "112",
+                        "addressMoo": null,
+                        "addressAlley": null,
+                        "addressRoad": null,
+                        "subDistrictId": 673,
+                        "districtId": 192,
+                        "provinceId": 16,
+                        "postalCode": "25140",
+                        "countryId": null,
+                        "addressOversea": null
+                    }
+                ]
+            }
+        }
+    ],
+    "finance": {
+        "isicId": null,
+        "isicCodeNameTh": null,
+        "operation": null,
+        "startDate": "1979-03-14T00:00:00.000Z",
+        "employeeAmount": 1,
+        "employeeAdd": null,
+        "manager": [
+            {
+                "idCard": "4081299709357",
+                "titleId": 10,
+                "name": "สุนิติ",
+                "surname": "ฟามาระ",
+                "identificationType": "C",
+                "exp": "10",
+                "customerId": 3375,
+                "registerCapital": "0"
+            }
+        ],
+        "asset": [
+            {
+                "fixedAssetType": "01",
+                "amt": "120000"
+            }
+        ],
+        "finance": [
+            {
+                "amtType": "I",
+                "yearPast1": "0",
+                "yearPast2": "0",
+                "yearPast3": "0",
+                "yearPast4": "0",
+                "yearPast5": "0",
+                "yearCurrent": "0",
+                "yearEstimate1": "8400000",
+                "yearEstimate2": "0",
+                "yearEstimate3": "0",
+                "yearEstimate4": "0",
+                "yearEstimate5": "0"
+            }
+        ],
+        "address": {
+            "nameType": null,
+            "addressType": "D",
+            "addressNo": "22",
+            "addressMoo": null,
+            "addressAlley": null,
+            "addressRoad": null,
+            "subDistrictId": 3411,
+            "districtId": 578,
+            "provinceId": 40,
+            "postalCode": "52000",
+            "active": true,
+            "countryId": null,
+            "addressOversea": null
+        },
+        "ebidta": "1600000",
+        "amtCreditOwn": "0",
+        "tcgBusinessId": 62,
+        "amtCredit": "845000",
+        "dscr": "1.89",
+        "typeEstablishment": null,
+        "ownerBusinessLocation": null
+    },
+    "credit": {
+        "guaLoadPurpose": "ขยาย",
+        "oldCredit": [],
+        "credit": [
+            {
+                "loanName": null,
+                "contractId": 3,
+                "loanLimit": "20000000",
+                "loanBal": null,
+                "loanInterest": "0",
+                "guaByTcg": "Y",
+                "debtMonth": 10,
+                "rateType": "MLR",
+                "ratio": null,
+                "contractName": "สัญญาสินเชื่อประเภทเงินกู้หมุนเวียน (Program K-Auto Floorplan for …(e.g. Honda Dealers))",
+"loanTypeName": "BG",
+                "contractNo": "4410",
+                "contractDate": "2020-04-05 00:00:00",
+                "purposeCode": "02",
+                "debtPeriod": "20",
+                "debtDescription": "BG",
+                "guaLimit": "20000000",
+                "contractNoDm": "DCT2563001242",
+                "contractDetailId": 58,
+                "debtorTypeId": 44
+            }
+        ],
+        "col": [],
+        "guarantorContract": [],
+        "guarantorTcg": []
+    },
+    "contract": {
+        "preRequestName": "นายสุนิติ ฟามาระ ",
+        "issuedAs": null,
+        "issuedAsName": null,
+        "contract": [
+            {
+                "loanContractId": 3,
+                "loanName": null,
+                "contractNo": "4410",
+                "contractName": "สัญญาสินเชื่อประเภทเงินกู้หมุนเวียน (Program K-Auto Floorplan for …(e.g. Honda Dealers))",
+"contractDate": "2020-04-05 00:00:00",
+                "purposeCode": "02",
+                "debtPeriod": "20",
+                "debtDescription": "BG",
+                "loanLimit": "20000000",
+                "guaLimit": "20000000",
+                "debtMonth": 10,
+                "rateType": "MLR",
+                "ratio": null,
+                "loanTypeName": "BG",
+                "contractNoDm": "DCT2563001242",
+                "loanInterest": null,
+                "contractDetailId": 58,
+                "debtorTypeId": 44
+            }
+        ]
+    },
+   
+     
+"payInSlip": {
+            "documentTypeId": 7,
+            "lgId": null,
+            "payinslipDt": null,
+            "payinslipAmount": null,
+            "bankAccountName": null,
+            "bankAccountNo": null,
+            "bankId": null,
+            "bankName": null,
+            "branchId": null,
+            "branchName": null,
+            "chequeName": null,
+            "status": "A",
+            "createBy": 1012,
+            "createDt": "2020-06-02T04:50:52.354+000",
+            "updateBy": null,
+            "updateDt": null,
+            "answer": [
+                {
+                    "questionDetailId": 1,
+                    "answers": [
+                        {
+                            "answerId": 2,
+                            "status": true,
+                        }
+                    ]
+                }
+            ],
+            "remark": null,
+            "preScreeningInitialNew": []
+        }
+}

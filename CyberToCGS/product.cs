@@ -158,7 +158,7 @@ namespace CyberToCGS
         public object employeeAdd { get; set; }
         public List<Manager> manager { get; set; }
         public List<Asset> asset { get; set; }
-        public List<Finance> finance { get; set; }
+        public List<Finance2> finance { get; set; }
         public Address address { get; set; }
         public string ebidta { get; set; }
         public string amtCreditOwn { get; set; }
@@ -193,7 +193,7 @@ namespace CyberToCGS
         public int debtorTypeId { get; set; }
         public string guaLoadPurpose { get; set; }
         public List<object> oldCredit { get; set; }
-        public List<Credit> credit { get; set; }
+        public List<Credit2> credit { get; set; }
         public List<object> col { get; set; }
         public List<object> guarantorContract { get; set; }
         public List<object> guarantorTcg { get; set; }
@@ -222,7 +222,7 @@ namespace CyberToCGS
         public string preRequestName { get; set; }
         public object issuedAs { get; set; }
         public object issuedAsName { get; set; }
-        public List<Contract> contract { get; set; }
+        public List<Contract2> contract { get; set; }
     }
 
     public class Answer2
@@ -268,6 +268,7 @@ namespace CyberToCGS
     {
         public Product product { get; set; }
         public Bank bank { get; set; }
+      
         public List<Customer> customer { get; set; }
         public Finance2 finance { get; set; }
         public Credit2 credit { get; set; }
