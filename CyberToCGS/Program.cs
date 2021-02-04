@@ -34,11 +34,12 @@ namespace CyberToCGS
             }
             else
             {
-              /* ---------------------------------
-               * เริ่ม Call API ตรงนี้
-               *
-               *----------------------------------
-              */
+                /* ---------------------------------
+                 * เริ่ม Call API ตรงนี้
+                 * htt://<HOST_NAME>/request-service/api/external/request
+                 *
+                 *----------------------------------
+                */
                 //GetDetais(token);
             }
 
