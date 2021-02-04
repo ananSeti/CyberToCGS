@@ -19,10 +19,12 @@ namespace CyberToCGS
              *https://sme-bank.tcg.or.th
              *-------------------------------
              */
-                                            
-            var urlSME = "http://192.168.15.17:31380";
+
+            // var urlSME = "http://192.168.15.17:31380";
+            var urlSME = "https://sme-bank.tcg.or.th";
+            // /requestservice/api/external/request
             //authentication-service/oauth/token
-            
+
             var cgs = new CGS();
             cgs.AuthenticationBasics(ref token,urlSME);
 

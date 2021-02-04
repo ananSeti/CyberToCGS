@@ -14,26 +14,41 @@ namespace CyberToCGS
         private string webUser = "webapp";
         private string password = "password";
 
-        //private string grant_type = "password";
+        private string cyberweb = "web_portal";
+        private string cyberpass = "password";
+
+       private string grant_type = "password";
         //private string bodyusername ="crm_system";
         //private string bodypassword = "P@ssw0rd";
 
+        private string cyberbodyUser = "TCG_SYSTEM";
+        private string cyberbodypassword = "'P@ssw0rd";
+
+        /* 
+         * username =TCG_SYSTEM
+         * password: P@ssw0rd
+         * 
+         * web ac
+         * **/
+
+
         private string servicesToken = "/authentication-service/oauth/token";
+        private string serviceReq = "/bank/authentication-service/oauth/token";
 
         public void AuthenticationBasics(ref string token,string url)
         {
             RestClient restClient = new RestClient();
-                       restClient.Authenticator = new HttpBasicAuthenticator(webUser, password);
+                       restClient.Authenticator = new HttpBasicAuthenticator(cyberweb, cyberpass);
                        restClient.BaseUrl = new Uri(url);
                        restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
-            RestRequest restRequest = new RestRequest(servicesToken, Method.POST);
+            RestRequest restRequest = new RestRequest(serviceReq, Method.POST);
                         //restRequest.AddParameter("grant_type",grant_type, ParameterType.GetOrPost);
                         //restRequest.AddParameter("username",bodyusername, ParameterType.GetOrPost);  
                         //restRequest.AddParameter("password",bodypassword, ParameterType.GetOrPost);
 
                         restRequest.AddParameter("grant_type", "password", ParameterType.GetOrPost);
-                        restRequest.AddParameter("username", "crm_system", ParameterType.GetOrPost);  
+                        restRequest.AddParameter("username", "TCG_SYSTEM", ParameterType.GetOrPost);  
                         restRequest.AddParameter("password", "P@ssw0rd", ParameterType.GetOrPost);
 
             try
