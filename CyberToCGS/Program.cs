@@ -10,6 +10,14 @@ namespace CyberToCGS
     {
         static void Main(string[] args)
         {
+
+            /*test load Json */
+
+            loadJson l = new loadJson();
+            string js = l.ReadJson();
+                l.DeserialProduct();
+                l.DeserialCutomerArray();
+
             string token = "";
             /*-------------------------------
              *  เร่ิ่มต้นด้วย การขอ TOKEN

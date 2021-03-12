@@ -39,8 +39,9 @@ namespace CyberToCGS
         public void AuthenticationBasics(ref string token,string url)
         {
             RestClient restClient = new RestClient();
-                       restClient.Authenticator = new HttpBasicAuthenticator(cyberweb, cyberpass);
-                       restClient.BaseUrl = new Uri(url);
+             restClient.Authenticator = new HttpBasicAuthenticator(cyberweb, cyberpass);
+            //restClient.Authenticator = new HttpBasicAuthenticator(webUser, password);
+            restClient.BaseUrl = new Uri(url);
                        restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
             RestRequest restRequest = new RestRequest(serviceReq, Method.POST);
@@ -156,7 +157,7 @@ namespace CyberToCGS
                           
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
              restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
-            restRequest.RequestFormat = DataFormat.Json;
+             restRequest.RequestFormat = DataFormat.Json;
 
             try {
                 IRestResponse restResponse = restClient.Execute(restRequest);
