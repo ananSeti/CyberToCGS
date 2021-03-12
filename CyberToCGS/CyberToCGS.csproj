@@ -52,6 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CGS.cs" />
+    <Compile Include="FactoryPattern\CgsAbstract.cs" />
+    <Compile Include="FactoryPattern\CustomerFactory.cs" />
+    <Compile Include="FactoryPattern\DataFactory.cs" />
+    <Compile Include="FactoryPattern\IcgsData.cs" />
+    <Compile Include="FactoryPattern\ProductFactory.cs" />
     <Compile Include="loadJson.cs" />
     <Compile Include="product.cs" />
     <Compile Include="Program.cs" />

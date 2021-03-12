@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CyberToCGS.FactoryPattern;
 
 namespace CyberToCGS
 {
@@ -11,13 +12,20 @@ namespace CyberToCGS
         static void Main(string[] args)
         {
 
+
+            DataFactory dataFactory = new DataFactory();
+            IcgsData product = dataFactory.getData("Product");
+            product.deserial();
+
+            IcgsData customer = dataFactory.getData("Customer");
+            customer.deserial();
             /*test load Json */
 
             loadJson l = new loadJson();
             string js = l.ReadJson();
                 l.DeserialProduct();
                 l.DeserialCutomerArray();
-
+            /*---------------------*/
             string token = "";
             /*-------------------------------
              *  เร่ิ่มต้นด้วย การขอ TOKEN
