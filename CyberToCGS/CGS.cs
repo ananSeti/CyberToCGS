@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RestSharp;
 using RestSharp.Authenticators;
 using Newtonsoft.Json.Linq;
+using CyberToCGS.FactoryPattern;
 
 namespace CyberToCGS
 {
@@ -45,10 +46,6 @@ namespace CyberToCGS
                        restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
             RestRequest restRequest = new RestRequest(serviceReq, Method.POST);
-                        //restRequest.AddParameter("grant_type",grant_type, ParameterType.GetOrPost);
-                        //restRequest.AddParameter("username",bodyusername, ParameterType.GetOrPost);  
-                        //restRequest.AddParameter("password",bodypassword, ParameterType.GetOrPost);
-
                         restRequest.AddParameter("grant_type", "password", ParameterType.GetOrPost);
                         restRequest.AddParameter("username", "TCG_SYSTEM", ParameterType.GetOrPost);  
                         restRequest.AddParameter("password", "P@ssw0rd", ParameterType.GetOrPost);
@@ -56,8 +53,8 @@ namespace CyberToCGS
             try
             {
                 IRestResponse restResponse = restClient.Execute(restRequest);
-                Console.WriteLine("Status code: " + restResponse.StatusCode);
-                Console.WriteLine("Status message " + restResponse.Content);
+               // Console.WriteLine("Status code: " + restResponse.StatusCode);
+               // Console.WriteLine("Status message " + restResponse.Content);
                 // Access token
                 JObject tk = JObject.Parse(restResponse.Content);
                 string t = (string)tk["access_token"];
@@ -84,6 +81,7 @@ namespace CyberToCGS
             restRequest.RequestFormat = DataFormat.Json;
             restRequest.AddHeader("Content-Type","application/json");
             restRequest.AddHeader("Authorization","Bearer" + token);
+
 
             /*
              *Parameter Here
@@ -147,13 +145,28 @@ namespace CyberToCGS
                     educationLevel= "7"
                 }
             };
-             
+
+
+
+            /* TEST Data Factory   */
+            DataFactory dataFactory = new DataFactory();
+            IcgsData product = dataFactory.getData("Product");
+            product.deserial();
+           // string a = product.getData();
+           
+                        
+            IcgsData customer = dataFactory.getData("Customer");
+            customer.deserial();
+
+
+
 
             indirectRequest.product = p;
             indirectRequest.bank = b;
             indirectRequest.customer = cust;
                             
                    
+
                           
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
              restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);

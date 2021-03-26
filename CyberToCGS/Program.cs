@@ -12,13 +12,7 @@ namespace CyberToCGS
         static void Main(string[] args)
         {
 
-
-            DataFactory dataFactory = new DataFactory();
-            IcgsData product = dataFactory.getData("Product");
-            product.deserial();
-
-            IcgsData customer = dataFactory.getData("Customer");
-            customer.deserial();
+                       
             /*test load Json */
 
             loadJson l = new loadJson();
@@ -46,7 +40,7 @@ namespace CyberToCGS
 
             if (string.IsNullOrEmpty(token))
             {
-                Console.WriteLine("can not get token");
+                Console.WriteLine("-------- Can not get token ------------");
             }
             else
             {

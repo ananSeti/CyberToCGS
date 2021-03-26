@@ -10,6 +10,7 @@ namespace CyberToCGS.FactoryPattern
 {
     public class ProductFactory : CgsAbstract, IcgsData
     {
+        Product a;
         public void deserial()
         {
             JObject obj = JObject.Parse(json);
@@ -17,12 +18,19 @@ namespace CyberToCGS.FactoryPattern
             if (obj["product"] != null)
             {
                 string data = obj["product"].ToString();
-                Product a = JsonConvert.DeserializeObject<Product>(data);
+                 a = JsonConvert.DeserializeObject<Product>(data);
                 //foreach (var item in a)
                 //{
-                Console.WriteLine(".................");
+               // JsonConvert.SerializeObject(a);
+                Console.WriteLine("Product:" + JsonConvert.SerializeObject(a));
                 //}
+                
             }
+        }
+
+        T IcgsData.getData<T>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

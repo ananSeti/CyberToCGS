@@ -20,9 +20,16 @@ namespace CyberToCGS.FactoryPattern
                 List<Customer> a = JsonConvert.DeserializeObject<List<Customer>>(data);
                 //foreach (var item in a)
                 //{
-                // Console.WriteLine(".................");
+                foreach ( Customer c in a) {
+                    Console.WriteLine("Customer :" + c.ToString());
+                }
                 //}
             }
+        }
+
+        T IcgsData.getData<T>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

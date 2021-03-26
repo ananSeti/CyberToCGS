@@ -9,5 +9,7 @@ namespace CyberToCGS.FactoryPattern
   public  interface IcgsData
     {
         void deserial();
+        T getData<T>();
+
     }
 }
