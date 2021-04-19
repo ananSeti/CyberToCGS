@@ -15,10 +15,10 @@ namespace CyberToCGS
                        
             /*test load Json */
             /* ทดลองการ load Json file   */
-            loadJson l = new loadJson();
-            string js = l.ReadJson();
-                l.DeserialProduct();
-                l.DeserialCutomerArray();
+            //loadJson l = new loadJson();
+            //string js = l.ReadJson();
+           //     l.DeserialProduct();
+            //    l.DeserialCutomerArray();
             /*---------------------*/
             string token = "";
             /*-------------------------------

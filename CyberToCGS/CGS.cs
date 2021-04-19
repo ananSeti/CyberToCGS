@@ -12,8 +12,8 @@ namespace CyberToCGS
 {
     class CGS
     {
-        private string webUser = "webapp";
-        private string password = "password";
+        //private string webUser = "webapp";
+        //private string password = "password";
 
         // private string cyberweb = "web_portal";
         // private string cyberpass = "password";
@@ -24,8 +24,8 @@ namespace CyberToCGS
         //private string bodyusername ="crm_system";
         //private string bodypassword = "P@ssw0rd";
 
-        private string cyberbodyUser = "TCG_SYSTEM";
-        private string cyberbodypassword = "'P@ssw0rd";
+        //private string cyberbodyUser = "TCG_SYSTEM";
+        //private string cyberbodypassword = "'P@ssw0rd";
 
         /* 
          * username =TCG_SYSTEM
@@ -50,11 +50,12 @@ namespace CyberToCGS
             RestRequest restRequest = new RestRequest(serviceReq, Method.POST);
                          restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                          restRequest.AddHeader("Authorization", "Basic eSrTcpfOZ1O6ZmkkN4YbWlSg1X9JYpFexMZSAprl7gM=");
-                         restRequest.AddParameter("grant_type", "password", ParameterType.GetOrPost);
+                         restRequest.AddParameter("grant_type", grant_type, ParameterType.GetOrPost);
+            //  restRequest.AddParameter("grant_type", "password", ParameterType.GetOrPost);
             // restRequest.AddParameter("username", "TCG_SYSTEM", ParameterType.GetOrPost);  
             // restRequest.AddParameter("password", "P@ssw0rd", ParameterType.GetOrPost);
-             restRequest.AddParameter("username", cyberweb, ParameterType.GetOrPost);  
-             restRequest.AddParameter("password", cyberpass, ParameterType.GetOrPost);
+                         restRequest.AddParameter("username", cyberweb, ParameterType.GetOrPost);  
+                         restRequest.AddParameter("password", cyberpass, ParameterType.GetOrPost);
 
             try
             {
@@ -127,7 +128,7 @@ namespace CyberToCGS
             {
                 new Customer()
                 {
-                     identification= "4081299709357",
+                    identification= "4081299709357",
                     identificationType= "C",
                     customerStatus =null,
                     customerType= "02",
@@ -158,17 +159,15 @@ namespace CyberToCGS
             IcgsData product = dataFactory.getData("Product");
             product.deserial();
            // string a = product.getData();
-           
-                        
+
+
             IcgsData customer = dataFactory.getData("Customer");
             customer.deserial();
 
             indirectRequest.product = p;
             indirectRequest.bank = b;
             indirectRequest.customer = cust;
-                            
-                   
-
+                                          
                           
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
              restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
