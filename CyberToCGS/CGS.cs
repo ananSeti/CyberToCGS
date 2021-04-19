@@ -15,10 +15,12 @@ namespace CyberToCGS
         private string webUser = "webapp";
         private string password = "password";
 
-        private string cyberweb = "web_portal";
-        private string cyberpass = "password";
+        // private string cyberweb = "web_portal";
+        // private string cyberpass = "password";
+         private string cyberweb = "JeTwLJALsikYUPXYhQtXag==";
+         private string cyberpass ="3UjGoHL3x0kCJ2+Bu0n0Yg==";
 
-       private string grant_type = "password";
+        private string grant_type = "password";
         //private string bodyusername ="crm_system";
         //private string bodypassword = "P@ssw0rd";
 
@@ -40,15 +42,19 @@ namespace CyberToCGS
         public void AuthenticationBasics(ref string token,string url)
         {
             RestClient restClient = new RestClient();
-             restClient.Authenticator = new HttpBasicAuthenticator(cyberweb, cyberpass);
+            // restClient.Authenticator = new HttpBasicAuthenticator(cyberweb, cyberpass);
             //restClient.Authenticator = new HttpBasicAuthenticator(webUser, password);
             restClient.BaseUrl = new Uri(url);
                        restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
             RestRequest restRequest = new RestRequest(serviceReq, Method.POST);
-                        restRequest.AddParameter("grant_type", "password", ParameterType.GetOrPost);
-                        restRequest.AddParameter("username", "TCG_SYSTEM", ParameterType.GetOrPost);  
-                        restRequest.AddParameter("password", "P@ssw0rd", ParameterType.GetOrPost);
+                         restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                         restRequest.AddHeader("Authorization", "Basic eSrTcpfOZ1O6ZmkkN4YbWlSg1X9JYpFexMZSAprl7gM=");
+                         restRequest.AddParameter("grant_type", "password", ParameterType.GetOrPost);
+            // restRequest.AddParameter("username", "TCG_SYSTEM", ParameterType.GetOrPost);  
+            // restRequest.AddParameter("password", "P@ssw0rd", ParameterType.GetOrPost);
+             restRequest.AddParameter("username", cyberweb, ParameterType.GetOrPost);  
+             restRequest.AddParameter("password", cyberpass, ParameterType.GetOrPost);
 
             try
             {
@@ -147,7 +153,6 @@ namespace CyberToCGS
             };
 
 
-
             /* TEST Data Factory   */
             DataFactory dataFactory = new DataFactory();
             IcgsData product = dataFactory.getData("Product");
@@ -157,9 +162,6 @@ namespace CyberToCGS
                         
             IcgsData customer = dataFactory.getData("Customer");
             customer.deserial();
-
-
-
 
             indirectRequest.product = p;
             indirectRequest.bank = b;
