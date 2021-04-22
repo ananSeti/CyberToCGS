@@ -1,0 +1,8 @@
+{
+  
+    "selectDate": {
+      "fromDate": "4/2/2021",
+      "toDate": "4/26/2021",
+      "formatDate":"m/dd/YYYY"     
+    }
+  }

@@ -12,12 +12,17 @@ namespace CyberToCGS
         static void Main(string[] args)
         {
 
-                       
+            //Database.Database db = Database.Database.GetInstance("localDB");
+            //db.GetUser();
+            //db.GetUser(2);
+
+            //db.SetConnection("DB_ONLINE_CG");
+
             /*test load Json */
             /* ทดลองการ load Json file   */
             //loadJson l = new loadJson();
             //string js = l.ReadJson();
-           //     l.DeserialProduct();
+            //     l.DeserialProduct();
             //    l.DeserialCutomerArray();
             /*---------------------*/
             string token = "";

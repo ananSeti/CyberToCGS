@@ -8,10 +8,13 @@ using RestSharp.Authenticators;
 using Newtonsoft.Json.Linq;
 using CyberToCGS.FactoryPattern;
 
+
 namespace CyberToCGS
 {
     class CGS
     {
+      
+                         
         //private string webUser = "webapp";
         //private string password = "password";
 
