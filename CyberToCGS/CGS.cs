@@ -7,14 +7,16 @@ using RestSharp;
 using RestSharp.Authenticators;
 using Newtonsoft.Json.Linq;
 using CyberToCGS.FactoryPattern;
+using RestSharp.Serialization.Json;
 
 
 namespace CyberToCGS
 {
-    class CGS
+    public class CGS
     {
-      
-                         
+
+        
+        
         //private string webUser = "webapp";
         //private string password = "password";
 
@@ -92,84 +94,20 @@ namespace CyberToCGS
             restRequest.AddHeader("Content-Type","application/json");
             restRequest.AddHeader("Authorization","Bearer" + token);
 
-
-            /*
-             *Parameter Here
-             *
-             */
-            IndirectRequest indirectRequest = new IndirectRequest();
            
-            /* 
-             * Product
-             * 
-             */
-            Product p = new Product() {
-            preReqStatus= "07",
-            productId= 215,
-            roundId= 1,
-            guaAmount= "20000000",
-            prdPayFeeType= 1,
-            prdReduGuaType = null,
-            refNo1= null,
-            refNo2 = null,
-            refNo3 = null,
-            advFeeYearId = null
-            };     
-            Bank b = new Bank() {
-
-             bankId = 4,
-             bankBrnUseLimit= 1687,
-             bankBrnSendOper = 1687,
-             guaCareName= "ม้า",
-             guaCareMobile= "0336569898",
-             guaCarePhone= "0336569898",
-             guaCareEmail= "nn@zz.com",
-             guaApproveEmail= "nn@zz.com",
-             guaRemark= ""
-            };
-            var cust = new List<Customer>()
-            {
-                new Customer()
-                {
-                    identification= "4081299709357",
-                    identificationType= "C",
-                    customerStatus =null,
-                    customerType= "02",
-                    customerGrade= null,
-                    customerScore= null,
-                    raceId = null,
-                    raceStr = null,
-                    nationalityId = null,
-                    nationalityStr = null,
-                    refReqNumber = null,
-                    customerId = 3375,
-                    borrowerType = "01",
-                    titleId = 10,
-                    cusNameTh = "สุนิติ",
-                    cusSurnameTh = "ฟามาระ",
-                    cusNameEn = null,
-                    cusSurnameEn = null,
-                    gender= "M",
-                    marriedStatus= "01",
-                    birthDate = Convert.ToDateTime("1965-09-13"),
-                    educationLevel= "7"
-                }
-            };
+            IndirectRequest indirectRequest = new IndirectRequest();
 
 
-            /* TEST Data Factory   */
-            DataFactory dataFactory = new DataFactory();
-            IcgsData product = dataFactory.getData("Product");
-            product.deserial();
-           // string a = product.getData();
+            Product product = new Product();
+
+            Bank bank = new Bank();
+
+            Customer customer = new Customer();
+
+            FacadeIndirect facade = new FacadeIndirect(product,bank,customer);
+            indirectRequest= ClientFacadeIndirect.ClientCode(facade);
 
 
-            IcgsData customer = dataFactory.getData("Customer");
-            customer.deserial();
-
-            indirectRequest.product = p;
-            indirectRequest.bank = b;
-            indirectRequest.customer = cust;
                                           
                           
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
@@ -182,6 +120,55 @@ namespace CyberToCGS
 
             
             } catch(Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    ex.InnerException.Message.ToString();
+                }
+            }
+
+
+        }
+        public void IndirectPostTestJson(string Token, string url)
+        {
+            string token = Token;
+            var restClient = new RestSharp.RestClient(url);
+            restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
+           
+            RestRequest restRequest = new RestRequest(serviceIndirecPost, Method.POST, DataFormat.Json);
+            // restRequest.RequestFormat = DataFormat.Json;
+            restRequest.Parameters.Clear();
+            restRequest.AddHeader("Content-Type", "application/json;charset=utf-8");
+            restRequest.AddHeader("Accept", "application/json");
+            restRequest.AddHeader("Authorization", "Bearer " + token);
+          
+
+            loadJson l = new loadJson();
+            string indirectRequest = l.ReadJson();
+
+          
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
+
+             restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
+            //  restRequest.AddJsonBody(indirectRequest);        
+           
+           // restRequest.AddParameter("Content-Type", indirectRequest,ParameterType.RequestBody);
+            //restRequest.RequestFormat = DataFormat.Json;
+
+            try
+            {
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                if (restResponse.IsSuccessful)
+                {
+                    JObject obj = JObject.Parse(restResponse.Content);
+                }
+                else
+                {
+                    Console.WriteLine("Response code:" + restResponse.StatusCode );
+                }
+
+            }
+            catch (Exception ex)
             {
                 if (ex.InnerException != null)
                 {

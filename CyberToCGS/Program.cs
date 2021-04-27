@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CyberToCGS.FactoryPattern;
+
 
 namespace CyberToCGS
 {
@@ -11,6 +13,7 @@ namespace CyberToCGS
     {
         static void Main(string[] args)
         {
+            
 
             //Database.Database db = Database.Database.GetInstance("localDB");
             //db.GetUser();
@@ -37,11 +40,13 @@ namespace CyberToCGS
 
             // var urlSME = "http://192.168.15.17:31380";
             var urlSME = "https://sme-bank.tcg.or.th";
+            var urlTCG = "https://cgs.tcg.or.th";
             // /requestservice/api/external/request
             //authentication-service/oauth/token
 
             var cgs = new CGS();
-            cgs.AuthenticationBasics(ref token,urlSME);
+            cgs.AuthenticationBasics(ref token, urlTCG);
+          //  cgs.AuthenticationBasics(ref token,urlSME);
 
             if (string.IsNullOrEmpty(token))
             {

@@ -51,9 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BankSubSystem.cs" />
     <Compile Include="CGS.cs" />
+    <Compile Include="ClientFacadeIndirect.cs" />
+    <Compile Include="CustomerSubsystem.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\Utils.cs" />
+    <Compile Include="FacadeIndirect.cs" />
     <Compile Include="FactoryPattern\CgsAbstract.cs" />
     <Compile Include="FactoryPattern\CustomerFactory.cs" />
     <Compile Include="FactoryPattern\DataFactory.cs" />
@@ -62,6 +66,7 @@
     <Compile Include="Json\AppConfig.cs" />
     <Compile Include="loadJson.cs" />
     <Compile Include="product.cs" />
+    <Compile Include="ProductSubsystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

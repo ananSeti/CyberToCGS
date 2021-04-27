@@ -9,33 +9,9 @@ namespace CyberToCGS
 {
     
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
-    public class Product
-    {
-        
-        public string preReqStatus { get; set; }
-        public int productId { get; set; }
-        public int roundId { get; set; }
-        public string guaAmount { get; set; }
-        public int prdPayFeeType { get; set; }
-        public object prdReduGuaType { get; set; }
-        public object refNo1 { get; set; }
-        public object refNo2 { get; set; }
-        public object refNo3 { get; set; }
-        public object advFeeYearId { get; set; }
-    }
+    
 
-    public class Bank
-    {
-        public int bankId { get; set; }
-        public int bankBrnUseLimit { get; set; }
-        public int bankBrnSendOper { get; set; }
-        public string guaCareName { get; set; }
-        public string guaCareMobile { get; set; }
-        public string guaCarePhone { get; set; }
-        public string guaCareEmail { get; set; }
-        public string guaApproveEmail { get; set; }
-        public string guaRemark { get; set; }
-    }
+   
 
     public class Address
     {
@@ -72,54 +48,7 @@ namespace CyberToCGS
         public List<Address> address { get; set; }
     }
 
-    public class Customer
-    {
-        public object customerUserType { get; set; }
-        public string identification { get; set; }
-        public string identificationType { get; set; }
-        public object customerStatus { get; set; }
-        public string customerType { get; set; }
-        public object customerGrade { get; set; }
-        public object customerScore { get; set; }
-        public object raceId { get; set; }
-        public object raceStr { get; set; }
-        public object nationalityId { get; set; }
-        public object nationalityStr { get; set; }
-        public object refReqNumber { get; set; }
-        public int customerId { get; set; }
-        public string borrowerType { get; set; }
-        public int titleId { get; set; }
-        public string cusNameTh { get; set; }
-        public string cusSurnameTh { get; set; }
-        public object cusNameEn { get; set; }
-        public object cusSurnameEn { get; set; }
-        public string gender { get; set; }
-        public string marriedStatus { get; set; }
-        public DateTime birthDate { get; set; }
-        public string educationLevel { get; set; }
-        public List<int> career { get; set; }
-        public string telephoneNo { get; set; }
-        public string mobilePhoneNo { get; set; }
-        public object faxNo { get; set; }
-        public object email { get; set; }
-        public int depLevelId { get; set; }
-        public DateTime proveDate { get; set; }
-        public string businessExp { get; set; }
-        public object registerDate { get; set; }
-        public string registerCapital { get; set; }
-        public object certificateDate { get; set; }
-        public string customerAlive { get; set; }
-        public object amountCol { get; set; }
-        public object kycResult { get; set; }
-        public object kycDate { get; set; }
-        public object guarantorRelationCode { get; set; }
-        public object guarantorRelationStr { get; set; }
-        public object seq { get; set; }
-        public List<Address> address { get; set; }
-        public List<object> relation { get; set; }
-        public Spouse spouse { get; set; }
-    }
-
+   
     public class Manager
     {
         public string idCard { get; set; }

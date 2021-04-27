@@ -1,6 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CyberToCGS.Database;
+using CyberToCGS;
+using System.Data;
+using System.Data.SqlClient;
+
 namespace DbOnlinetest
 {
     [TestClass]
@@ -24,9 +28,41 @@ namespace DbOnlinetest
         [TestMethod]
         public void testDB_online_CG()
         {
+            string fromDate;
+            string toDate;
+
+            loadJson l = new loadJson();
+            l.ReadAppConfig();
+            fromDate = l.GetFormatFromdate();
+            toDate = l.GetFormatTodate();
             Database db = Database.GetInstance("DB_ONLINE_CG");
-            db.GetT01_Request_Online();
+            SqlDataReader rec= db.GetT01_Request_Online(fromDate, toDate);
+             while (rec.Read())
+            Console.WriteLine( rec.GetValue(1));
+
+          
+
         }
+        [TestMethod]
+        public void testDB_online_CG_Request()
+        {
+            string fromDate;
+            string toDate;
+
+            loadJson l = new loadJson();
+            l.ReadAppConfig();
+            fromDate = l.GetFormatFromdate();
+            toDate = l.GetFormatTodate();
+            Database db = Database.GetInstance("DB_ONLINE_CG");
+            //  db.GetT01_Request_Online(fromDate, toDate);
+            //request no =5703591
+          SqlDataReader rec =  db.GetT01_Request_Online("5703591");
+
+            while (rec.Read())
+                Console.WriteLine(rec.GetValue(0) + "-"+ rec.GetValue(2));
+
+        }
+
 
         [TestMethod]
         public void testTime()
@@ -35,5 +71,6 @@ namespace DbOnlinetest
             u.GetSystemDate();
             u.GetSystemDateThai();
         }
+       
     }
 }

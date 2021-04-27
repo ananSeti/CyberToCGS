@@ -18,8 +18,9 @@ namespace CyberToCGS
         AppConfigClass app;
         public string ReadJson()
         {
+            // string filename = "success.json"; //"request.json";
             string filename = "request.json";
-             filename = Path.Combine(Environment.CurrentDirectory, filename);
+            filename = Path.Combine(Environment.CurrentDirectory, filename);
             // string fileName = @"D:\tcg\Cyber\CyberToCGS\CyberToCGS\Json\request.json";
             using (System.IO.StreamReader r = new System.IO.StreamReader(filename))
             {
