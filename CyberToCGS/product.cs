@@ -18,15 +18,15 @@ namespace CyberToCGS
         public bool active { get; set; }
         public string addressType { get; set; }
         public string addressNo { get; set; }
-        public object addressMoo { get; set; }
-        public object addressAlley { get; set; }
-        public object addressRoad { get; set; }
+        public string addressMoo { get; set; }
+        public string addressAlley { get; set; }
+        public string addressRoad { get; set; }
         public int subDistrictId { get; set; }
         public int districtId { get; set; }
         public int provinceId { get; set; }
         public string postalCode { get; set; }
-        public object countryId { get; set; }
-        public object addressOversea { get; set; }
+        public int? countryId { get; set; }
+        public string addressOversea { get; set; }
         public object nameType { get; set; }
     }
 
@@ -37,13 +37,13 @@ namespace CyberToCGS
         public int titleId { get; set; }
         public string cusNameTh { get; set; }
         public string cusSurnameTh { get; set; }
-        public object cusNameEn { get; set; }
-        public object cusSurnameEn { get; set; }
-        public DateTime birthDate { get; set; }
+        public string cusNameEn { get; set; }
+        public string cusSurnameEn { get; set; }
+        public string  birthDate { get; set; }
         public string telephoneNo { get; set; }
         public string mobilePhoneNo { get; set; }
-        public object faxNo { get; set; }
-        public object email { get; set; }
+        public string faxNo { get; set; }
+        public string email { get; set; }
         public string registerCapital { get; set; }
         public List<Address> address { get; set; }
     }

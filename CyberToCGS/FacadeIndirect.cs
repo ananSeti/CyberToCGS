@@ -12,7 +12,7 @@ namespace CyberToCGS
         protected IndirectRequest indirectRequest = new IndirectRequest();
         protected Product _product;
         protected Bank _bank;
-        protected Customer _customer;
+        protected  Customer _customer;
         
         SqlDataReader rec;
 
@@ -43,18 +43,18 @@ namespace CyberToCGS
             //  db.GetT01_Request_Online(fromDate, toDate);
             //request no =5703591
 
-            if (rec.HasRows)
-            {
-                _product.rec = rec;
-                _bank.rec = rec;
-                _customer.rec = rec;
-            }
+            //if (rec.HasRows)
+            //{
+            //    _product.rec = rec;
+            //    _bank.rec = rec;
+            //    _customer.rec = rec;
+            //}
             //while (rec.Read())
             //    Console.WriteLine(rec.GetValue(0) + "-" + rec.GetValue(2));
         }
         public IndirectRequest Operation()
         {
-
+            List<Customer> cust = new List<Customer>();
             while (rec.Read())
             {
                 T01OnlineID = rec["T01Online_ID"].ToString();
@@ -64,11 +64,11 @@ namespace CyberToCGS
 
             this._product.operation(T01OnlineID);
             this._bank.operation(T01OnlineID);
-            this._customer.operation(T01OnlineID);
+            cust = this._customer.operation(T01OnlineID);
 
             indirectRequest.product = _product;
             indirectRequest.bank = _bank;
-            indirectRequest.customer = _customer.operation(T01OnlineID);
+            indirectRequest.customer = cust.ToList();
 
             return indirectRequest;
         }

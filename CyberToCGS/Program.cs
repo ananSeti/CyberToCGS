@@ -45,8 +45,8 @@ namespace CyberToCGS
             //authentication-service/oauth/token
 
             var cgs = new CGS();
-            cgs.AuthenticationBasics(ref token, urlTCG);
-          //  cgs.AuthenticationBasics(ref token,urlSME);
+         //   cgs.AuthenticationBasics(ref token, urlTCG);
+            cgs.AuthenticationBasics(ref token,urlSME);
 
             if (string.IsNullOrEmpty(token))
             {

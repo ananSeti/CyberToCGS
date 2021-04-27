@@ -18,10 +18,11 @@ namespace CyberToCGS
         public string guaCareEmail { get; set; }
         public string guaApproveEmail { get; set; }
         public string guaRemark { get; set; }
-        public SqlDataReader rec { get; set; }
+        //public SqlDataReader rec { get; set; }
         protected string T01OnlineID;
         public void operation(string T01OnlineID)
         {
+            SqlDataReader rec;
             this.T01OnlineID = T01OnlineID;
             Database.Database db2 = Database.Database.GetInstance("DB_CGSAPI_MASTER");
             rec = db2.GetViewCgsapiBank(T01OnlineID);
