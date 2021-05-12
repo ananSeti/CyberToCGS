@@ -63,6 +63,7 @@
     <Compile Include="FactoryPattern\DataFactory.cs" />
     <Compile Include="FactoryPattern\IcgsData.cs" />
     <Compile Include="FactoryPattern\ProductFactory.cs" />
+    <Compile Include="FinanceSubSystem.cs" />
     <Compile Include="Json\AppConfig.cs" />
     <Compile Include="loadJson.cs" />
     <Compile Include="product.cs" />

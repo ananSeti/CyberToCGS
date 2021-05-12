@@ -13,6 +13,7 @@ namespace CyberToCGS
         protected Product _product;
         protected Bank _bank;
         protected  Customer _customer;
+        protected 
         
         SqlDataReader rec;
 

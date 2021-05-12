@@ -14,7 +14,7 @@ namespace DbOnlinetest
             var urlSME = "https://sme-bank.tcg.or.th";
             var urlTCG = "https://cgs.tcg.or.th";
             var cgs = new CGS();
-            cgs.AuthenticationBasics(ref token, urlTCG);
+            //cgs.AuthenticationBasics(ref token, urlTCG);
             cgs.AuthenticationBasics(ref token, urlSME);
             if (string.IsNullOrEmpty(token))
             {

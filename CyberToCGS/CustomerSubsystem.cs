@@ -39,12 +39,12 @@ namespace CyberToCGS
             public string mobilePhoneNo { get; set; }
             public string faxNo { get; set; }
             public string email { get; set; }
-            public int depLevelId { get; set; }
-            public DateTime proveDate { get; set; }
+            public int? depLevelId { get; set; }
+            public DateTime? proveDate { get; set; }
             public string businessExp { get; set; }
             public string registerDate { get; set; }
             public string registerCapital { get; set; }
-            public object certificateDate { get; set; }
+            public string certificateDate { get; set; }
             public string customerAlive { get; set; }
             public string amountCol { get; set; }
             public string kycResult { get; set; }
@@ -75,6 +75,8 @@ namespace CyberToCGS
             {
                 List<int?> carr = new List<int?>();
                 carr.Add( string.IsNullOrEmpty(rec["career"].ToString()) ? (int?)null : Convert.ToInt32(rec["career"]));
+                List<Address> addr = new List<Address>();
+                Spouse spo = new Spouse();
 
                 Customer c = new Customer() {
                     identification = rec["identification"].ToString(),
@@ -99,7 +101,29 @@ namespace CyberToCGS
                     marriedStatus = rec["marriedStatus"].ToString(),
                     birthDate = rec["birthDate"].ToString(),
                     educationLevel = rec["educationLevel"].ToString(),
-                    career = carr.ToList(),       
+                    career = carr.ToList(),
+                    telephoneNo = rec["telephoneNo"].ToString(),
+                    mobilePhoneNo = rec["mobilePhoneNo"].ToString(),
+                    faxNo = rec["faxNo"].ToString(),
+                    email = rec["email"].ToString(),
+                    depLevelId = string.IsNullOrEmpty(rec["depLevelId"].ToString()) ? (int?)null : Convert.ToInt32(rec["depLevelId"]),
+                    proveDate = string.IsNullOrEmpty(rec["proveDate"].ToString()) ? (DateTime?)null : Convert.ToDateTime(rec["proveDate"]),
+                    businessExp = rec["businessExp"].ToString(),
+                    registerDate = rec["registerDate"].ToString(),
+                    registerCapital = rec["registerCapital"].ToString(),
+                    certificateDate = rec["certificateDate"].ToString(),
+                    customerAlive = rec["customerAlive"].ToString(),
+                    amountCol = rec["amountCol"].ToString(),
+                    kycResult = rec["kycResult"].ToString(),
+                    kycDate = rec["kycDate"].ToString(),
+                    guarantorRelationCode = rec["guarantorRelationCode"].ToString(),
+                    guarantorRelationStr = rec["guarantorRelationStr"].ToString(),
+                    seq = string.IsNullOrEmpty(rec["seq"].ToString()) ? (int?)null : Convert.ToInt32(rec["seq"]),
+                    //s_identification
+                    //s_identificationType
+                    address = addr.ToList(),
+                    
+
                 };
 
                 cust.Add(c);
