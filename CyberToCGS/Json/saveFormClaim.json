@@ -1,0 +1,29 @@
+﻿{
+  "lgId": 1,
+  "requestClaim": 100000,
+  "claimCollaterals": [
+    {
+      "sueStatus": "Y",
+      "remark": "remark",
+      "collateralId": 1
+    }
+  ],
+  "claimLoans": [
+    {
+      "loanId": 1,
+      "detailType": "1",
+      "sueDtAct": "2020-01-01T00:00:00.000+0000",
+      "courtName": "ศาลแพ่ง กทม.ใต้",
+      "undecideCaseNo": "1/2563",
+      "decideCaseNo": "1/2563",
+      "judgmentDt": "2020-01-01T00:00:00.000+0000",
+      "escortDt": "2020-01-01T00:00:00.000+0000",
+      "finalCaseDt": "2020-01-01T00:00:00.000+0000",
+      "auctionDt": "2020-01-01T00:00:00.000+0000",
+      "filingDtObgAmount": 1000000,
+      "requestDtObgAmount": 1000000,
+      "defaultDt": "2020-01-01T00:00:00.000+0000",
+      "loanPage": 1
+    }
+  ]
+}

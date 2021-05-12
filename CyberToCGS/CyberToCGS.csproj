@@ -58,6 +58,7 @@
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\Utils.cs" />
     <Compile Include="FacadeIndirect.cs" />
+    <Compile Include="FacadeSaveFormClaim.cs" />
     <Compile Include="FactoryPattern\CgsAbstract.cs" />
     <Compile Include="FactoryPattern\CustomerFactory.cs" />
     <Compile Include="FactoryPattern\DataFactory.cs" />
@@ -70,11 +71,13 @@
     <Compile Include="ProductSubsystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveFormClaim\SaveFormClaim.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Json\Appconfig.json" />
     <None Include="Json\request.json" />
+    <None Include="Json\saveFormClaim.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

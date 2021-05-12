@@ -12,6 +12,7 @@ namespace CyberToCGS.Database
     {
         string db_online = @"server = 192.168.0.83; database = DB_ONLINE_CG; user = sa; password = ABC123abc$; ";
         string db_apiMaster = @"server = 192.168.0.83; database = DB_CGSAPI_MASTER; user = sa; password = ABC123abc$; ";
+        string db_claim_online = @"server = 192.168.0.83; database = DB_CLAIM_ONLINE; user = sa; password = ABC123abc$; ";
         string localDb = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=testDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         string connectionString = null;
 
@@ -32,6 +33,10 @@ namespace CyberToCGS.Database
             if (value == "DB_CGSAPI_MASTER")
             {
                 connectionString = db_apiMaster;
+            }
+            if(value  == "DB_CLAIM_ONLINE")
+            {
+                connectionString = db_claim_online;
             }
         }
 
@@ -350,6 +355,40 @@ namespace CyberToCGS.Database
             }
             return dataReader;
         }
+        public SqlDataReader GetTw01_Claim_Online(string T01lg_no) {
+            Sql = " SELECT T01Claim_ID, T01LG_No, T01LG_Name, T01LG_Date, T01End_Date_LG, T01Last_Status,"
+                + " T01Bank_Code, T01Project_Type, T01Sub_Project_Type, T01Contract_Name, T01Contract_Position, "
+                + " T01Contract_Province, T01Contract_Branch, T01Contract_Telephone, T01Contract_Fax, T01Contract_Mobile, "
+                + " T01Contract_Email, T01Create_Date, T01Create_Time, T01Create_User, T01Total_Amount_Duty, T01Active,"
+                + " T01Default_Date, T01Accuse_Date, T01Cancel_Date_1, T01Cancel_Date_2, T01Description, T01Update_Date, "
+                + " T01Update_Time, T01Update_User, T01Send_Date, T01Send_Time, T01Send_User, T01Receive_Date, T01Receive_Time, "
+                + " T01Receive_User, T01Success_Document, T01Success_Document_Time, T01File_1, T01File_2, T01File_3, T01File_4, "
+                + " T01File_5, T01File_6, T01File_Merge, T01Year_Port, T01Message, T01Order_No, T01Branch_Code, T01Internal_Message, "
+                + " T01Business_Running, T01Management_1, T01Management_2, T01Management_3, T01Management_4, T01Management_5, "
+                + " T01Other_Management, T01Finance_1, T01Finance_2, T01Finance_3, T01Finance_4, T01Finance_5, T01Other_Finance, "
+                + " T01Market_1, T01Market_2, T01Market_3, T01Market_4, T01Market_5, T01Other_Market, T01Capital_Asset, T01Judgement,"
+                + " T01Collectral, T01Collectral_Desc, T01IsResend "
+                + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where T01LG_No = @T01lg_no ; " ;
 
+
+            connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                command = new SqlCommand(Sql, connection);
+
+                command.Parameters.Add("@T01lg_no", SqlDbType.NVarChar);
+                command.Parameters["@T01lg_no"].Value = T01lg_no;
+
+
+                dataReader = command.ExecuteReader();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Get  DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  Error" + ex.Message.ToString());
+            }
+            return dataReader;
+        }
     }
 }

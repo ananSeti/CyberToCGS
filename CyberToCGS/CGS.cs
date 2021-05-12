@@ -8,7 +8,7 @@ using RestSharp.Authenticators;
 using Newtonsoft.Json.Linq;
 using CyberToCGS.FactoryPattern;
 using RestSharp.Serialization.Json;
-
+using CyberToCGS.SaveFormClaim;
 
 namespace CyberToCGS
 {
@@ -43,6 +43,7 @@ namespace CyberToCGS
         private string servicesToken = "/authentication-service/oauth/token";
         private string serviceReq = "/bank/authentication-service/oauth/token";
         private string serviceIndirecPost = "/request-service/api/external/request";
+        private string serviceSaveFormClaim = "/guarantee-service/api/saveFormClaim";
 
         public void AuthenticationBasics(ref string token,string url)
         {
@@ -176,6 +177,56 @@ namespace CyberToCGS
                 }
             }
 
+
+        }
+       
+        public void SaveRequestClaimPGSPackage(string Token,string url)
+        {
+            string token = Token;
+            var restClient = new RestSharp.RestClient(url);
+            restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
+
+            RestRequest restRequest = new RestRequest(serviceSaveFormClaim, Method.POST);
+            restRequest.RequestFormat = DataFormat.Json;
+            restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.AddHeader("Authorization", "Bearer" + token);
+
+
+            SaveFormClaimRoot sCR = new SaveFormClaimRoot();
+
+
+            // Product product = new Product();
+
+            //  Bank bank = new Bank();
+
+            //  Customer customer = new Customer();
+
+            //FacadeIndirect facade = new FacadeIndirect(product, bank, customer);
+            FacadeSaveFormClaim facade = new FacadeSaveFormClaim();
+            sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
+           
+
+           loadJson l = new loadJson();
+            string saveformClaim = l.ReadsaveFormClaim();  
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
+            restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
+            restRequest.RequestFormat = DataFormat.Json;
+
+            try
+            {
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                JObject obj = JObject.Parse(restResponse.Content);
+
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    ex.InnerException.Message.ToString();
+                }
+            }
 
         }
     }

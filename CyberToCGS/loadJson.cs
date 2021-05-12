@@ -16,6 +16,19 @@ namespace CyberToCGS
        public string json;
        public string AppConfig;
         AppConfigClass app;
+
+        public string ReadsaveFormClaim()
+        {
+            // string filename = "success.json"; //"request.json";
+            string filename = "saveFormClaim.json";// "request.json";
+            filename = Path.Combine(Environment.CurrentDirectory, filename);
+            // string fileName = @"D:\tcg\Cyber\CyberToCGS\CyberToCGS\Json\request.json";
+            using (System.IO.StreamReader r = new System.IO.StreamReader(filename))
+            {
+                json = r.ReadToEnd();
+            }
+            return json;
+        }
         public string ReadJson()
         {
             // string filename = "success.json"; //"request.json";
@@ -163,5 +176,6 @@ namespace CyberToCGS
             this.SetformatToDateTime();
             return app.GetformatToDate();
         }
+     
     }
 }

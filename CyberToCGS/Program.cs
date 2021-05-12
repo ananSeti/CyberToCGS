@@ -60,7 +60,9 @@ namespace CyberToCGS
                  *6. บันทึกคำขอแบบ indirect
                  *----------------------------------
                 */
-                cgs.IndirectPost(token, urlSME);
+              //  cgs.IndirectPost(token, urlSME);
+
+                cgs.SaveRequestClaimPGSPackage(token, urlSME);
             }
 
 
