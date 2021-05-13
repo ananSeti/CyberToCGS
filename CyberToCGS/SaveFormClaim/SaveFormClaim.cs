@@ -38,6 +38,11 @@ namespace CyberToCGS.SaveFormClaim
         public int requestClaim { get; set; }
         public List<ClaimCollateral> claimCollaterals { get; set; }
         public List<ClaimLoan> claimLoans { get; set; }
+    public SaveFormClaimRoot()
+        {
+            this.claimCollaterals = new List<ClaimCollateral>();
+            this.claimLoans = new List<ClaimLoan>();
+        }
     }
 
 

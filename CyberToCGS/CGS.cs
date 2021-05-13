@@ -193,7 +193,7 @@ namespace CyberToCGS
 
 
             SaveFormClaimRoot sCR = new SaveFormClaimRoot();
-
+            string saveformClaim;
 
             // Product product = new Product();
 
@@ -203,11 +203,11 @@ namespace CyberToCGS
 
             //FacadeIndirect facade = new FacadeIndirect(product, bank, customer);
             FacadeSaveFormClaim facade = new FacadeSaveFormClaim();
-            sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
+           // SaveFormClaimRoot saveformClaim = ClientFacadeSaveFormClaim.ClientCode(facade);
            
 
-           loadJson l = new loadJson();
-            string saveformClaim = l.ReadsaveFormClaim();  
+            loadJson l = new loadJson();
+            saveformClaim = l.ReadsaveFormClaim();  
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
             restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
