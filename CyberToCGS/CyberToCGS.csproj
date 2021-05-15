@@ -56,6 +56,7 @@
     <Compile Include="ClientFacadeIndirect.cs" />
     <Compile Include="CustomerSubsystem.cs" />
     <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\logData.cs" />
     <Compile Include="Database\Utils.cs" />
     <Compile Include="FacadeIndirect.cs" />
     <Compile Include="FacadeSaveFormClaim.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="ProductSubsystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveFormClaim\AdjustGuaLoanByLgID.cs" />
     <Compile Include="SaveFormClaim\SaveFormClaim.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +82,8 @@
     <None Include="Json\saveFormClaim.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Database\testSQL.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

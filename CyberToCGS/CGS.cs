@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using CyberToCGS.FactoryPattern;
 using RestSharp.Serialization.Json;
 using CyberToCGS.SaveFormClaim;
+using System.Globalization;
 
 namespace CyberToCGS
 {
@@ -44,6 +45,7 @@ namespace CyberToCGS
         private string serviceReq = "/bank/authentication-service/oauth/token";
         private string serviceIndirecPost = "/request-service/api/external/request";
         private string serviceSaveFormClaim = "/guarantee-service/api/saveFormClaim";
+        private string serviceGetAdjustGuaLonnByLgId = "guarantee-post-service/api/external/adjust-gua-loan-by-lg-id";
 
         public void AuthenticationBasics(ref string token,string url)
         {
@@ -192,8 +194,8 @@ namespace CyberToCGS
             restRequest.AddHeader("Authorization", "Bearer" + token);
 
 
-            SaveFormClaimRoot sCR = new SaveFormClaimRoot();
-            string saveformClaim;
+          
+          
 
             // Product product = new Product();
 
@@ -202,14 +204,26 @@ namespace CyberToCGS
             //  Customer customer = new Customer();
 
             //FacadeIndirect facade = new FacadeIndirect(product, bank, customer);
-            FacadeSaveFormClaim facade = new FacadeSaveFormClaim();
-           // SaveFormClaimRoot saveformClaim = ClientFacadeSaveFormClaim.ClientCode(facade);
-           
+          
 
+            string json=null;
             loadJson l = new loadJson();
-            saveformClaim = l.ReadsaveFormClaim();  
+            l.ReadAppConfig();
+            if (l.isLoadTestFile())
+            {
+                string saveformClaim;
+                saveformClaim = l.ReadsaveFormClaim();
+                 json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
+            }
+            else
+            {
+                SaveFormClaimRoot sCR = new SaveFormClaimRoot();
+                FacadeSaveFormClaim facade = new FacadeSaveFormClaim();
+                  sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
+                json = Newtonsoft.Json.JsonConvert.SerializeObject(sCR);
+            }
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
+
             restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
             restRequest.RequestFormat = DataFormat.Json;
 
@@ -228,6 +242,49 @@ namespace CyberToCGS
                 }
             }
 
+        }
+        //รายละเอียดคำขอลดวงเงิน
+        public void GetAdjustGuaLoanByLgId(string Token,string url)
+        {
+            string token = Token;
+            var restClient = new RestSharp.RestClient(url);
+            restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
+
+            RestRequest restRequest = new RestRequest(serviceGetAdjustGuaLonnByLgId, Method.GET);
+            restRequest.RequestFormat = DataFormat.Json;
+            restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.AddHeader("Authorization", "Bearer" + token);
+            string testdate = "25620930";
+            string format = "YYYY-mm-dd";
+            //Create param for Service
+            AdjustGuaLoanByLgID param = new AdjustGuaLoanByLgID();
+            param.P_LG_ID = 736;
+            param.P_POST_REQUEST_ID = 245;
+            param.P_POST_REQ_CHANNELL = "01";
+            param.P_APPROVE_DT = DateTime.Parse(testdate) ; //2020-11-18T10:58:55+07:00
+            param.P_POST_REQ_SEND_DT = Convert.ToDateTime( "2021-05-14");//
+            param.P_DOCUMENT_TYPE_CODE = "POST14";
+
+            restRequest.AddParameter("P_LG_ID",param.P_LG_ID,ParameterType.GetOrPost);
+            restRequest.AddParameter("P_POST_REQUEST_ID",param.P_POST_REQUEST_ID,ParameterType.GetOrPost);
+            restRequest.AddParameter("P_POST_REQ_CHANNELL",param.P_POST_REQ_CHANNELL,ParameterType.GetOrPost);
+            restRequest.AddParameter("P_APPROVE_DT", param.P_APPROVE_DT, ParameterType.GetOrPost);
+            restRequest.AddParameter("P_POST_REQ_SEND_DT",param.P_POST_REQ_SEND_DT,ParameterType.GetOrPost);
+            restRequest.AddParameter("P_DOCUMENT_TYPE_CODE",param.P_DOCUMENT_TYPE_CODE,ParameterType.GetOrPost);
+
+
+
+            try {
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                JObject tk = JObject.Parse(restResponse.Content);
+            }
+            catch(Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    ex.InnerException.Message.ToString();
+                }
+            }
         }
     }
 }

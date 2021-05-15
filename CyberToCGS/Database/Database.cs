@@ -62,6 +62,38 @@ namespace CyberToCGS.Database
            
             return _database;
         }
+       public bool LogData(logData log)
+        {
+            Sql = "insert into [dbo].[claimLog](LgNo,logDate) values(@lgNo,@logDate)";
+            connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                command = new SqlCommand(Sql, connection);
+                //Parameter
+                command.Parameters.AddWithValue("@LgNo", log.lgNo);
+                command.Parameters.AddWithValue("@logDate", log.logDate);
+
+
+                
+               
+                int result = command.ExecuteNonQuery();
+                if (result < 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("------- log Data : " + log.lgNo);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("insert log  error" + ex.Message.ToString());
+                return false;
+            }
+        }
         public void GetUser()
         {
            

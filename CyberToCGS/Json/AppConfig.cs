@@ -10,7 +10,9 @@ namespace CyberToCGS.Json
     {
         public string fromDate { get; set; }
         public string toDate { get; set; }
-
+        public string urlSME { get; set; }
+        public string urlTCG { get; set; }
+        public string ReadTestFile { get; set; }
         public string fromYear { get; set; }
         public string fromMonth { get; set; }
         public string fromDay { get; set; }

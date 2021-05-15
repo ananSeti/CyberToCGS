@@ -26,6 +26,16 @@ namespace DbOnlinetest
            
         }
         [TestMethod]
+        public void TestInsertLog()
+        {
+            Database db = Database.GetInstance("localDB");
+            logData log = new logData();
+            log.lgNo = "LG123456";
+            log.logDate = DateTime.Now;
+            db.LogData(log);
+
+        }
+        [TestMethod]
         public void testDB_online_CG()
         {
             string fromDate;

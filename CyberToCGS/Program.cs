@@ -23,7 +23,9 @@ namespace CyberToCGS
 
             /*test load Json */
             /* ทดลองการ load Json file   */
-            //loadJson l = new loadJson();
+            //read config
+           // loadJson l = new loadJson();
+           // l.ReadAppConfig();
             //string js = l.ReadJson();
             //     l.DeserialProduct();
             //    l.DeserialCutomerArray();
@@ -60,9 +62,19 @@ namespace CyberToCGS
                  *6. บันทึกคำขอแบบ indirect
                  *----------------------------------
                 */
-              //  cgs.IndirectPost(token, urlSME);
-
-                cgs.SaveRequestClaimPGSPackage(token, urlSME);
+                loadJson l = new loadJson();
+                l.ReadAppConfig();
+                if ( l.isUrlSME())
+                {
+                    cgs.IndirectPost(token, urlSME);
+                }
+                if (l.isUrlTCG())
+                {
+                    //P300
+                    //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
+                    cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
+                    cgs.SaveRequestClaimPGSPackage(token, urlTCG);
+                }
             }
 
 

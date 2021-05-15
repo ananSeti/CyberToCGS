@@ -176,6 +176,32 @@ namespace CyberToCGS
             this.SetformatToDateTime();
             return app.GetformatToDate();
         }
-     
+     public bool isUrlSME()
+        {
+            this.GetFromDate();
+            if (this.app.urlSME == "True")
+            {
+                return true;
+            }
+            else return false;
+        }
+        public bool isUrlTCG()
+        {
+            this.GetFromDate();
+            if (this.app.urlTCG == "True")
+            {
+                return true;
+            }
+            else return false;
+        }
+        public bool isLoadTestFile()
+        {
+            this.GetFromDate();
+            if (this.app.ReadTestFile == "True")
+            {
+                return true;
+            }
+            else return false;
+        }
     }
 }
