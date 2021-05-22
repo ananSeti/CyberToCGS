@@ -44,14 +44,14 @@ namespace CyberToCGS
         private string servicesToken = "/authentication-service/oauth/token";
         private string serviceReq = "/bank/authentication-service/oauth/token";
         private string serviceIndirecPost = "/request-service/api/external/request";
-        private string serviceSaveFormClaim = "/guarantee-service/api/saveFormClaim";
-        private string serviceGetAdjustGuaLonnByLgId = "guarantee-post-service/api/external/adjust-gua-loan-by-lg-id";
+        private string serviceSaveFormClaim = "/guarantee-service/api/external/saveFormClaim";
+        private string serviceGetAdjustGuaLonnByLgId = "/guarantee-post-service/api/external/adjust-gua-loan-by-lg-id";
+        private string serviceGetLgInfo = "/bank/guarantee-post-service/api/guarantee-post";
 
         public void AuthenticationBasics(ref string token,string url)
         {
             RestClient restClient = new RestClient();
-            // restClient.Authenticator = new HttpBasicAuthenticator(cyberweb, cyberpass);
-            //restClient.Authenticator = new HttpBasicAuthenticator(webUser, password);
+            
             restClient.BaseUrl = new Uri(url);
                        restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
@@ -59,9 +59,7 @@ namespace CyberToCGS
                          restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                          restRequest.AddHeader("Authorization", "Basic eSrTcpfOZ1O6ZmkkN4YbWlSg1X9JYpFexMZSAprl7gM=");
                          restRequest.AddParameter("grant_type", grant_type, ParameterType.GetOrPost);
-            //  restRequest.AddParameter("grant_type", "password", ParameterType.GetOrPost);
-            // restRequest.AddParameter("username", "TCG_SYSTEM", ParameterType.GetOrPost);  
-            // restRequest.AddParameter("password", "P@ssw0rd", ParameterType.GetOrPost);
+            
                          restRequest.AddParameter("username", cyberweb, ParameterType.GetOrPost);  
                          restRequest.AddParameter("password", cyberpass, ParameterType.GetOrPost);
 
@@ -193,18 +191,10 @@ namespace CyberToCGS
             restRequest.AddHeader("Content-Type", "application/json");
             restRequest.AddHeader("Authorization", "Bearer" + token);
 
+            //this lg not found 63092355
+            //this lg found  63071729
+            string lgno = "63092355";// "63071729";  //not found in Claim online //"62036859"; //63060917
 
-          
-          
-
-            // Product product = new Product();
-
-            //  Bank bank = new Bank();
-
-            //  Customer customer = new Customer();
-
-            //FacadeIndirect facade = new FacadeIndirect(product, bank, customer);
-          
 
             string json=null;
             loadJson l = new loadJson();
@@ -213,13 +203,22 @@ namespace CyberToCGS
             {
                 string saveformClaim;
                 saveformClaim = l.ReadsaveFormClaim();
-                 json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
+                json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
             }
             else
             {
                 SaveFormClaimRoot sCR = new SaveFormClaimRoot();
-                FacadeSaveFormClaim facade = new FacadeSaveFormClaim();
-                  sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
+                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno);
+                sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
+                bool found;
+                SaveFormClaim.Content lgInfo = GetLgByBank(facade.bankId, facade.lgNo, token, url, out found);
+                //update lgID get from CGS 
+                if (found)
+                {
+                    sCR.lgId = lgInfo.lgId;
+                }
+
+
                 json = Newtonsoft.Json.JsonConvert.SerializeObject(sCR);
             }
 
@@ -277,6 +276,7 @@ namespace CyberToCGS
             try {
                 IRestResponse restResponse = restClient.Execute(restRequest);
                 JObject tk = JObject.Parse(restResponse.Content);
+           
             }
             catch(Exception ex)
             {
@@ -285,6 +285,75 @@ namespace CyberToCGS
                     ex.InnerException.Message.ToString();
                 }
             }
+        }
+        public SaveFormClaim.Content GetLgByBank(string bank, string lgNo, string Token, string url,out bool found)
+        {
+            found = false;
+            SaveFormClaim.Content lgInfo = new Content();
+            string token = Token;
+            var restClient = new RestSharp.RestClient(url);
+            restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
+
+            RestRequest restRequest = new RestRequest(serviceGetLgInfo, Method.GET);
+            restRequest.RequestFormat = DataFormat.Json;
+            restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.AddHeader("Authorization", "Bearer" + token);
+
+            LGInformation param = new LGInformation();
+            param.bankId = bank;
+            param.lgNo = lgNo;
+
+            restRequest.AddParameter("page", param.page, ParameterType.GetOrPost);
+            restRequest.AddParameter("perPage", param.perPage, ParameterType.GetOrPost);
+            restRequest.AddParameter("documentTypeCode", param.documentTypeCode, ParameterType.GetOrPost);
+            restRequest.AddParameter("bakId", param.bankId, ParameterType.GetOrPost);
+            restRequest.AddParameter("lgNo", param.lgNo, ParameterType.GetOrPost);
+
+            
+            try
+            {
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                LGClaimInfo lgCliaminfo = Newtonsoft.Json.JsonConvert.DeserializeObject<LGClaimInfo>(restResponse.Content);
+                if (lgCliaminfo != null)
+                {
+                    foreach (SaveFormClaim.Content c in lgCliaminfo.content)
+                    {
+                        //if (c != null)
+                        //{
+                        //    if (SearchLgInfo(c, lgNo))
+                        //    {
+                        //        lgInfo = c;
+                        //    }
+                        //}
+                        lgInfo = c;
+                        found = true;
+                    }
+
+                }
+                
+            }
+             catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    ex.InnerException.Message.ToString();
+                }
+            }
+          
+
+            return lgInfo;
+        }
+
+        private bool SearchLgInfo(Content c,string lgNo)
+        {
+            
+            if (c.lgNo ==lgNo)
+            {
+               // Console.WriteLine("Lg No: " +c.lgNo) ;
+                
+                return true;
+            }
+            return false;
         }
     }
 }

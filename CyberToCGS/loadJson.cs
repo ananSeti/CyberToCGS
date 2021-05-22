@@ -203,5 +203,14 @@ namespace CyberToCGS
             }
             else return false;
         }
+        public bool isInsertLocalLog()
+        {
+            this.GetFromDate();
+            if (this.app.InsertLocalLog == "True")
+            {
+                return true;
+            }
+            else return false;
+        }
     }
 }

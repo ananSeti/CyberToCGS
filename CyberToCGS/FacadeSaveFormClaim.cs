@@ -12,15 +12,20 @@ namespace CyberToCGS
     {
         protected SaveFormClaimRoot saveFormClaim = new SaveFormClaimRoot();
         SqlDataReader rec;
-     public FacadeSaveFormClaim()
+       public string lgNo;
+       public string bankId;
+     public FacadeSaveFormClaim(string lgNo)
         {
             // loadJson l = new loadJson();
 
             // l.ReadAppConfig();
             // fromDate = l.GetFormatFromdate();
             // toDate = l.GetFormatTodate();
+            this.lgNo = lgNo;
+            
             Database.Database db = Database.Database.GetInstance("DB_CLAIM_ONLINE");
-            rec = db.GetTw01_Claim_Online("62036859");
+           
+            rec = db.GetTw01_Claim_Online(lgNo); //62036859
         }
     public SaveFormClaimRoot Operation()
         {
@@ -31,7 +36,8 @@ namespace CyberToCGS
 
             while(rec.Read())
             {
-                saveFormClaim.lgId = Convert.ToInt32(rec["T01LG_No"]);
+                this.bankId = "4"; //rec["T01Bank_Code"].ToString();
+                saveFormClaim.lgId = // getLG_ID LG for Convert.ToInt32(rec["T01LG_No"]);
                 saveFormClaim.requestClaim = 10000;
 
                 ClaimCollateral cr = new ClaimCollateral();
@@ -43,7 +49,7 @@ namespace CyberToCGS
                 ClaimLoan cl = new ClaimLoan();
                 cl.loanId = 1;  //TODO loanId
                 cl.detailType = "1";
-                cl.sueDtAct = DateTime.Now; //TOTO suedate
+                cl.sueDtAct = DateTime.Now; //TOTO suedate //วันฟ้อง
                 cl.courtName = "ศาลแพ่ง กทม.ใต้"; //TODO
                 cl.undecideCaseNo = "1/2563"; //TODO
                 cl.judgmentDt = DateTime.Now; //TODO judementDt

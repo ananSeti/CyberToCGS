@@ -11,5 +11,6 @@ namespace CyberToCGS.Database
 
         public string lgNo { get; set; }
         public DateTime logDate { get; set; }
+        public string method { get; set; }
     }
 }

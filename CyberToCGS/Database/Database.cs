@@ -64,7 +64,7 @@ namespace CyberToCGS.Database
         }
        public bool LogData(logData log)
         {
-            Sql = "insert into [dbo].[claimLog](LgNo,logDate) values(@lgNo,@logDate)";
+            Sql = "insert into [dbo].[claimLog](LgNo,logDate,Method) values(@lgNo,@logDate,@method)";
             connection = new SqlConnection(connectionString);
             try
             {
@@ -73,6 +73,7 @@ namespace CyberToCGS.Database
                 //Parameter
                 command.Parameters.AddWithValue("@LgNo", log.lgNo);
                 command.Parameters.AddWithValue("@logDate", log.logDate);
+                command.Parameters.AddWithValue("@method", log.method);
 
 
                 

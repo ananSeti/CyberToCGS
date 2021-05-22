@@ -13,6 +13,7 @@ namespace CyberToCGS.Json
         public string urlSME { get; set; }
         public string urlTCG { get; set; }
         public string ReadTestFile { get; set; }
+        public string InsertLocalLog { get; set; }
         public string fromYear { get; set; }
         public string fromMonth { get; set; }
         public string fromDay { get; set; }

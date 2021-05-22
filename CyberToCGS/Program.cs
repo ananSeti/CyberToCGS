@@ -70,10 +70,12 @@ namespace CyberToCGS
                 }
                 if (l.isUrlTCG())
                 {
+
                     //P300
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
-                    cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
-                    cgs.SaveRequestClaimPGSPackage(token, urlTCG);
+                    // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
+                    // cgs.SaveRequestClaimPGSPackage(token, urlTCG);
+                    cgs.SaveRequestClaimPGSPackage(token, urlSME);
                 }
             }
 

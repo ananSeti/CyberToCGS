@@ -1,0 +1,3 @@
+﻿ https://sme-bank.tcg.or.th/bank/guarantee-post-service/api/guarantee-post?page=1&perPage=10&documentTypeCode=POST36&bankId=80
+
+ link สำหรับ Get Lg ID

@@ -32,6 +32,7 @@ namespace DbOnlinetest
             logData log = new logData();
             log.lgNo = "LG123456";
             log.logDate = DateTime.Now;
+            log.method = "GET service1";
             db.LogData(log);
 
         }
