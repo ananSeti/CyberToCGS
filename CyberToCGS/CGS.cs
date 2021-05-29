@@ -41,11 +41,11 @@ namespace CyberToCGS
          * **/
 
 
-        private string servicesToken = "/authentication-service/oauth/token";
+        //private string servicesToken = "/authentication-service/oauth/token";
         private string serviceReq = "/bank/authentication-service/oauth/token";
-        private string serviceIndirecPost = "/request-service/api/external/request";
-        private string serviceSaveFormClaim = "/guarantee-service/api/external/saveFormClaim";
-        private string serviceGetAdjustGuaLonnByLgId = "/guarantee-post-service/api/external/adjust-gua-loan-by-lg-id";
+        private string serviceIndirecPost = "/bank/request-service/api/external/request";
+        private string serviceSaveFormClaim = "/bank/guarantee-service/api/external/saveFormClaim";
+        private string serviceGetAdjustGuaLonnByLgId = "/bank/guarantee-post-service/api/external/adjust-gua-loan-by-lg-id";
         private string serviceGetLgInfo = "/bank/guarantee-post-service/api/guarantee-post";
 
         public void AuthenticationBasics(ref string token,string url)
@@ -92,10 +92,9 @@ namespace CyberToCGS
 
             RestRequest restRequest = new RestRequest(serviceIndirecPost,Method.POST);
             restRequest.RequestFormat = DataFormat.Json;
-            restRequest.AddHeader("Content-Type","application/json");
             restRequest.AddHeader("Authorization","Bearer" + token);
+            restRequest.AddHeader("Content-Type", "application/json");
 
-           
             IndirectRequest indirectRequest = new IndirectRequest();
 
 
@@ -112,8 +111,8 @@ namespace CyberToCGS
                                           
                           
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
-             restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
-             restRequest.RequestFormat = DataFormat.Json;
+             restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
+            
 
             try {
                 IRestResponse restResponse = restClient.Execute(restRequest);
@@ -135,26 +134,20 @@ namespace CyberToCGS
             string token = Token;
             var restClient = new RestSharp.RestClient(url);
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
-           
-            RestRequest restRequest = new RestRequest(serviceIndirecPost, Method.POST, DataFormat.Json);
-            // restRequest.RequestFormat = DataFormat.Json;
-            restRequest.Parameters.Clear();
-            restRequest.AddHeader("Content-Type", "application/json;charset=utf-8");
-            restRequest.AddHeader("Accept", "application/json");
+            restClient.Timeout = -1;
+            RestRequest restRequest = new RestRequest(serviceIndirecPost, Method.POST);
             restRequest.AddHeader("Authorization", "Bearer " + token);
-          
+            restRequest.AddHeader("Content-Type", "application/json");
+           
 
             loadJson l = new loadJson();
             string indirectRequest = l.ReadJson();
 
-          
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
 
-             restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
-            //  restRequest.AddJsonBody(indirectRequest);        
+           //  var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
            
-           // restRequest.AddParameter("Content-Type", indirectRequest,ParameterType.RequestBody);
-            //restRequest.RequestFormat = DataFormat.Json;
+             restRequest.AddParameter("application/json", indirectRequest, ParameterType.RequestBody);
+          
 
             try
             {
@@ -223,7 +216,12 @@ namespace CyberToCGS
             }
 
 
-            restRequest.AddParameter("application / json; charset = utf - 8", json, ParameterType.RequestBody);
+           // restRequest.AddJsonBody(json);
+               restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
+               // restRequest.AddParameter("application / json; charset = utf - 8", param.Value, ParameterType.RequestBody);
+
+
+
             restRequest.RequestFormat = DataFormat.Json;
 
             try

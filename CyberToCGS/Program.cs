@@ -47,7 +47,7 @@ namespace CyberToCGS
             //authentication-service/oauth/token
 
             var cgs = new CGS();
-         //   cgs.AuthenticationBasics(ref token, urlTCG);
+           // cgs.AuthenticationBasics(ref token, urlTCG);
             cgs.AuthenticationBasics(ref token,urlSME);
 
             if (string.IsNullOrEmpty(token))
@@ -74,8 +74,8 @@ namespace CyberToCGS
                     //P300
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
-                    // cgs.SaveRequestClaimPGSPackage(token, urlTCG);
-                    cgs.SaveRequestClaimPGSPackage(token, urlSME);
+                     cgs.SaveRequestClaimPGSPackage(token, urlTCG);
+                   // cgs.SaveRequestClaimPGSPackage(token, urlSME);
                 }
             }
 

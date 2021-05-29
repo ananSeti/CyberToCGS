@@ -6,7 +6,7 @@
       "formatDate": "m/dd/YYYY" ,
       "urlSME": "False",
       "urlTCG": "True",
-      "ReadTestFile": "False",
+      "ReadTestFile": "True",
       "InsertLocalLog": "True"
     }
   }
