@@ -196,7 +196,7 @@ namespace CyberToCGS
             {
                 string saveformClaim;
                 saveformClaim = l.ReadsaveFormClaim();
-                json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
+               // json = Newtonsoft.Json.JsonConvert.SerializeObject(saveformClaim);
             }
             else
             {
@@ -215,12 +215,9 @@ namespace CyberToCGS
                 json = Newtonsoft.Json.JsonConvert.SerializeObject(sCR);
             }
 
-
-           // restRequest.AddJsonBody(json);
+                      
                restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
-               // restRequest.AddParameter("application / json; charset = utf - 8", param.Value, ParameterType.RequestBody);
-
-
+            
 
             restRequest.RequestFormat = DataFormat.Json;
 

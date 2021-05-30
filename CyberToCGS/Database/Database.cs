@@ -400,7 +400,7 @@ namespace CyberToCGS.Database
                 + " T01Business_Running, T01Management_1, T01Management_2, T01Management_3, T01Management_4, T01Management_5, "
                 + " T01Other_Management, T01Finance_1, T01Finance_2, T01Finance_3, T01Finance_4, T01Finance_5, T01Other_Finance, "
                 + " T01Market_1, T01Market_2, T01Market_3, T01Market_4, T01Market_5, T01Other_Market, T01Capital_Asset, T01Judgement,"
-                + " T01Collectral, T01Collectral_Desc, T01IsResend "
+                + " T01Collectral, T01Collectral_Desc, T01IsResend,T01Claim_Amount "
                 + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where T01LG_No = @T01lg_no ; " ;
 
 

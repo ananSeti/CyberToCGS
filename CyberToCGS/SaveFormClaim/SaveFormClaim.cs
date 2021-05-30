@@ -35,7 +35,7 @@ namespace CyberToCGS.SaveFormClaim
     public class SaveFormClaimRoot
     {
         public int lgId { get; set; }
-        public int requestClaim { get; set; }
+        public int? requestClaim { get; set; }
         public List<ClaimCollateral> claimCollaterals { get; set; }
         public List<ClaimLoan> claimLoans { get; set; }
     public SaveFormClaimRoot()

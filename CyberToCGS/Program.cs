@@ -30,7 +30,8 @@ namespace CyberToCGS
             //     l.DeserialProduct();
             //    l.DeserialCutomerArray();
             /*---------------------*/
-            string token = "";
+            string tokenSME = "";
+            string tokenTCG = "";
             /*-------------------------------
              *  เร่ิ่มต้นด้วย การขอ TOKEN
              *-------------------------------
@@ -45,14 +46,14 @@ namespace CyberToCGS
             var urlTCG = "https://cgs.tcg.or.th";
             // /requestservice/api/external/request
             //authentication-service/oauth/token
-
+            loadJson l = new loadJson();
             var cgs = new CGS();
-           // cgs.AuthenticationBasics(ref token, urlTCG);
-            cgs.AuthenticationBasics(ref token,urlSME);
+          //  cgs.AuthenticationBasics(ref tokenTCG, urlTCG);
+            cgs.AuthenticationBasics(ref tokenSME,urlSME);
 
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(tokenSME ))
             {
-                Console.WriteLine("-------- Can not get token ------------");
+                Console.WriteLine("-------- Can not get SME token ------------");
             }
             else
             {
@@ -62,24 +63,33 @@ namespace CyberToCGS
                  *6. บันทึกคำขอแบบ indirect
                  *----------------------------------
                 */
-                loadJson l = new loadJson();
+                
                 l.ReadAppConfig();
                 if ( l.isUrlSME())
                 {
-                    cgs.IndirectPost(token, urlSME);
+                    // cgs.IndirectPost(token, urlSME);
+                    cgs.SaveRequestClaimPGSPackage(tokenSME, urlSME);
                 }
+                
+            }
+
+            if (string.IsNullOrEmpty(tokenTCG)){
+                Console.WriteLine("======= Can not get TCG token");
+            }
+            else
+            {
+               
+                l.ReadAppConfig();
                 if (l.isUrlTCG())
                 {
 
                     //P300
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
-                     cgs.SaveRequestClaimPGSPackage(token, urlTCG);
-                   // cgs.SaveRequestClaimPGSPackage(token, urlSME);
+                    cgs.SaveRequestClaimPGSPackage(tokenTCG, urlTCG);
+                    // cgs.SaveRequestClaimPGSPackage(token, urlSME);
                 }
             }
-
-
 
 
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CyberToCGS.SaveFormClaim;
-
+using CyberToCGS.Database;
 namespace CyberToCGS
 {
   public  class FacadeSaveFormClaim
@@ -14,6 +14,7 @@ namespace CyberToCGS
         SqlDataReader rec;
        public string lgNo;
        public string bankId;
+       
      public FacadeSaveFormClaim(string lgNo)
         {
             // loadJson l = new loadJson();
@@ -22,23 +23,23 @@ namespace CyberToCGS
             // fromDate = l.GetFormatFromdate();
             // toDate = l.GetFormatTodate();
             this.lgNo = lgNo;
-            
+
             Database.Database db = Database.Database.GetInstance("DB_CLAIM_ONLINE");
            
             rec = db.GetTw01_Claim_Online(lgNo); //62036859
         }
     public SaveFormClaimRoot Operation()
         {
-           // List<ClaimCollateral> claimCollaterals = new List<ClaimCollateral>();
-           
-           
+            // List<ClaimCollateral> claimCollaterals = new List<ClaimCollateral>();
+            char pad = '0';
+            Utils utils = new Utils();
             
 
             while(rec.Read())
             {
-                this.bankId = "4"; //rec["T01Bank_Code"].ToString();
-                saveFormClaim.lgId = // getLG_ID LG for Convert.ToInt32(rec["T01LG_No"]);
-                saveFormClaim.requestClaim = 10000;
+                this.bankId = rec["T01Bank_Code"].ToString().PadLeft(3, pad); //"4"; //rec["T01Bank_Code"].ToString();
+                saveFormClaim.lgId = 1;// getLG_ID LG for Convert.ToInt32(rec["T01LG_No"]);
+                saveFormClaim.requestClaim = string.IsNullOrEmpty(rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(rec["T01Claim_Amount"]);//10000;
 
                 ClaimCollateral cr = new ClaimCollateral();
                 cr.collateralId = 1; //  TODO add collateralId
@@ -49,7 +50,7 @@ namespace CyberToCGS
                 ClaimLoan cl = new ClaimLoan();
                 cl.loanId = 1;  //TODO loanId
                 cl.detailType = "1";
-                cl.sueDtAct = DateTime.Now; //TOTO suedate //วันฟ้อง
+                cl.sueDtAct =  utils.ConvertYear(rec["T01Accuse_Date"].ToString());  //TOTO suedate //วันฟ้อง
                 cl.courtName = "ศาลแพ่ง กทม.ใต้"; //TODO
                 cl.undecideCaseNo = "1/2563"; //TODO
                 cl.judgmentDt = DateTime.Now; //TODO judementDt

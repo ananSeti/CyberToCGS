@@ -97,6 +97,7 @@
     <Compile Include="UnitTest1.cs" />
     <Compile Include="UnitDateTime.cs" />
     <Compile Include="PDFFile.cs" />
+    <Compile Include="StringFormat.cs" />
     <Compile Include="UnitTestindirectPost.cs" />
   </ItemGroup>
   <ItemGroup>
