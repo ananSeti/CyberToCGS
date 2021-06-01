@@ -66,5 +66,15 @@ namespace CyberToCGS.Database
                        
             return ret;
         }
+        public void log(string lgno,string logtype,string status)
+        {
+            Database db = Database.GetInstance("localDB");
+            logData log = new logData();
+            log.lgNo = lgno; // "LG123456";
+            log.logDate = DateTime.Now;
+            log.method = logtype;
+            log.status = status;
+            db.LogData(log);
+        }
     }
 }

@@ -82,6 +82,21 @@ namespace DbOnlinetest
             u.GetSystemDate();
             u.GetSystemDateThai();
         }
-       
+        [TestMethod]
+       public void getNewClaimLg()
+        {
+            Database db = Database.GetInstance("DB_ONLINE_CG");
+            SqlDataReader rec = db.GetT01_Request_online_lgNo();
+            while (rec.Read())
+                Console.WriteLine(rec.GetValue(0));
+
+        }
+        [TestMethod]
+        public void UpdateLGStatus()
+        {
+            Database db = Database.GetInstance("DB_ONLINE_CG");
+            int a = db.UpdateT01_request_Online("400", "5858691");
+            Console.WriteLine("update lgno : {0}  and Status {1} " ,"5858691","800"  );
+        }
     }
 }

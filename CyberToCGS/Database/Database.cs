@@ -64,7 +64,7 @@ namespace CyberToCGS.Database
         }
        public bool LogData(logData log)
         {
-            Sql = "insert into [dbo].[claimLog](LgNo,logDate,Method) values(@lgNo,@logDate,@method)";
+            Sql = "insert into [dbo].[claimLog](LgNo,logDate,Method,Status) values(@lgNo,@logDate,@method,@Status)";
             connection = new SqlConnection(connectionString);
             try
             {
@@ -74,6 +74,7 @@ namespace CyberToCGS.Database
                 command.Parameters.AddWithValue("@LgNo", log.lgNo);
                 command.Parameters.AddWithValue("@logDate", log.logDate);
                 command.Parameters.AddWithValue("@method", log.method);
+                command.Parameters.AddWithValue("@Status",log.status);
 
 
                 
@@ -95,6 +96,25 @@ namespace CyberToCGS.Database
                 return false;
             }
         }
+
+        public SqlDataReader GetT01_Request_online_lgNo()
+        {
+            Sql = " SELECT T01LG_No FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online "
+                  + " where t01last_status = '010'";
+            connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                command = new SqlCommand(Sql, connection);
+                dataReader = command.ExecuteReader();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Get DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  ");
+            }
+            return dataReader;
+        }
+
         public void GetUser()
         {
            
@@ -401,7 +421,8 @@ namespace CyberToCGS.Database
                 + " T01Other_Management, T01Finance_1, T01Finance_2, T01Finance_3, T01Finance_4, T01Finance_5, T01Other_Finance, "
                 + " T01Market_1, T01Market_2, T01Market_3, T01Market_4, T01Market_5, T01Other_Market, T01Capital_Asset, T01Judgement,"
                 + " T01Collectral, T01Collectral_Desc, T01IsResend,T01Claim_Amount "
-                + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where T01LG_No = @T01lg_no ; " ;
+                + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where T01Last_Status = '010' "
+                + " and T01LG_No = @T01lg_no ; " ;
 
 
             connection = new SqlConnection(connectionString);
@@ -422,6 +443,26 @@ namespace CyberToCGS.Database
                 Console.WriteLine("Get  DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  Error" + ex.Message.ToString());
             }
             return dataReader;
+        }
+        public int UpdateT01_request_Online(string lastStatus,string lgNo)
+        {
+            int ret=0;
+            Sql = " Update DB_CLAIM_ONLINE.dbo.TW01_Claim_Online set T01Last_Status = @lastStatus " //400
+                 + " where T01LG_No  = @T01lg_no ;";
+            connection = new SqlConnection(connectionString);
+            try {
+                connection.Open();
+                command = new SqlCommand(Sql,connection);
+                command.Parameters.AddWithValue("@lastStatus",lastStatus);
+                command.Parameters.AddWithValue("@T01lg_no", lgNo);
+
+                ret = command.ExecuteNonQuery();
+            }
+            catch( Exception ex )
+            {
+                Console.WriteLine( "...can not update TW01_Claim_Online...." );
+            }
+            return ret; 
         }
     }
 }

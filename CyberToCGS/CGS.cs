@@ -10,7 +10,7 @@ using CyberToCGS.FactoryPattern;
 using RestSharp.Serialization.Json;
 using CyberToCGS.SaveFormClaim;
 using System.Globalization;
-
+using CyberToCGS.Database;
 namespace CyberToCGS
 {
     public class CGS
@@ -173,7 +173,7 @@ namespace CyberToCGS
 
         }
        
-        public void SaveRequestClaimPGSPackage(string Token,string url)
+        public void SaveRequestClaimPGSPackage(string LGNo, string Token,string url)
         {
             string token = Token;
             var restClient = new RestSharp.RestClient(url);
@@ -186,10 +186,11 @@ namespace CyberToCGS
 
             //this lg not found 63092355
             //this lg found  63071729
-            string lgno = "63092355";// "63071729";  //not found in Claim online //"62036859"; //63060917
-
-
-            string json=null;
+            string lgno = LGNo; // "63092355";// "63071729";  //not found in Claim online //"62036859"; //63060917
+            Utils databaseUtil = new Utils();
+            Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG");
+            int a = db.UpdateT01_request_Online("400", "5858691");
+            string json= null;
             loadJson l = new loadJson();
             l.ReadAppConfig();
             if (l.isLoadTestFile())
@@ -219,13 +220,16 @@ namespace CyberToCGS
                restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
             
 
-            restRequest.RequestFormat = DataFormat.Json;
+           // restRequest.RequestFormat = DataFormat.Json;
 
             try
             {
                 IRestResponse restResponse = restClient.Execute(restRequest);
                 JObject obj = JObject.Parse(restResponse.Content);
-
+                // update log 
+                databaseUtil.log(lgno,"postclaim","S");
+                //update status
+               // db.UpdateT01_request_Online("400", lgno);
 
             }
             catch (Exception ex)

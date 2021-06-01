@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CyberToCGS.FactoryPattern;
-
+using CyberToCGS.Database;
+using System.Data.SqlClient;
 
 namespace CyberToCGS
 {
@@ -44,12 +45,16 @@ namespace CyberToCGS
             // var urlSME = "http://192.168.15.17:31380";
             var urlSME = "https://sme-bank.tcg.or.th";
             var urlTCG = "https://cgs.tcg.or.th";
+            var urlSBCG = "https://cgs.sbcg.or.th";
             // /requestservice/api/external/request
             //authentication-service/oauth/token
             loadJson l = new loadJson();
             var cgs = new CGS();
-          //  cgs.AuthenticationBasics(ref tokenTCG, urlTCG);
+            cgs.AuthenticationBasics(ref tokenTCG, urlTCG);
             cgs.AuthenticationBasics(ref tokenSME,urlSME);
+
+            Database.Database db= Database.Database.GetInstance("DB_ONLINE_CG");
+            SqlDataReader rec= db.GetT01_Request_online_lgNo();
 
             if (string.IsNullOrEmpty(tokenSME ))
             {
@@ -68,7 +73,9 @@ namespace CyberToCGS
                 if ( l.isUrlSME())
                 {
                     // cgs.IndirectPost(token, urlSME);
-                    cgs.SaveRequestClaimPGSPackage(tokenSME, urlSME);
+                   
+                    while (rec.Read())
+                        cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenSME, urlSME);
                 }
                 
             }
@@ -86,7 +93,8 @@ namespace CyberToCGS
                     //P300
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
-                    cgs.SaveRequestClaimPGSPackage(tokenTCG, urlTCG);
+                    while(rec.Read())
+                    cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenTCG, urlTCG);
                     // cgs.SaveRequestClaimPGSPackage(token, urlSME);
                 }
             }
