@@ -72,7 +72,7 @@ namespace CyberToCGS
                 l.ReadAppConfig();
                 if ( l.isUrlSME())
                 {
-                    // cgs.IndirectPost(token, urlSME);
+                     //cgs.IndirectPost(token, urlSME);
                    
                     while (rec.Read())
                         cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenSME, urlSME);

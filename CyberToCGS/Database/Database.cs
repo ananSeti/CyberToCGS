@@ -464,5 +464,27 @@ namespace CyberToCGS.Database
             }
             return ret; 
         }
+
+        public string GetBankId(string bankCode)
+        {
+            string ret = "";
+            Sql = "SELECT BANK_ID ,bank_code  FROM DB_CGSAPI_MASTER.dbo.TBL_MD_BANK "
+                   + " WHERE BANK_CODE = @bankcode ;";
+            connection = new SqlConnection(connectionString);
+            try {
+                connection.Open();
+                command = new SqlCommand(Sql, connection);
+                command.Parameters.AddWithValue("@bankcode", bankCode);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                 ret=   dataReader.GetValue(0).ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("... get bank id error... " + ex.Message.ToString());
+            }
+
+            return ret;
+        }
     }
 }

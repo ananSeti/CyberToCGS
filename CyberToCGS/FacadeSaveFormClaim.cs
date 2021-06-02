@@ -11,10 +11,10 @@ namespace CyberToCGS
   public  class FacadeSaveFormClaim
     {
         protected SaveFormClaimRoot saveFormClaim = new SaveFormClaimRoot();
-        SqlDataReader rec;
+       SqlDataReader rec;
        public string lgNo;
        public string bankId;
-       
+       public Database.Database db;
      public FacadeSaveFormClaim(string lgNo)
         {
             // loadJson l = new loadJson();
@@ -24,20 +24,24 @@ namespace CyberToCGS
             // toDate = l.GetFormatTodate();
             this.lgNo = lgNo;
 
-            Database.Database db = Database.Database.GetInstance("DB_CLAIM_ONLINE");
+             db = Database.Database.GetInstance("DB_CLAIM_ONLINE");
            
             rec = db.GetTw01_Claim_Online(lgNo); //62036859
+
         }
     public SaveFormClaimRoot Operation()
         {
             // List<ClaimCollateral> claimCollaterals = new List<ClaimCollateral>();
             char pad = '0';
             Utils utils = new Utils();
-            
 
-            while(rec.Read())
+            
+            while (rec.Read())
             {
-                this.bankId = rec["T01Bank_Code"].ToString().PadLeft(3, pad); //"4"; //rec["T01Bank_Code"].ToString();
+                //TODO Get BANK -ID FROM api 
+                db = Database.Database.GetInstance("DB_CGSAPI_MASTER");
+                
+                this.bankId = db.GetBankId(rec["T01Bank_Code"].ToString().PadLeft(3, pad));// rec["T01Bank_Code"].ToString().PadLeft(3, pad); //"4"; //rec["T01Bank_Code"].ToString();
                 saveFormClaim.lgId = 1;// getLG_ID LG for Convert.ToInt32(rec["T01LG_No"]);
                 saveFormClaim.requestClaim = string.IsNullOrEmpty(rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(rec["T01Claim_Amount"]);//10000;
 

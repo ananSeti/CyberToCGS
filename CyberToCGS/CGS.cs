@@ -142,13 +142,10 @@ namespace CyberToCGS
 
             loadJson l = new loadJson();
             string indirectRequest = l.ReadJson();
-
-
-           //  var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
+            //  var json = Newtonsoft.Json.JsonConvert.SerializeObject(indirectRequest);
            
              restRequest.AddParameter("application/json", indirectRequest, ParameterType.RequestBody);
           
-
             try
             {
                 IRestResponse restResponse = restClient.Execute(restRequest);
@@ -305,7 +302,7 @@ namespace CyberToCGS
             restRequest.AddParameter("page", param.page, ParameterType.GetOrPost);
             restRequest.AddParameter("perPage", param.perPage, ParameterType.GetOrPost);
             restRequest.AddParameter("documentTypeCode", param.documentTypeCode, ParameterType.GetOrPost);
-            restRequest.AddParameter("bakId", param.bankId, ParameterType.GetOrPost);
+            restRequest.AddParameter("bankId", param.bankId, ParameterType.GetOrPost);
             restRequest.AddParameter("lgNo", param.lgNo, ParameterType.GetOrPost);
 
             
