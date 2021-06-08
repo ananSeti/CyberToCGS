@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Odbc;
 
 namespace CyberToCGS.Database
 {
@@ -14,12 +15,20 @@ namespace CyberToCGS.Database
         string db_apiMaster = @"server = 192.168.0.83; database = DB_CGSAPI_MASTER; user = sa; password = ABC123abc$; ";
         string db_claim_online = @"server = 192.168.0.83; database = DB_CLAIM_ONLINE; user = sa; password = ABC123abc$; ";
         string localDb = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=testDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        string SIT1 = @"DSN=SIT1;uid=CGS;Pwd=tibero";
+       string PROD = @"DSN=PROD;uid=cgs;Pwd=tcg2019;";
+        //string PROD = @"Driver={Tibero 6 ODBC Driver};server=192.168.12.13;port=8629;uid=cgs;pwd=tibero2019;DB=tac;TYPE=ODBC";
         string connectionString = null;
 
         SqlConnection connection;
+        OdbcCommand odbcCommand;
+        OdbcConnection odbcConnection;
         SqlCommand command;
         SqlDataReader dataReader;
-     
+        OdbcDataReader odbcDataReader;
+
+       
+
         String Sql;
         public Database(string value) {
             if (value == "localDB")
@@ -38,6 +47,14 @@ namespace CyberToCGS.Database
             {
                 connectionString = db_claim_online;
             }
+            if(value == "SIT1")
+            {
+                connectionString = SIT1;
+            }
+            if(value == "PROD")
+            {
+                connectionString = PROD;
+            }
         }
 
 
@@ -46,20 +63,48 @@ namespace CyberToCGS.Database
         public string Value { get; set; }
         public static Database GetInstance(string value)
         {
-            if(_database == null)
+            if (_database == null)
             {
                 lock (_lock)
                 {
-                    if(_database == null)
+                    if (_database == null)
                     {
                         _database = new Database(value);
                         _database.Value = value;
 
                     }
                 }
-               
+
             }
-           
+            else
+            {
+                _database.Value = value;
+                if (value == "localDB")
+                {
+                    _database.connectionString = _database.localDb;
+                }
+                if (value == "DB_ONLINE_CG")
+                {
+                   _database.connectionString = _database.db_online;
+                }
+                if (value == "DB_CGSAPI_MASTER")
+                {
+                   _database.connectionString =_database. db_apiMaster;
+                }
+                if (value == "DB_CLAIM_ONLINE")
+                {
+                    _database.connectionString = _database.db_claim_online;
+                }
+                if (value == "SIT1")
+                {
+                    _database.connectionString = _database.SIT1;
+                }
+                if (value == "PROD")
+                {
+                    _database.connectionString = _database.PROD;
+                }
+            }
+            
             return _database;
         }
        public bool LogData(logData log)
@@ -443,6 +488,34 @@ namespace CyberToCGS.Database
                 Console.WriteLine("Get  DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  Error" + ex.Message.ToString());
             }
             return dataReader;
+        }
+        public OdbcDataReader GetLGInfo(string lgNo)
+        {
+            //dataReader.Close();
+            Sql = "SELECT a.lg_id,a.LG_NO , a.BANK_ID , b.product_id ,b.claim_pgs_model_id,b.max_claim_model_id ,c.product_name ,b.pay_condition_type  ,d.port_no "
+                + " FROM tbl_rd_lg a "
+                + " LEFT outer JOIN  TBL_AS_PRODUCT_CLAIM_PGS b ON a.PRODUCT_ID = b.product_id "
+                + " LEFT outer JOIN TBL_MD_PRODUCT  c ON a.PRODUCT_ID = c.product_id "
+                + " LEFT OUTER JOIN TBL_RD_PRODUCT_ROUND_INF d ON a.product_id = d.product_id "
+                + " WHERE a.lg_no =  '" + lgNo +"'"; //'5910612';"; //= @lgNo ;" ;  //5910612
+
+            // connection = new SqlConnection(connectionString);
+            odbcConnection = new OdbcConnection(connectionString);
+            try {
+               
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+               // odbcCommand.Parameters.Add("@lgNo",OdbcType.NVarChar);
+               //  odbcCommand.Parameters["@lgNo"].Value = lgNo;
+                //odbcCommand.Parameters.AddWithValue("@lgNo", lgNo);
+                odbcConnection.Open();
+                odbcDataReader = odbcCommand.ExecuteReader();
+             
+
+            }
+            catch (Exception ex) {
+                Console.WriteLine("Get SIT1 or Prod  error: "+ ex.Message.ToString());
+            }
+            return odbcDataReader;
         }
         public int UpdateT01_request_Online(string lastStatus,string lgNo)
         {

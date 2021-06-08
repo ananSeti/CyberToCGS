@@ -6,12 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using CyberToCGS.SaveFormClaim;
 using CyberToCGS.Database;
+using System.Globalization;
+using System.Data.Odbc;
+
 namespace CyberToCGS
 {
   public  class FacadeSaveFormClaim
     {
         protected SaveFormClaimRoot saveFormClaim = new SaveFormClaimRoot();
        SqlDataReader rec;
+        OdbcDataReader odbcRec;
        public string lgNo;
        public string bankId;
        public Database.Database db;
@@ -24,9 +28,12 @@ namespace CyberToCGS
             // toDate = l.GetFormatTodate();
             this.lgNo = lgNo;
 
-             db = Database.Database.GetInstance("DB_CLAIM_ONLINE");
-           
-            rec = db.GetTw01_Claim_Online(lgNo); //62036859
+            // db = Database.Database.GetInstance("DB_CLAIM_ONLINE");
+            //  rec = db.GetTw01_Claim_Online(lgNo); //62036859
+
+            //  db = Database.Database.GetInstance("SIT1");
+            db = Database.Database.GetInstance("PROD");
+            odbcRec = db.GetLGInfo(lgNo);
 
         }
     public SaveFormClaimRoot Operation()
@@ -36,15 +43,22 @@ namespace CyberToCGS
             Utils utils = new Utils();
 
             
-            while (rec.Read())
+            while (odbcRec.Read())
             {
                 //TODO Get BANK -ID FROM api 
-                db = Database.Database.GetInstance("DB_CGSAPI_MASTER");
-                
-                this.bankId = db.GetBankId(rec["T01Bank_Code"].ToString().PadLeft(3, pad));// rec["T01Bank_Code"].ToString().PadLeft(3, pad); //"4"; //rec["T01Bank_Code"].ToString();
-                saveFormClaim.lgId = 1;// getLG_ID LG for Convert.ToInt32(rec["T01LG_No"]);
-                saveFormClaim.requestClaim = string.IsNullOrEmpty(rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(rec["T01Claim_Amount"]);//10000;
+               // db = Database.Database.GetInstance("DB_CGSAPI_MASTER");
 
+                //this.bankId = "11";//db.GetBankId(rec["T01Bank_Code"].ToString().PadLeft(3, pad));// rec["T01Bank_Code"].ToString().PadLeft(3, pad); //"4"; //rec["T01Bank_Code"].ToString();
+                saveFormClaim.bankId = Convert.ToInt32(odbcRec["BANK_ID"].ToString()); //11;
+                saveFormClaim.lgId = Convert.ToInt32(odbcRec["LG_ID"].ToString()) ;//222910; // getLG_ID LG for Convert.ToInt32(rec["T01LG_No"]);
+                saveFormClaim.requestClaim =null ;//string.IsNullOrEmpty(rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(rec["T01Claim_Amount"]);//10000;
+                saveFormClaim.payConditionType = odbcRec["pay_condition_type"].ToString() ;// "B";
+                saveFormClaim.productId = Convert.ToInt32(odbcRec["PRODUCT_ID"]);
+                saveFormClaim.portNo = Convert.ToInt32(odbcRec["port_no"]);
+                saveFormClaim.refuseFlag = "N";
+                saveFormClaim.claimPgsModelId = Convert.ToInt32(odbcRec["claim_pgs_model_id"]);
+                saveFormClaim.maxClaimModelId =Convert.ToInt32(odbcRec["max_claim_model_id"]);
+             
                 ClaimCollateral cr = new ClaimCollateral();
                 cr.collateralId = 1; //  TODO add collateralId
                 cr.sueStatus = "Y";  // TODO add sue status
@@ -52,19 +66,19 @@ namespace CyberToCGS
                 saveFormClaim.claimCollaterals.Add(cr);
 
                 ClaimLoan cl = new ClaimLoan();
-                cl.loanId = 1;  //TODO loanId
+                cl.loanId = null;  //TODO loanId
                 cl.detailType = "1";
-                cl.sueDtAct =  utils.ConvertYear(rec["T01Accuse_Date"].ToString());  //TOTO suedate //วันฟ้อง
-                cl.courtName = "ศาลแพ่ง กทม.ใต้"; //TODO
-                cl.undecideCaseNo = "1/2563"; //TODO
-                cl.judgmentDt = DateTime.Now; //TODO judementDt
-                cl.escortDt = DateTime.Now;//TODO escortDT
-                cl.finalCaseDt = DateTime.Now;// TODO finalCaseDt
-                cl.auctionDt = DateTime.Now; //TODO auctionDt
-                cl.filingDtObgAmount = 100000; //TODO filingDtObgAmount
-                cl.requestDtObgAmount = 100000; //TODO requestDtObgAmount
-                cl.defaultDt = DateTime.Now;//TODO defaultDt
-                cl.loanPage = 1;//TODO loanPage
+                cl.sueDtAct = null;// utils.ConvertYear(rec["T01Accuse_Date"].ToString());  //TOTO suedate //วันฟ้อง
+                cl.courtName = "";//"ศาลแพ่ง กทม.ใต้"; //TODO
+                cl.undecideCaseNo = null;//"1/2563"; //TODO เลขที่คดีดำ
+                cl.judgmentDt = null;//DateTime.Now; //TODO judementDt วันที่พิพากษา
+                cl.escortDt = null;// DateTime.Now;//TODO escortDT //วันที่พิทักษ์ทรัพย์
+                cl.finalCaseDt = null;//DateTime.Now;// TODO finalCaseDt //วันที่คดีถึงที่สุด
+                cl.auctionDt = null;//DateTime.Now; //TODO auctionDt  //วันที่ขายทอดตลาด
+                cl.filingDtObgAmount = 1217477.377; //TODO filingDtObgAmount ภาระหนี้ ณ วันฟ้อง
+                cl.requestDtObgAmount = 0; //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
+                cl.defaultDt =  DateTime.ParseExact( "2020-11-20","yyyy-mm-dd",CultureInfo.InvariantCulture );//DateTime.Now;//TODO defaultDt วันที่ผิดนัด / ชำระหนี้ครั้งสุดท้าย
+                cl.loanPage = null;//1;//TODO loanPage
                 saveFormClaim.claimLoans.Add(cl);
 
             }

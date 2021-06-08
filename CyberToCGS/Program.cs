@@ -46,11 +46,12 @@ namespace CyberToCGS
             var urlSME = "https://sme-bank.tcg.or.th";
             var urlTCG = "https://cgs.tcg.or.th";
             var urlSBCG = "https://cgs.sbcg.or.th";
+            var localSME = "http://localhost:8080";
             // /requestservice/api/external/request
             //authentication-service/oauth/token
             loadJson l = new loadJson();
             var cgs = new CGS();
-            cgs.AuthenticationBasics(ref tokenTCG, urlTCG);
+          // cgs.AuthenticationBasics(ref tokenTCG, urlTCG);
             cgs.AuthenticationBasics(ref tokenSME,urlSME);
 
             Database.Database db= Database.Database.GetInstance("DB_ONLINE_CG");
@@ -72,10 +73,18 @@ namespace CyberToCGS
                 l.ReadAppConfig();
                 if ( l.isUrlSME())
                 {
-                     //cgs.IndirectPost(token, urlSME);
-                   
+                    //cgs.IndirectPost(token, urlSME);
+
                     while (rec.Read())
-                        cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenSME, urlSME);
+                    {
+                        //localSME
+                        //LG test :222910
+                         // cgs.SaveRequestClaimPGSPackage("222910", tokenSME, localSME);
+                         cgs.SaveRequestClaimPGSPackage("222910", tokenSME, urlSME);
+                        //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, localSME);
+                        //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, urlSME);
+                        // cgs.SaveRequestClaimPGSPackage("222910", tokenSME, urlSME);
+                    }
                 }
                 
             }

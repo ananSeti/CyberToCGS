@@ -45,8 +45,10 @@ namespace CyberToCGS
         private string serviceReq = "/bank/authentication-service/oauth/token";
         private string serviceIndirecPost = "/bank/request-service/api/external/request";
         private string serviceSaveFormClaim = "/bank/guarantee-service/api/external/saveFormClaim";
+        private string serviceSaveFormClaimLocal = "/guarantee-service/api/external/saveFormClaim";
         private string serviceGetAdjustGuaLonnByLgId = "/bank/guarantee-post-service/api/external/adjust-gua-loan-by-lg-id";
         private string serviceGetLgInfo = "/bank/guarantee-post-service/api/guarantee-post";
+        private string serviceGetLgInfoLocal = "/guarantee-post-service/api/guarantee-post";
 
         public void AuthenticationBasics(ref string token,string url)
         {
@@ -176,8 +178,10 @@ namespace CyberToCGS
             var restClient = new RestSharp.RestClient(url);
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
-            RestRequest restRequest = new RestRequest(serviceSaveFormClaim, Method.POST);
-            restRequest.RequestFormat = DataFormat.Json;
+           // RestRequest restRequest = new RestRequest(serviceSaveFormClaim, Method.POST);
+            //serviceSaveFormClaimLocal
+            RestRequest restRequest = new RestRequest(serviceSaveFormClaim, Method.POST);  //serviceSaveFormClaim
+            //restRequest.RequestFormat = DataFormat.Json;
             restRequest.AddHeader("Content-Type", "application/json");
             restRequest.AddHeader("Authorization", "Bearer" + token);
 
@@ -186,7 +190,7 @@ namespace CyberToCGS
             string lgno = LGNo; // "63092355";// "63071729";  //not found in Claim online //"62036859"; //63060917
             Utils databaseUtil = new Utils();
             Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG");
-            int a = db.UpdateT01_request_Online("400", "5858691");
+           // int a = db.UpdateT01_request_Online("400", "5858691");
             string json= null;
             loadJson l = new loadJson();
             l.ReadAppConfig();
@@ -202,6 +206,7 @@ namespace CyberToCGS
                 FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno);
                 sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
                 bool found;
+               
                 SaveFormClaim.Content lgInfo = GetLgByBank(facade.bankId, facade.lgNo, token, url, out found);
                 //update lgID get from CGS 
                 if (found)
@@ -212,17 +217,21 @@ namespace CyberToCGS
 
                 json = Newtonsoft.Json.JsonConvert.SerializeObject(sCR);
             }
-
-                      
+                               
                restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
             
-
            // restRequest.RequestFormat = DataFormat.Json;
-
-            try
+          try
             {
                 IRestResponse restResponse = restClient.Execute(restRequest);
                 JObject obj = JObject.Parse(restResponse.Content);
+                //if (obj["error"].ToString() == "server_error")
+                //{
+
+                //    Console.WriteLine("****** Error Save Claim ******" + obj["error_description"].ToString());
+                //    throw new Exception(obj["error"].ToString());
+                //}
+
                 // update log 
                 databaseUtil.log(lgno,"postclaim","S");
                 //update status
@@ -287,10 +296,13 @@ namespace CyberToCGS
             found = false;
             SaveFormClaim.Content lgInfo = new Content();
             string token = Token;
-            var restClient = new RestSharp.RestClient(url);
+            // var restClient = new RestSharp.RestClient(url);
+            //local
+            //var restClient =new RestSharp.RestClient( "http://localhost:8083");
+            var restClient = new RestSharp.RestClient("https://sme-bank.tcg.or.th");
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
-            RestRequest restRequest = new RestRequest(serviceGetLgInfo, Method.GET);
+            RestRequest restRequest = new RestRequest(serviceGetLgInfo, Method.GET); //serviceGetLgInfoLocal  // serviceGetLgInfo
             restRequest.RequestFormat = DataFormat.Json;
             restRequest.AddHeader("Content-Type", "application/json");
             restRequest.AddHeader("Authorization", "Bearer" + token);
@@ -309,6 +321,20 @@ namespace CyberToCGS
             try
             {
                 IRestResponse restResponse = restClient.Execute(restRequest);
+                if (restResponse.StatusCode.ToString() != "OK")
+                {
+                    JObject obj = JObject.Parse(restResponse.Content);
+
+                    if (obj["error"].ToString() == "server_error")
+                    {
+
+                        Console.WriteLine("  GetLgByBank " + obj["error_description"].ToString());
+                        throw new Exception(obj["error"].ToString());
+                    }
+
+                }
+
+
                 LGClaimInfo lgCliaminfo = Newtonsoft.Json.JsonConvert.DeserializeObject<LGClaimInfo>(restResponse.Content);
                 if (lgCliaminfo != null)
                 {
