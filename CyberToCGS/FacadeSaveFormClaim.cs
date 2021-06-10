@@ -32,6 +32,7 @@ namespace CyberToCGS
             //  rec = db.GetTw01_Claim_Online(lgNo); //62036859
 
             //  db = Database.Database.GetInstance("SIT1");
+            //db = Database.Database.GetInstance("PROD");
             db = Database.Database.GetInstance("PROD");
             odbcRec = db.GetLGInfo(lgNo);
 
@@ -58,7 +59,17 @@ namespace CyberToCGS
                 saveFormClaim.refuseFlag = "N";
                 saveFormClaim.claimPgsModelId = Convert.ToInt32(odbcRec["claim_pgs_model_id"]);
                 saveFormClaim.maxClaimModelId =Convert.ToInt32(odbcRec["max_claim_model_id"]);
-             
+                saveFormClaim.productGroupId = Convert.ToInt32(odbcRec["product_group_id"]);
+
+                //get AVG_YEAR
+                db = Database.Database.GetInstance("PROD");
+                saveFormClaim.maxClaimBal= db.GetmaxClaimBal(saveFormClaim.productId, saveFormClaim.bankId, saveFormClaim.productGroupId);
+                saveFormClaim.avgYear = db.GetavgYear(saveFormClaim.productId, saveFormClaim.portNo, saveFormClaim.bankId);
+                saveFormClaim.maxClaim = db.GetMaxClaim(saveFormClaim.productId, saveFormClaim.bankId, saveFormClaim.productGroupId);
+                saveFormClaim.adjustClaimAmtAccum = db.GetAdjustClaimAmtAccum(saveFormClaim.productId,saveFormClaim.bankId,saveFormClaim.productGroupId);
+                saveFormClaim.filingdtobgAmountAccumul = db.GetfilingdtobgAmountAccumul(saveFormClaim.productId, saveFormClaim.bankId, saveFormClaim.productGroupId);
+                saveFormClaim.claimAmtAccum = db.GetClaimAmtAccum(saveFormClaim.productId, saveFormClaim.bankId, saveFormClaim.productGroupId);
+                saveFormClaim.previousNpgAccumul = db.GetPreviousNpgAccumul(saveFormClaim.productId,saveFormClaim.bankId,saveFormClaim.productGroupId);
                 ClaimCollateral cr = new ClaimCollateral();
                 cr.collateralId = 1; //  TODO add collateralId
                 cr.sueStatus = "Y";  // TODO add sue status
@@ -79,6 +90,8 @@ namespace CyberToCGS
                 cl.requestDtObgAmount = 0; //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
                 cl.defaultDt =  DateTime.ParseExact( "2020-11-20","yyyy-mm-dd",CultureInfo.InvariantCulture );//DateTime.Now;//TODO defaultDt วันที่ผิดนัด / ชำระหนี้ครั้งสุดท้าย
                 cl.loanPage = null;//1;//TODO loanPage
+
+
                 saveFormClaim.claimLoans.Add(cl);
 
             }

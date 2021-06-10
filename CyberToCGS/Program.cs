@@ -79,8 +79,8 @@ namespace CyberToCGS
                     {
                         //localSME
                         //LG test :222910
-                         // cgs.SaveRequestClaimPGSPackage("222910", tokenSME, localSME);
-                         cgs.SaveRequestClaimPGSPackage("222910", tokenSME, urlSME);
+                        // cgs.SaveRequestClaimPGSPackage("5910612 ", tokenSME, localSME);
+                        cgs.SaveRequestClaimPGSPackage("5910612", tokenSME, urlSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, localSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, urlSME);
                         // cgs.SaveRequestClaimPGSPackage("222910", tokenSME, urlSME);

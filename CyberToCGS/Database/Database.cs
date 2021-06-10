@@ -492,22 +492,23 @@ namespace CyberToCGS.Database
         public OdbcDataReader GetLGInfo(string lgNo)
         {
             //dataReader.Close();
-            Sql = "SELECT a.lg_id,a.LG_NO , a.BANK_ID , b.product_id ,b.claim_pgs_model_id,b.max_claim_model_id ,c.product_name ,b.pay_condition_type  ,d.port_no "
+            Sql = "SELECT a.lg_id,a.LG_NO , a.BANK_ID , b.product_id ,b.claim_pgs_model_id,b.max_claim_model_id, " 
+                + " c.product_group_id,c.product_name ,b.pay_condition_type  ,d.port_no "
                 + " FROM tbl_rd_lg a "
                 + " LEFT outer JOIN  TBL_AS_PRODUCT_CLAIM_PGS b ON a.PRODUCT_ID = b.product_id "
                 + " LEFT outer JOIN TBL_MD_PRODUCT  c ON a.PRODUCT_ID = c.product_id "
                 + " LEFT OUTER JOIN TBL_RD_PRODUCT_ROUND_INF d ON a.product_id = d.product_id "
-                + " WHERE a.lg_no =  '" + lgNo +"'"; //'5910612';"; //= @lgNo ;" ;  //5910612
+                + " WHERE a.lg_no = ? ;";//'" + lgNo +"'"; //'5910612';"; //= @lgNo ;" ;  //5910612
 
             // connection = new SqlConnection(connectionString);
             odbcConnection = new OdbcConnection(connectionString);
             try {
-               
-                odbcCommand = new OdbcCommand(Sql, odbcConnection);
-               // odbcCommand.Parameters.Add("@lgNo",OdbcType.NVarChar);
-               //  odbcCommand.Parameters["@lgNo"].Value = lgNo;
-                //odbcCommand.Parameters.AddWithValue("@lgNo", lgNo);
                 odbcConnection.Open();
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                // odbcCommand.Parameters.Add("@lgNo",OdbcType.NVarChar);
+                // odbcCommand.Parameters["@lgNo"].Value = lgNo;
+                // odbcCommand.Parameters.AddWithValue("@lgno", lgNo);
+                 odbcCommand.Parameters.Add("@lg_no", OdbcType.NVarChar).Value =lgNo;
                 odbcDataReader = odbcCommand.ExecuteReader();
              
 
@@ -516,6 +517,220 @@ namespace CyberToCGS.Database
                 Console.WriteLine("Get SIT1 or Prod  error: "+ ex.Message.ToString());
             }
             return odbcDataReader;
+        }
+        public double GetmaxClaimBal(int productid,int bankid,int productGroupid)
+        {
+            double maxClaimBal=0;
+            //ให้ใช้ตัวแรก 
+            Sql = " SELECT MAX_CLAIM_BAL FROM TBL_RD_CLAIM_ACCUM "
+                  + " WHERE PRODUCT_ID = ? "
+                  + " AND BANK_ID = ?"
+                  + " AND PRODUCT_GROUP_ID = ? "
+                  + " ORDER BY ACCUM_ORDER DESC;";
+            odbcConnection = new OdbcConnection(connectionString);
+            try {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@prodcutid",productid);
+                odbcCommand.Parameters.AddWithValue("@bankid",bankid);
+                odbcCommand.Parameters.AddWithValue("@productGroupid",productGroupid);
+
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows)
+                {
+                   odbcDataReader.Read();
+                    maxClaimBal= Convert.ToDouble(odbcDataReader["MAX_CLAIM_BAL"]);
+                }
+
+            }
+            catch (Exception ex) {
+                Console.WriteLine(" Get SIT1 or Prod Max ClaimBal error: " + ex.Message.ToLower());
+            }
+            return maxClaimBal;
+        }
+        public int GetavgYear(int productid,int prodno,int bankid) {
+
+            int avgYear = 0;
+            Sql = " SELECT AVG_YEAR FROM TBL_MD_AVG_OUT_CNF WHERE PRODUCT_ID = ?"
+                + " AND PORT_NO = ? AND BANK_ID = ? AND STATUS = 'A'";
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@prodcutid", productid);
+                odbcCommand.Parameters.AddWithValue("@portNo", prodno);
+                odbcCommand.Parameters.AddWithValue("@bankid", bankid);
+                
+
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows) {
+                    odbcDataReader.Read();
+                    avgYear = Convert.ToInt32(odbcDataReader["AVG_YEAR"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Get everage year SIT1 or Prod error: " + ex.Message.ToLower());
+            }
+            return avgYear;
+
+        }
+        public double GetMaxClaim(int productid,int bankid,int productGroupid) {
+            //ให้ใช้ตัวแรก 
+            double maxClaim =0;
+            Sql = " SELECT MAX_CLAIM FROM TBL_RD_CLAIM_ACCUM "
+                + " WHERE PRODUCT_ID =? "
+                + " AND BANK_ID = ? "
+                + " AND PRODUCT_GROUP_ID = ? "
+                + " ORDER BY ACCUM_ORDER DESC ";
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@prodcutid", productid);
+                odbcCommand.Parameters.AddWithValue("@bankid", bankid);
+                odbcCommand.Parameters.AddWithValue("@productGroupid", productGroupid);
+
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows) {
+                    odbcDataReader.Read();
+                    maxClaim = Convert.ToDouble(odbcDataReader["MAX_CLAIM"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Get everage year SIT1 or Prod  Get Max Claim error: " + ex.Message.ToLower());
+            }
+            return maxClaim;
+        }
+        public double GetAdjustClaimAmtAccum(int productid,int bankid,int productGroupid) {
+            //ให้ใช้ตัวแรก 
+            double adjClaimAccum = 0;
+            Sql = " SELECT ADJUST_CLAIM_AMT_ACCUM FROM TBL_RD_CLAIM_ACCUM "
+                 +" WHERE PRODUCT_ID = ? "
+                 +" AND BANK_ID =? "
+                 +" AND PRODUCT_GROUP_ID =? "
+                 +" ORDER BY ACCUM_ORDER DESC; ";
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@prodcutid", productid);
+                odbcCommand.Parameters.AddWithValue("@bankid", bankid);
+                odbcCommand.Parameters.AddWithValue("@productGroupid", productGroupid);
+                
+
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows)
+                {
+                    odbcDataReader.Read();
+                    adjClaimAccum = Convert.ToDouble(odbcDataReader["ADJUST_CLAIM_AMT_ACCUM"]);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Get everage year SIT1 or Prod error: " + ex.Message.ToLower());
+            }
+            return adjClaimAccum;
+        }
+        public double GetfilingdtobgAmountAccumul(int productid,int bankid,int productGroupid) {
+            double obgAmountAccummul = 0;
+            //ให้ใช้ตัวแรก 
+            Sql = " SELECT FILINGDTOBG_AMOUNT_ACCUMUL FROM TBL_RD_CLAIM_ACCUM "
+              + " WHERE PRODUCT_ID = ? "
+              + " AND BANK_ID = ? "
+              + " AND PRODUCT_GROUP_ID = ? "
+              + " ORDER BY ACCUM_ORDER DESC; ";    //'5910612';"; //= @lgNo ;" ;  //5910612
+
+            // connection = new SqlConnection(connectionString);
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcCommand.Parameters.AddWithValue("@productid",productid);
+                odbcCommand.Parameters.AddWithValue("@bankid",bankid);
+                odbcCommand.Parameters.AddWithValue("@productGroupid", productGroupid);
+                odbcConnection.Open();
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows) {
+                    odbcDataReader.Read();
+                    obgAmountAccummul = string.IsNullOrEmpty(odbcDataReader["FILINGDTOBG_AMOUNT_ACCUMUL"].ToString())? 0 : Convert.ToDouble(odbcDataReader["FILINGDTOBG_AMOUNT_ACCUMUL"]);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Get FILINGDTOBG_AMOUNT_ACCUMUL  error: " + ex.Message.ToString());
+            }
+            return obgAmountAccummul;
+        }
+        public double GetClaimAmtAccum(int productid,int bankid,int productGroupid) {
+
+            //ให้ใช้ตัวแรก 
+            double claimAmtAccum = 0;
+            Sql =  " SELECT CLAIM_AMT_ACCUM FROM TBL_RD_CLAIM_ACCUM "
+                 + " WHERE PRODUCT_ID = ? "
+                 + " AND BANK_ID = ? "
+                 + " AND PRODUCT_GROUP_ID = ? "
+                 + " ORDER BY ACCUM_ORDER DESC; ";
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@prodcutid", productid);
+                odbcCommand.Parameters.AddWithValue("@bankid", bankid);
+                odbcCommand.Parameters.AddWithValue("@productGroupid", productGroupid);
+
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows) {
+                    odbcDataReader.Read();
+                    claimAmtAccum = Convert.ToDouble(odbcDataReader["CLAIM_AMT_ACCUM"]);
+                }
+                return claimAmtAccum;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Get SIT1 or Prod  claimAmtAccum error: " + ex.Message.ToLower());
+            }
+            return claimAmtAccum;
+        }
+
+        public double   GetPreviousNpgAccumul(int productid,int bankid ,int productGroupid) {
+
+            //ห้ใช้ตัวแรก
+            double previousNpgAccumul = 0;
+            Sql = " SELECT NPG FROM TBL_RD_CLAIM_ACCUM "
+                + " WHERE PRODUCT_ID = ? "
+                + " AND BANK_ID = ? "
+                + " AND PRODUCT_GROUP_ID = ? "
+                + " ORDER BY ACCUM_ORDER DESC; ";
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@prodcutid", productid);
+                odbcCommand.Parameters.AddWithValue("@bankid", bankid);
+                odbcCommand.Parameters.AddWithValue("@productGroupid", productGroupid);
+
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows) {
+                    odbcDataReader.Read();
+                    previousNpgAccumul = Convert.ToDouble(odbcDataReader["NPG"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Get everage year SIT1 or Prod previousNpgAccumul error: " + ex.Message.ToLower());
+            }
+            return previousNpgAccumul;
         }
         public int UpdateT01_request_Online(string lastStatus,string lgNo)
         {

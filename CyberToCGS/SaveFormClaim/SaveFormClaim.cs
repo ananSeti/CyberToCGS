@@ -40,13 +40,17 @@ namespace CyberToCGS.SaveFormClaim
         public int claimPgsModelId { get; set; }
         public int maxClaimModelId { get; set; }
         public int productId { get; set; }
+        public int productGroupId { get; set; }
         public int portNo { get; set; }
         public int bankId { get; set; }
+        public double maxClaimBal { get; set; }
         public int avgYear { get; set; }
         public double maxClaim { get; set; }
+      
         public double adjustClaimAmtAccum {get;set;}
-        public int filingdtobgAmountAccumul { get; set; }
-        public int claimAmtAccum { get; set; }
+        public double filingdtobgAmountAccumul { get; set; }
+        public double claimAmtAccum { get; set; }
+        public double previousNpgAccumul { get; set; }
         public string loanContact { get; set; }
         public string refuseFlag { get; set; }
         public List<ClaimCollateral> claimCollaterals { get; set; }
