@@ -26,10 +26,11 @@ namespace CyberToCGS.SaveFormClaim
         public DateTime? escortDt { get; set; }
         public DateTime? finalCaseDt { get; set; }
         public DateTime? auctionDt { get; set; }
-        public double filingDtObgAmount { get; set; }
+        public double? filingDtObgAmount { get; set; }
         public double requestDtObgAmount { get; set; }
-        public DateTime defaultDt { get; set; }
+        public DateTime? defaultDt { get; set; }
         public int? loanPage { get; set; }
+        public double? loanObgAmount { get; set; }
     }
 
     public class SaveFormClaimRoot
@@ -37,8 +38,8 @@ namespace CyberToCGS.SaveFormClaim
         public int lgId { get; set; }
         public int? requestClaim { get; set; }
         public string payConditionType { get; set; }
-        public int claimPgsModelId { get; set; }
-        public int maxClaimModelId { get; set; }
+        public int? claimPgsModelId { get; set; }
+        public int? maxClaimModelId { get; set; }
         public int productId { get; set; }
         public int productGroupId { get; set; }
         public int portNo { get; set; }

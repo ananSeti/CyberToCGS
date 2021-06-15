@@ -109,7 +109,7 @@ namespace CyberToCGS.Database
         }
        public bool LogData(logData log)
         {
-            Sql = "insert into [dbo].[claimLog](LgNo,logDate,Method,Status) values(@lgNo,@logDate,@method,@Status)";
+            Sql = "insert into [dbo].[claimLog](LgNo,logDate,Method,Status,JsonPost) values(@lgNo,@logDate,@method,@Status,@JsonPost)";
             connection = new SqlConnection(connectionString);
             try
             {
@@ -120,6 +120,7 @@ namespace CyberToCGS.Database
                 command.Parameters.AddWithValue("@logDate", log.logDate);
                 command.Parameters.AddWithValue("@method", log.method);
                 command.Parameters.AddWithValue("@Status",log.status);
+                command.Parameters.AddWithValue("@JsonPost",log.JsonPost);
 
 
                 
@@ -492,13 +493,13 @@ namespace CyberToCGS.Database
         public OdbcDataReader GetLGInfo(string lgNo)
         {
             //dataReader.Close();
-            Sql = "SELECT a.lg_id,a.LG_NO , a.BANK_ID , b.product_id ,b.claim_pgs_model_id,b.max_claim_model_id, " 
+            Sql = "SELECT a.lg_id,a.LG_NO , a.BANK_ID ,a.PRODUCT_ID AS p, b.product_id ,b.claim_pgs_model_id,b.max_claim_model_id, "
                 + " c.product_group_id,c.product_name ,b.pay_condition_type  ,d.port_no "
                 + " FROM tbl_rd_lg a "
                 + " LEFT outer JOIN  TBL_AS_PRODUCT_CLAIM_PGS b ON a.PRODUCT_ID = b.product_id "
                 + " LEFT outer JOIN TBL_MD_PRODUCT  c ON a.PRODUCT_ID = c.product_id "
                 + " LEFT OUTER JOIN TBL_RD_PRODUCT_ROUND_INF d ON a.product_id = d.product_id "
-                + " WHERE a.lg_no = ? ;";//'" + lgNo +"'"; //'5910612';"; //= @lgNo ;" ;  //5910612
+                + " WHERE a.status='A' AND  a.lg_no = ? ;";//'" + lgNo +"'"; //'5910612';"; //= @lgNo ;" ;  //5910612
 
             // connection = new SqlConnection(connectionString);
             odbcConnection = new OdbcConnection(connectionString);
@@ -514,7 +515,34 @@ namespace CyberToCGS.Database
 
             }
             catch (Exception ex) {
-                Console.WriteLine("Get SIT1 or Prod  error: "+ ex.Message.ToString());
+                Console.WriteLine("Get SIT1 or Prod  PGS error: "+ ex.Message.ToString());
+            }
+            return odbcDataReader;
+        }
+        public OdbcDataReader GetLginfoPackage(string lgNo)
+        {
+            Sql = " SELECT a.lg_id,a.LG_NO , a.BANK_ID , a.product_id ,b.* "
+                 +" FROM tbl_rd_lg a "
+                 +" LEFT  JOIN TBL_AS_PRODUCT_CLAIM_PACKAGE b ON a.PRODUCT_ID = b.product_id "
+                 +" WHERE b.PRODUCT_CLAIM_PACKAGE_ID is not NULL "
+                 +" AND a.LG_NO = ?"
+                + " ORDER BY PRODUCT_CLAIM_PACKAGE_ID DESC; "; //'60034524'
+
+
+            // connection = new SqlConnection(connectionString);
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcConnection.Open();
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcCommand.Parameters.Add("@lg_no", OdbcType.NVarChar).Value = lgNo;
+                odbcDataReader = odbcCommand.ExecuteReader();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Get SIT1 or Prod  PGS error: " + ex.Message.ToString());
             }
             return odbcDataReader;
         }
@@ -547,6 +575,28 @@ namespace CyberToCGS.Database
                 Console.WriteLine(" Get SIT1 or Prod Max ClaimBal error: " + ex.Message.ToLower());
             }
             return maxClaimBal;
+        }
+        public OdbcDataReader GetCourtDateInfo(int lg_id)
+        {
+            Sql = "  SELECT lg_id ,LG_LOAN_ID, SUE_DATE, UNDECIDE_CASE_NO, DECIDE_CASE_NO, "
+                + " JUDGMENT_DT, ESCORT_DT, FINAL_CASE_DT, AUCTION_SALE_DT "
+                + " FROM CGS.TBL_RD_LG_LOAN WHERE lg_id =? ";
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@lg_id", lg_id);
+                
+                odbcDataReader = odbcCommand.ExecuteReader();
+                
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Get SIT1 or Prod Max Court date info error: " + ex.Message.ToString());
+            }
+            return odbcDataReader;
         }
         public int GetavgYear(int productid,int prodno,int bankid) {
 
@@ -596,7 +646,7 @@ namespace CyberToCGS.Database
                 odbcDataReader = odbcCommand.ExecuteReader();
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
-                    maxClaim = Convert.ToDouble(odbcDataReader["MAX_CLAIM"]);
+                    maxClaim = string.IsNullOrEmpty(odbcDataReader["MAX_CLAIM"].ToString())? 0: Convert.ToDouble(odbcDataReader["MAX_CLAIM"]);
                 }
             }
             catch (Exception ex)
@@ -627,7 +677,7 @@ namespace CyberToCGS.Database
                 if (odbcDataReader.HasRows)
                 {
                     odbcDataReader.Read();
-                    adjClaimAccum = Convert.ToDouble(odbcDataReader["ADJUST_CLAIM_AMT_ACCUM"]);
+                    adjClaimAccum =  string.IsNullOrEmpty(odbcDataReader["ADJUST_CLAIM_AMT_ACCUM"].ToString())?0 : Convert.ToDouble(odbcDataReader["ADJUST_CLAIM_AMT_ACCUM"]);
                 }
 
             }
@@ -691,7 +741,7 @@ namespace CyberToCGS.Database
                 odbcDataReader = odbcCommand.ExecuteReader();
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
-                    claimAmtAccum = Convert.ToDouble(odbcDataReader["CLAIM_AMT_ACCUM"]);
+                    claimAmtAccum = string.IsNullOrEmpty(odbcDataReader["CLAIM_AMT_ACCUM"].ToString())? 0 : Convert.ToDouble(odbcDataReader["CLAIM_AMT_ACCUM"]);
                 }
                 return claimAmtAccum;
             }
@@ -723,7 +773,7 @@ namespace CyberToCGS.Database
                 odbcDataReader = odbcCommand.ExecuteReader();
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
-                    previousNpgAccumul = Convert.ToDouble(odbcDataReader["NPG"]);
+                    previousNpgAccumul = string.IsNullOrEmpty(odbcDataReader["NPG"].ToString())? 0 : Convert.ToDouble(odbcDataReader["NPG"]);
                 }
             }
             catch (Exception ex)
@@ -731,6 +781,33 @@ namespace CyberToCGS.Database
                 Console.WriteLine(" Get everage year SIT1 or Prod previousNpgAccumul error: " + ex.Message.ToLower());
             }
             return previousNpgAccumul;
+        }
+        public double? GetLoanObgAmount(int lgId ) {
+            double loanObgAmount = 0;
+            Sql = "SELECT G.LOAN_OBG_AMOUNT FROM TBL_RD_LG_LOAN  L "
+                + " INNER JOIN TBL_RD_LG_GUA_OBG G ON L.LG_LOAN_ID = G.LG_LOAN_ID "
+                + " WHERE G.LG_ID =?; ";
+            odbcConnection = new OdbcConnection(connectionString);
+            try
+            {
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcConnection.Open();
+                odbcCommand.Parameters.AddWithValue("@lgId", lgId);
+                //odbcCommand.Parameters.AddWithValue("@bankid", bankid);
+                //odbcCommand.Parameters.AddWithValue("@productGroupid", productGroupid);
+
+                odbcDataReader = odbcCommand.ExecuteReader();
+                if (odbcDataReader.HasRows)
+                {
+                    odbcDataReader.Read();
+                    loanObgAmount =  string.IsNullOrEmpty(odbcDataReader["LOAN_OBG_AMOUNT"].ToString())? 0: Convert.ToDouble(odbcDataReader["LOAN_OBG_AMOUNT"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" Get everage year SIT1 or Prod loanObgAmount error: " + ex.Message.ToLower());
+            }
+            return loanObgAmount;
         }
         public int UpdateT01_request_Online(string lastStatus,string lgNo)
         {
@@ -773,6 +850,30 @@ namespace CyberToCGS.Database
             }
 
             return ret;
+        }
+        public int GetProductGroup(int product_id) {
+            int ret = 0;
+            Sql = " SELECT product_group_id,prod_grp_name "
+                + " FROM tbl_md_product_group "
+                + " WHERE status = 'A'  and product_group_id =? ";
+
+            odbcConnection = new  OdbcConnection(connectionString);
+            try
+            {
+                odbcConnection.Open();
+                odbcCommand = new OdbcCommand(Sql, odbcConnection);
+                odbcCommand.Parameters.AddWithValue("@product_group_id", product_id);
+                odbcDataReader = odbcCommand.ExecuteReader();
+                while (odbcDataReader.Read())
+                    ret = Convert.ToInt32(odbcDataReader.GetValue(0));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("... get GetProductGroup  error... " + ex.Message.ToString());
+            }
+
+            return ret;
+
         }
     }
 }

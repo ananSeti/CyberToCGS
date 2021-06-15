@@ -83,9 +83,15 @@ namespace CyberToCGS
                 }
             }
         }
+
+        internal void TEST(CGS cgs, List<string> testLg, string v1, string v2)
+        {
+            throw new NotImplementedException();
+        }
+
         /*
-         * เซอร์วิสสำหรับบันทึกคำขอแบบ Indirect
-         */
+* เซอร์วิสสำหรับบันทึกคำขอแบบ Indirect
+*/
         public void IndirectPost(string Token,string url)
         {
             string token = Token;
@@ -175,13 +181,13 @@ namespace CyberToCGS
         public void SaveRequestClaimPGSPackage(string LGNo, string Token,string url)
         {
             string token = Token;
+            string dbInstance = "PROD";
             var restClient = new RestSharp.RestClient(url);
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
            // RestRequest restRequest = new RestRequest(serviceSaveFormClaim, Method.POST);
             //serviceSaveFormClaimLocal
             RestRequest restRequest = new RestRequest(serviceSaveFormClaim, Method.POST);  //serviceSaveFormClaim
-            //restRequest.RequestFormat = DataFormat.Json;
             restRequest.AddHeader("Content-Type", "application/json");
             restRequest.AddHeader("Authorization", "Bearer" + token);
 
@@ -203,7 +209,7 @@ namespace CyberToCGS
             else
             {
                 SaveFormClaimRoot sCR = new SaveFormClaimRoot();
-                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno);
+                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance);
                 sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
                 bool found;
                
@@ -219,9 +225,8 @@ namespace CyberToCGS
             }
                                
                restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
-            
-           // restRequest.RequestFormat = DataFormat.Json;
-          try
+               databaseUtil.log(lgno, "postclaim", "J", json);
+            try
             {
                 IRestResponse restResponse = restClient.Execute(restRequest);
                 JObject obj = JObject.Parse(restResponse.Content);
@@ -233,9 +238,9 @@ namespace CyberToCGS
                 //}
 
                 // update log 
-                databaseUtil.log(lgno,"postclaim","S");
+                databaseUtil.log(lgno,"postclaim","R",restResponse.Content);
                 //update status
-               // db.UpdateT01_request_Online("400", lgno);
+                 //db.UpdateT01_request_Online("400", lgno);
 
             }
             catch (Exception ex)
@@ -296,10 +301,10 @@ namespace CyberToCGS
             found = false;
             SaveFormClaim.Content lgInfo = new Content();
             string token = Token;
-            // var restClient = new RestSharp.RestClient(url);
+             var restClient = new RestSharp.RestClient(url);
             //local
             //var restClient =new RestSharp.RestClient( "http://localhost:8083");
-            var restClient = new RestSharp.RestClient("https://sme-bank.tcg.or.th");
+           // var restClient = new RestSharp.RestClient("https://sme-bank.tcg.or.th");
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
             RestRequest restRequest = new RestRequest(serviceGetLgInfo, Method.GET); //serviceGetLgInfoLocal  // serviceGetLgInfo

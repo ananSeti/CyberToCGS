@@ -80,7 +80,10 @@ namespace CyberToCGS
                         //localSME
                         //LG test :222910
                         // cgs.SaveRequestClaimPGSPackage("5910612 ", tokenSME, localSME);
-                        cgs.SaveRequestClaimPGSPackage("5910612", tokenSME, urlSME);
+                        // cgs.SaveRequestClaimPGSPackage("5910612", tokenSME, urlSME);
+                        // cgs.SaveRequestClaimPGSPackage("60080702", tokenSME, urlSME);
+                        var testLg = new List<string> { "60034524" };  //{ "5910612", "60080702" };
+                        testingLg(cgs, testLg, tokenSME, urlSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, localSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, urlSME);
                         // cgs.SaveRequestClaimPGSPackage("222910", tokenSME, urlSME);
@@ -103,12 +106,21 @@ namespace CyberToCGS
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
                     while(rec.Read())
-                    cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenTCG, urlTCG);
+                    //cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenTCG, urlTCG);
+                    cgs.SaveRequestClaimPGSPackage("60080702", tokenTCG, urlTCG);
                     // cgs.SaveRequestClaimPGSPackage(token, urlSME);
                 }
             }
 
 
+        }
+
+        private static void testingLg(CGS cgs, List<string> testLg, string tokenSME, string urlSME)
+        {
+            foreach (string lg in testLg)
+            {
+                cgs.SaveRequestClaimPGSPackage(lg, tokenSME, urlSME);
+            }
         }
     }
 }

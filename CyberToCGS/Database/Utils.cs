@@ -45,16 +45,26 @@ namespace CyberToCGS.Database
             }
 
         }
-        public DateTime ConvertYear(string bc)
+        public DateTime? ConvertYear(string bc)
         {
             string s = bc;
-            string y = s.Substring(0, 4);
-            int c = Convert.ToInt32(y) - 543;
-            string mm = s.Substring(4,2);
-            string dd = s.Substring(6, 2);
             const string V = "yyyy-MM-dd";
+
+            if (bc != "")
+            {
+                string y = s.Substring(0, 4);
+                int c = Convert.ToInt32(y) - 543;
+                string mm = s.Substring(4, 2);
+                string dd = s.Substring(6, 2);
+               
+                return Convert.ToDateTime(string.Format("{0}-{1:00}-{2:00} 00:00:00", c.ToString(), mm, dd, V, CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                return null;
+            }
            // string test = s.Replace(y, c.ToString());
-            return Convert.ToDateTime(string.Format("{0}-{1:00}-{2:00} 00:00:00",c.ToString(),mm,dd,V,CultureInfo.InvariantCulture)) ;
+           
         }
         public int ClaimAmountCheck(System.Data.SqlClient.SqlDataReader rec)
         {
@@ -66,7 +76,7 @@ namespace CyberToCGS.Database
                        
             return ret;
         }
-        public void log(string lgno,string logtype,string status)
+        public void log(string lgno,string logtype,string status,string json)
         {
             Database db = Database.GetInstance("localDB");
             logData log = new logData();
@@ -74,6 +84,7 @@ namespace CyberToCGS.Database
             log.logDate = DateTime.Now;
             log.method = logtype;
             log.status = status;
+            log.JsonPost = json;
             db.LogData(log);
         }
     }

@@ -13,5 +13,6 @@ namespace CyberToCGS.Database
         public DateTime logDate { get; set; }
         public string method { get; set; }
         public string status { get; set; }
+        public string JsonPost { get; set; }
     }
 }
