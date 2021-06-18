@@ -32,7 +32,12 @@ namespace CyberToCGS.SaveFormClaim
         public int? loanPage { get; set; }
         public double? loanObgAmount { get; set; }
     }
-
+    public class PostConsider
+    {
+        public int considerInfId { get; set; }
+        public string remark { get; set; }
+        public int considerId { get; set; }
+    }
     public class SaveFormClaimRoot
     {
         public int lgId { get; set; }
@@ -56,10 +61,12 @@ namespace CyberToCGS.SaveFormClaim
         public string refuseFlag { get; set; }
         public List<ClaimCollateral> claimCollaterals { get; set; }
         public List<ClaimLoan> claimLoans { get; set; }
-    public SaveFormClaimRoot()
+        public List<PostConsider> postConsider { get; set; }
+        public SaveFormClaimRoot()
         {
             this.claimCollaterals = new List<ClaimCollateral>();
             this.claimLoans = new List<ClaimLoan>();
+            this.postConsider = new List<PostConsider>();
         }
     }
 

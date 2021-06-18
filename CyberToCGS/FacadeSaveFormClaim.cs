@@ -14,14 +14,17 @@ namespace CyberToCGS
   public  class FacadeSaveFormClaim
     {
         protected SaveFormClaimRoot saveFormClaim = new SaveFormClaimRoot();
-       SqlDataReader rec;
+        SqlDataReader rec;
+        SqlDataReader recMapp;
         OdbcDataReader odbcRec;
        public string lgNo;
        public string bankId;
        public Database.Database db;
        public Database.Database db2;
-        public string dbInstance;
-     public FacadeSaveFormClaim(string lgNo,string DbInstance)
+       public string dbInstance;
+       public string dbClaimOnline;
+       public string dbLocal;
+     public FacadeSaveFormClaim(string lgNo,string DbInstance,string DbCliamOnline,string dbLocal)
         {
             // loadJson l = new loadJson();
 
@@ -30,6 +33,8 @@ namespace CyberToCGS
             // toDate = l.GetFormatTodate();
             this.lgNo = lgNo;
             this.dbInstance = DbInstance;
+            this.dbClaimOnline = DbCliamOnline;
+            this.dbLocal = dbLocal;
 
             // db = Database.Database.GetInstance("DB_CLAIM_ONLINE");
             //  rec = db.GetTw01_Claim_Online(lgNo); //62036859
@@ -37,8 +42,10 @@ namespace CyberToCGS
             //  db = Database.Database.GetInstance("SIT1");
             //db = Database.Database.GetInstance("PROD");
             db = Database.Database.GetInstance(dbInstance); ///PROD
-           // db2 = Database.Database.GetInstance(dbInstance);
             odbcRec = db.GetLGInfo(lgNo);
+
+            db2 = Database.Database.GetInstance(dbClaimOnline);
+            rec = db2.GetTw01_Claim_Online(lgNo);
 
         }
     public SaveFormClaimRoot Operation()
@@ -54,11 +61,247 @@ namespace CyberToCGS
                 //TODO Get BANK -ID FROM api 
                 // db = Database.Database.GetInstance("DB_CGSAPI_MASTER");
                 odbcRec.Read();
+                
                 db = Database.Database.GetInstance(dbInstance); //PROD
                 //this.bankId = "11";//db.GetBankId(rec["T01Bank_Code"].ToString().PadLeft(3, pad));// rec["T01Bank_Code"].ToString().PadLeft(3, pad); //"4"; //rec["T01Bank_Code"].ToString();
                 saveFormClaim.bankId = Convert.ToInt32(odbcRec["BANK_ID"].ToString()); //11;
                 saveFormClaim.lgId = Convert.ToInt32(odbcRec["LG_ID"].ToString()) ;//222910; // getLG_ID LG for Convert.ToInt32(rec["T01LG_No"]);
-                saveFormClaim.requestClaim =null ;//string.IsNullOrEmpty(rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(rec["T01Claim_Amount"]);//10000;
+                if (this.rec.HasRows)
+                {
+                    this.rec.Read();
+                    saveFormClaim.requestClaim = string.IsNullOrEmpty(this.rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(this.rec["T01Claim_Amount"]);//10000;
+                                                                                                                                                                          //consider
+                    PostConsider postConsider;
+                    db2 = Database.Database.GetInstance(dbLocal);
+                   // string a = this.rec["T01Management_1"].ToString();
+                    if (this.rec["T01Management_1"].ToString() =="True") {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Management_1");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+                       
+                    }
+                    if (this.rec["T01Management_2"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Management_2");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Management_3"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Management_3");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Management_4"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Management_4");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Management_5"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Management_5");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    //T01Finance_1
+                    if (this.rec["T01Finance_1"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Finance_1");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Finance_2"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Finance_2");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Finance_3"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Finance_3");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Finance_4"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Finance_4");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Finance_5"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Finance_5");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    //T01Market_1
+                    if (this.rec["T01Market_1"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Market_1");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Market_2"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Market_2");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Market_3"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Market_3");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Market_4"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Market_4");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                    if (this.rec["T01Market_5"].ToString() == "True")
+                    {
+                        //get Mapping Data
+                        recMapp = db2.GetCGSMapping("T01Market_5");
+                        if (recMapp.HasRows)
+                        {
+                            postConsider = new PostConsider();
+                            recMapp.Read();
+                            postConsider.considerId = Convert.ToInt32(recMapp["Consider_Id"]);
+                            postConsider.considerInfId = Convert.ToInt32(recMapp["Consider_Inf_Id"]);
+                            postConsider.remark = null;
+                            saveFormClaim.postConsider.Add(postConsider);
+                        }
+
+                    }
+                }
+
                 saveFormClaim.productGroupId = Convert.ToInt32(odbcRec["product_group_id"]);
                 saveFormClaim.productId = Convert.ToInt32(odbcRec["p"]);
                 saveFormClaim.portNo = Convert.ToInt32(odbcRec["port_no"]);

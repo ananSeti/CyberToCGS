@@ -107,7 +107,29 @@ namespace CyberToCGS.Database
             
             return _database;
         }
-       public bool LogData(logData log)
+
+        public SqlDataReader GetCGSMapping(string ClaimOnlineColumn)
+        {
+            Sql = " select * from [dbo].[MappingConsider_inf_id] "
+                + " where ClaimOnlineColumn =@ClName ";
+            connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                command = new SqlCommand(Sql, connection);
+                command.Parameters.AddWithValue("@ClName", ClaimOnlineColumn);
+                dataReader = command.ExecuteReader();
+
+              
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Get CGS Mapping data Error  ");
+            }
+            return dataReader;
+        }
+
+        public bool LogData(logData log)
         {
             Sql = "insert into [dbo].[claimLog](LgNo,logDate,Method,Status,JsonPost) values(@lgNo,@logDate,@method,@Status,@JsonPost)";
             connection = new SqlConnection(connectionString);

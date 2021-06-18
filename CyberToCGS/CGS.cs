@@ -182,6 +182,8 @@ namespace CyberToCGS
         {
             string token = Token;
             string dbInstance = "PROD";
+            string dbClaimOnline = "DB_ONLINE_CG";
+            string dblocal = "localDB";
             var restClient = new RestSharp.RestClient(url);
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
@@ -209,7 +211,7 @@ namespace CyberToCGS
             else
             {
                 SaveFormClaimRoot sCR = new SaveFormClaimRoot();
-                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance);
+                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnline, dblocal);
                 sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
                 bool found;
                
