@@ -70,7 +70,16 @@ namespace CyberToCGS
                 {
                     this.rec.Read();
                     saveFormClaim.requestClaim = string.IsNullOrEmpty(this.rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(this.rec["T01Claim_Amount"]);//10000;
-                                                                                                                                                                          //consider
+                    //จนท ผู้ดูแลผู้ให้ขอ้มูล/ผู้ดูแล
+                    saveFormClaim.guaCareBy = string.IsNullOrEmpty( this.rec["T01Contract_Name"].ToString())? "": this.rec["T01Contract_Name"].ToString();
+                    saveFormClaim.guaCarePostion = string.IsNullOrEmpty(this.rec["T01Contract_Position"].ToString()) ? "" : this.rec["T01Contract_Position"].ToString();
+                    saveFormClaim.guaCarePhone = string.IsNullOrEmpty(this.rec["T01Contract_Telephone"].ToString()) ? "" : this.rec["T01Contract_Telephone"].ToString();
+                    saveFormClaim.guaCareMobile = string.IsNullOrEmpty(this.rec["T01Contract_Mobile"].ToString()) ? "" : this.rec["T01Contract_Mobile"].ToString();
+                    saveFormClaim.guaCareFaxNo = string.IsNullOrEmpty(this.rec["T01Contract_Fax"].ToString()) ? "" : this.rec["T01Contract_Fax"].ToString();
+                    saveFormClaim.guaCareEmail = string.IsNullOrEmpty(this.rec["T01Contract_Email"].ToString()) ? "" : this.rec["T01Contract_Email"].ToString();
+                    saveFormClaim.authorizedBy = ""; //TODO
+                    saveFormClaim.authorizedPosition = ""; //TODO
+                    //consider
                     PostConsider postConsider;
                     db2 = Database.Database.GetInstance(dbLocal);
                    // string a = this.rec["T01Management_1"].ToString();
@@ -308,7 +317,8 @@ namespace CyberToCGS
                 saveFormClaim.refuseFlag = "N";
                 ///Check if PGS or Package
                 ///
-              if ( db.GetProductGroup(saveFormClaim.productGroupId) ==1 )
+                db = Database.Database.GetInstance(dbInstance);
+                if ( db.GetProductGroup(saveFormClaim.productGroupId) ==1 )
                 {
                     /// PGS
                     saveFormClaim.payConditionType = string.IsNullOrEmpty(odbcRec["pay_condition_type"].ToString()) ? null : odbcRec["pay_condition_type"].ToString();// "B";
@@ -344,6 +354,7 @@ namespace CyberToCGS
                 saveFormClaim.claimCollaterals.Add(cr);
 
                 //Get Court Date Time Info
+                db = Database.Database.GetInstance(dbInstance); //PROD
                 OdbcDataReader rec= db.GetCourtDateInfo(saveFormClaim.lgId);
                 if (rec.HasRows)
                     while (rec.Read())

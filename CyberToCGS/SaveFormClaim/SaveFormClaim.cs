@@ -57,8 +57,19 @@ namespace CyberToCGS.SaveFormClaim
         public double filingdtobgAmountAccumul { get; set; }
         public double claimAmtAccum { get; set; }
         public double previousNpgAccumul { get; set; }
-        public string loanContact { get; set; }
         public string refuseFlag { get; set; }
+        public string loanContact { get; set; }
+        public string guarantorContact { get; set; }
+        public string guaCareBy { get; set; }
+        public string guaCarePostion { get; set; }
+        public string guaCarePhone { get; set; }
+        public string guaCareMobile { get; set; }
+        public string guaCareFaxNo { get; set; }
+        public string guaCareEmail { get; set; }
+        public string authorizedBy { get; set; }
+        public string authorizedPosition { get; set; }
+        public string recieveFullAmountFlag { get; set; }
+
         public List<ClaimCollateral> claimCollaterals { get; set; }
         public List<ClaimLoan> claimLoans { get; set; }
         public List<PostConsider> postConsider { get; set; }
