@@ -51,11 +51,14 @@ namespace CyberToCGS
             //authentication-service/oauth/token
             loadJson l = new loadJson();
             var cgs = new CGS();
-          // cgs.AuthenticationBasics(ref tokenTCG, urlTCG);
-            cgs.AuthenticationBasics(ref tokenSME,urlSME);
+           cgs.AuthenticationBasics(ref tokenTCG, urlSBCG);
+           // cgs.AuthenticationBasics(ref tokenSME,urlSME);
 
             Database.Database db= Database.Database.GetInstance("DB_ONLINE_CG");
+           // Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG_PROD");
             SqlDataReader rec= db.GetT01_Request_online_lgNo();
+            //ข้อมูลทดสอบ  "60080702","5910612","60034524","62041574"
+            var testLg = new List<string> { "5910612" };   //5619990 5910612 60034524
 
             if (string.IsNullOrEmpty(tokenSME ))
             {
@@ -66,6 +69,7 @@ namespace CyberToCGS
                 /* ---------------------------------
                  * เริ่ม Call API ตรงนี้
                  * htt://<HOST_NAME>/request-service/api/external/request
+                 * 
                  *6. บันทึกคำขอแบบ indirect
                  *----------------------------------
                 */
@@ -83,7 +87,7 @@ namespace CyberToCGS
                         // cgs.SaveRequestClaimPGSPackage("5910612", tokenSME, urlSME);
                         // cgs.SaveRequestClaimPGSPackage("60080702", tokenSME, urlSME);
                         // 5619990
-                        var testLg = new List<string> { "5619990" };  //{ "5910612", "60080702" };
+                       // var testLg = new List<string> { "5619990" };  //{ "5910612", "60080702" };
                         testingLg(cgs, testLg, tokenSME, urlSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, localSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, urlSME);
@@ -106,9 +110,13 @@ namespace CyberToCGS
                     //P300
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
-                    while(rec.Read())
-                    //cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenTCG, urlTCG);
-                    cgs.SaveRequestClaimPGSPackage("60080702", tokenTCG, urlTCG);
+                    while (rec.Read())
+                        //cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenTCG, urlTCG);
+
+                        // 60034524  
+                        //var testLg = new List<string> { "5619990" };
+                        testingLg(cgs, testLg, tokenTCG, urlSBCG);
+                    // cgs.SaveRequestClaimPGSPackage("60034524", tokenTCG, urlTCG);  //60034524   //60080702
                     // cgs.SaveRequestClaimPGSPackage(token, urlSME);
                 }
             }
@@ -116,11 +124,11 @@ namespace CyberToCGS
 
         }
 
-        private static void testingLg(CGS cgs, List<string> testLg, string tokenSME, string urlSME)
+        private static void testingLg(CGS cgs, List<string> testLg, string tokenUsed, string urlUsed)
         {
             foreach (string lg in testLg)
             {
-                cgs.SaveRequestClaimPGSPackage(lg, tokenSME, urlSME);
+                cgs.SaveRequestClaimPGSPackage(lg, tokenUsed, urlUsed);
                 //Branch ANan
             }
         }

@@ -71,7 +71,7 @@ namespace CyberToCGS
                     this.rec.Read();
                     saveFormClaim.requestClaim = string.IsNullOrEmpty(this.rec["T01Claim_Amount"].ToString()) ? (int?)null : Convert.ToInt32(this.rec["T01Claim_Amount"]);//10000;
                     //จนท ผู้ดูแลผู้ให้ขอ้มูล/ผู้ดูแล
-                    saveFormClaim.guaCareBy = string.IsNullOrEmpty( this.rec["T01Contract_Name"].ToString())? "": this.rec["T01Contract_Name"].ToString();
+                    saveFormClaim.guaCareBy = string.IsNullOrEmpty(this.rec["T01Contract_Name"].ToString()) ? "" : this.rec["T01Contract_Name"].ToString();
                     saveFormClaim.guaCarePostion = string.IsNullOrEmpty(this.rec["T01Contract_Position"].ToString()) ? "" : this.rec["T01Contract_Position"].ToString();
                     saveFormClaim.guaCarePhone = string.IsNullOrEmpty(this.rec["T01Contract_Telephone"].ToString()) ? "" : this.rec["T01Contract_Telephone"].ToString();
                     saveFormClaim.guaCareMobile = string.IsNullOrEmpty(this.rec["T01Contract_Mobile"].ToString()) ? "" : this.rec["T01Contract_Mobile"].ToString();
@@ -79,11 +79,46 @@ namespace CyberToCGS
                     saveFormClaim.guaCareEmail = string.IsNullOrEmpty(this.rec["T01Contract_Email"].ToString()) ? "" : this.rec["T01Contract_Email"].ToString();
                     saveFormClaim.authorizedBy = ""; //TODO
                     saveFormClaim.authorizedPosition = ""; //TODO
+                    saveFormClaim.loanContact = "0";
+
+                    //PDF
+                    if (! string.IsNullOrEmpty( this.rec["T01File_2"].ToString())) {
+                        byte[] t1;
+                           PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_1"].ToString());
+                        t1 = p.getPdf();
+                    }
+                    if (!string.IsNullOrEmpty(this.rec["T01File_2"].ToString()))
+                    {
+                        byte[] t1;
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_2"].ToString());
+                        t1 = p.getPdf();
+                    }
+                    if (!string.IsNullOrEmpty(this.rec["T01File_3"].ToString()))
+                    {
+                        byte[] t1;
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_3"].ToString());
+                        t1 = p.getPdf();
+                    }
+                    if (!string.IsNullOrEmpty(this.rec["T01File_4"].ToString()))
+                    {
+                        byte[] t1;
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_4"].ToString());
+                        t1 = p.getPdf();
+                    }
+                    if (!string.IsNullOrEmpty(this.rec["T01File_5"].ToString()))
+                    {
+                        byte[] t1;
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_5"].ToString());
+                        t1 = p.getPdf();
+                    }
+
+
                     //consider
                     PostConsider postConsider;
                     db2 = Database.Database.GetInstance(dbLocal);
-                   // string a = this.rec["T01Management_1"].ToString();
-                    if (this.rec["T01Management_1"].ToString() =="True") {
+                    // string a = this.rec["T01Management_1"].ToString();
+                    if (this.rec["T01Management_1"].ToString() == "True")
+                    {
                         //get Mapping Data
                         recMapp = db2.GetCGSMapping("T01Management_1");
                         if (recMapp.HasRows)
@@ -95,7 +130,7 @@ namespace CyberToCGS
                             postConsider.remark = null;
                             saveFormClaim.postConsider.Add(postConsider);
                         }
-                       
+
                     }
                     if (this.rec["T01Management_2"].ToString() == "True")
                     {
@@ -310,6 +345,11 @@ namespace CyberToCGS
 
                     }
                 }
+                else {
+                   // จนท.ผู้ดูแลระบบ
+                    saveFormClaim.loanContact = "0";
+                }
+
 
                 saveFormClaim.productGroupId = Convert.ToInt32(odbcRec["product_group_id"]);
                 saveFormClaim.productId = Convert.ToInt32(odbcRec["p"]);
@@ -350,33 +390,59 @@ namespace CyberToCGS
                 ClaimCollateral cr = new ClaimCollateral();
                 cr.collateralId = 1; //  TODO add collateralId
                 cr.sueStatus = "Y";  // TODO add sue status
-                cr.remark = "Remark"; //TODO add remark status
+                cr.remark = "Remark"; //TODO add remark statuszz
                 saveFormClaim.claimCollaterals.Add(cr);
 
-                //Get Court Date Time Info
+                //Get Court Date Time Info from CGS
                 db = Database.Database.GetInstance(dbInstance); //PROD
                 OdbcDataReader rec= db.GetCourtDateInfo(saveFormClaim.lgId);
                 if (rec.HasRows)
+                {
                     while (rec.Read())
                     {
                         ClaimLoan cl = new ClaimLoan();
-                        cl.loanId = Convert.ToInt32( rec["LG_LOAN_ID"])  ;  //TODO loanId
+                        cl.loanId = Convert.ToInt32(rec["LG_LOAN_ID"]);  //TODO loanId
                         cl.detailType = "1";
-                        cl.sueDtAct = utils.ConvertYear(rec["SUE_DATE"].ToString());   ;// utils.ConvertYear(rec["T01Accuse_Date"].ToString());  //TOTO suedate //วันฟ้อง
+                        cl.sueDtAct = utils.ConvertYear(this.rec["T01Accuse_Date"].ToString()); // utils.ConvertYear(rec["SUE_DATE"].ToString()); ;// utils.ConvertYear(rec["T01Accuse_Date"].ToString());  //TOTO suedate //วันฟ้อง
                         cl.courtName = "";//"ศาลแพ่ง กทม.ใต้"; //TODO
-                        cl.undecideCaseNo = string.IsNullOrEmpty( rec["UNDECIDE_CASE_NO"].ToString())?null:rec["UNDECIDE_CASE_NO"].ToString()  ;//"1/2563"; //TODO เลขที่คดีดำ
+                        cl.undecideCaseNo = string.IsNullOrEmpty(rec["UNDECIDE_CASE_NO"].ToString()) ? null : rec["UNDECIDE_CASE_NO"].ToString();//"1/2563"; //TODO เลขที่คดีดำ
                         cl.judgmentDt = utils.ConvertYear(rec["JUDGMENT_DT"].ToString()); // null;//DateTime.Now; //TODO judementDt วันที่พิพากษา
                         cl.escortDt = utils.ConvertYear(rec["ESCORT_DT"].ToString()); //null;// DateTime.Now;//TODO escortDT //วันที่พิทักษ์ทรัพย์
                         cl.finalCaseDt = utils.ConvertYear(rec["FINAL_CASE_DT"].ToString()); //null;//DateTime.Now;// TODO finalCaseDt //วันที่คดีถึงที่สุด
-                        cl.auctionDt = utils.ConvertYear(rec["AUCTION_SALE_DT"].ToString()); ;//null;//DateTime.Now; //TODO auctionDt  //วันที่ขายทอดตลาด
+                        cl.auctionDt = utils.ConvertYear(rec["AUCTION_SALE_DT"].ToString()); //null;//DateTime.Now; //TODO auctionDt  //วันที่ขายทอดตลาด
                         cl.filingDtObgAmount = null;//1217477.377; //TODO filingDtObgAmount ภาระหนี้ ณ วันฟ้อง
                         cl.requestDtObgAmount = 0; //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
-                        cl.defaultDt = null;// DateTime.ParseExact("2020-11-20", "yyyy-mm-dd", CultureInfo.InvariantCulture);//DateTime.Now;//TODO defaultDt วันที่ผิดนัด / ชำระหนี้ครั้งสุดท้าย
+                        cl.defaultDt = utils.ConvertYear(this.rec["T01Default_Date"].ToString()); ;// DateTime.ParseExact("2020-11-20", "yyyy-mm-dd", CultureInfo.InvariantCulture);//DateTime.Now;//TODO defaultDt วันที่ผิดนัด / ชำระหนี้ครั้งสุดท้าย
                         cl.loanPage = null;//1;//TODO loanPage
                         cl.loanObgAmount = db.GetLoanObgAmount(saveFormClaim.lgId);  // null;//TODO 
 
                         saveFormClaim.claimLoans.Add(cl);
                     }
+
+                }
+                /**
+                // Get Court Data Time Info from Claim
+                //if (this.rec.HasRows)
+                //{
+                //    ClaimLoan cl = new ClaimLoan();
+                //   cl.loanId = Convert.ToInt32(rec["LG_LOAN_ID"]);  //TODO loanId
+                //   cl.detailType = "1";
+                //   cl.sueDtAct = utils.ConvertYear(this.rec["T01Accuse_Date"].ToString());  //TOTO suedate //วันฟ้อง
+                //   cl.courtName = "";//"ศาลแพ่ง กทม.ใต้"; //TODO
+                //   cl.undecideCaseNo = string.IsNullOrEmpty(rec["UNDECIDE_CASE_NO"].ToString()) ? null : rec["UNDECIDE_CASE_NO"].ToString();//"1/2563"; //TODO เลขที่คดีดำ
+                //   cl.judgmentDt = utils.ConvertYear(rec["JUDGMENT_DT"].ToString()); // null;//DateTime.Now; //TODO judementDt วันที่พิพากษา
+                //   cl.escortDt = utils.ConvertYear(rec["ESCORT_DT"].ToString()); //null;// DateTime.Now;//TODO escortDT //วันที่พิทักษ์ทรัพย์
+                //   cl.finalCaseDt = utils.ConvertYear(rec["FINAL_CASE_DT"].ToString()); //null;//DateTime.Now;// TODO finalCaseDt //วันที่คดีถึงที่สุด
+                //   cl.auctionDt = utils.ConvertYear(rec["AUCTION_SALE_DT"].ToString()); ;//null;//DateTime.Now; //TODO auctionDt  //วันที่ขายทอดตลาด
+                //   cl.filingDtObgAmount = null;//1217477.377; //TODO filingDtObgAmount ภาระหนี้ ณ วันฟ้อง
+                //   cl.requestDtObgAmount = 0; //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
+                //   cl.defaultDt = utils.ConvertYear(this.rec["T01Default_Date"].ToString());// DateTime.ParseExact("2020-11-20", "yyyy-mm-dd", CultureInfo.InvariantCulture);//DateTime.Now;//TODO defaultDt วันที่ผิดนัด / ชำระหนี้ครั้งสุดท้าย
+                //   cl.loanPage = null;//1;//TODO loanPage
+                //   cl.loanObgAmount = db.GetLoanObgAmount(saveFormClaim.lgId);  // null;//TODO 
+
+                //    saveFormClaim.claimLoans.Add(cl);
+                //}
+                **/
 
             }
             return saveFormClaim;

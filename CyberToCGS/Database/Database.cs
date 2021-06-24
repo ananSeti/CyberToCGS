@@ -14,9 +14,10 @@ namespace CyberToCGS.Database
         string db_online = @"server = 192.168.0.83; database = DB_ONLINE_CG; user = sa; password = ABC123abc$; ";
         string db_apiMaster = @"server = 192.168.0.83; database = DB_CGSAPI_MASTER; user = sa; password = ABC123abc$; ";
         string db_claim_online = @"server = 192.168.0.83; database = DB_CLAIM_ONLINE; user = sa; password = ABC123abc$; ";
+        string db_claim_online_Prod = @"server = 192.168.10.17; database = DB_CLAIM_ONLINE; user = sa; password = sicgcadmin; ";
         string localDb = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=testDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         string SIT1 = @"DSN=SIT1;uid=CGS;Pwd=tibero";
-       string PROD = @"DSN=PROD;uid=cgs;Pwd=tcg2019;";
+        string PROD = @"DSN=PROD;uid=cgs;Pwd=tcg2019;";
         //string PROD = @"Driver={Tibero 6 ODBC Driver};server=192.168.12.13;port=8629;uid=cgs;pwd=tibero2019;DB=tac;TYPE=ODBC";
         string connectionString = null;
 
@@ -54,6 +55,10 @@ namespace CyberToCGS.Database
             if(value == "PROD")
             {
                 connectionString = PROD;
+            }
+            if(value == "DB_ONLINE_CG_PROD")
+            {
+                connectionString = db_claim_online_Prod;
             }
         }
 
@@ -102,6 +107,10 @@ namespace CyberToCGS.Database
                 if (value == "PROD")
                 {
                     _database.connectionString = _database.PROD;
+                }
+                if (value == "DB_ONLINE_CG_PROD")
+                {
+                    _database.connectionString = _database.db_claim_online_Prod;
                 }
             }
             
@@ -489,7 +498,7 @@ namespace CyberToCGS.Database
                 + " T01Other_Management, T01Finance_1, T01Finance_2, T01Finance_3, T01Finance_4, T01Finance_5, T01Other_Finance, "
                 + " T01Market_1, T01Market_2, T01Market_3, T01Market_4, T01Market_5, T01Other_Market, T01Capital_Asset, T01Judgement,"
                 + " T01Collectral, T01Collectral_Desc, T01IsResend,T01Claim_Amount "
-                + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where T01Last_Status = '010' "
+                + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where 1=1 "     //change status from 010 to 100 //2.
                 + " and T01LG_No = @T01lg_no ; " ;
 
 
