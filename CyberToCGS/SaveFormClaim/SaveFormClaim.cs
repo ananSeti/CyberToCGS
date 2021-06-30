@@ -32,7 +32,24 @@ namespace CyberToCGS.SaveFormClaim
         public int? loanPage { get; set; }
         public double? loanObgAmount { get; set; }
     }
-
+    public class PostConsider
+    {
+        public int considerInfId { get; set; }
+        public string remark { get; set; }
+        public int considerId { get; set; }
+    }
+    public class File
+    {
+        public string fileName { get; set; }
+        public string fileType { get; set; }
+        public string base64 { get; set; }
+    }
+    public class ApplicationDocument
+    {
+        public int documentTypeInfId { get; set; }
+        public List<File> file = new List<File>() ;
+        
+    }
     public class SaveFormClaimRoot
     {
         public int lgId { get; set; }
@@ -52,14 +69,30 @@ namespace CyberToCGS.SaveFormClaim
         public double filingdtobgAmountAccumul { get; set; }
         public double claimAmtAccum { get; set; }
         public double previousNpgAccumul { get; set; }
-        public string loanContact { get; set; }
         public string refuseFlag { get; set; }
+        public string loanContact { get; set; }
+        public string guarantorContact { get; set; }
+        public string guaCareBy { get; set; }
+        public string guaCarePostion { get; set; }
+        public string guaCarePhone { get; set; }
+        public string guaCareMobile { get; set; }
+        public string guaCareFaxNo { get; set; }
+        public string guaCareEmail { get; set; }
+        public string authorizedBy { get; set; }
+        public string authorizedPosition { get; set; }
+        public string recieveFullAmountFlag { get; set; }
+
         public List<ClaimCollateral> claimCollaterals { get; set; }
         public List<ClaimLoan> claimLoans { get; set; }
-    public SaveFormClaimRoot()
+        public List<PostConsider> postConsider { get; set; }
+        public List<ApplicationDocument> applicationDocuments { get; set; }
+
+        public SaveFormClaimRoot()
         {
             this.claimCollaterals = new List<ClaimCollateral>();
             this.claimLoans = new List<ClaimLoan>();
+            this.postConsider = new List<PostConsider>();
+            this.applicationDocuments = new List<ApplicationDocument>();
         }
     }
 

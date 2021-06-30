@@ -182,6 +182,9 @@ namespace CyberToCGS
         {
             string token = Token;
             string dbInstance = "PROD";
+            string dbClaimOnline = "DB_ONLINE_CG";
+            string dbClaimOnlineProd = "DB_ONLINE_CG_PROD";
+            string dblocal = "localDB";
             var restClient = new RestSharp.RestClient(url);
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
@@ -195,7 +198,7 @@ namespace CyberToCGS
             //this lg found  63071729
             string lgno = LGNo; // "63092355";// "63071729";  //not found in Claim online //"62036859"; //63060917
             Utils databaseUtil = new Utils();
-            Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG");
+            Database.Database db = Database.Database.GetInstance(dbClaimOnline);
            // int a = db.UpdateT01_request_Online("400", "5858691");
             string json= null;
             loadJson l = new loadJson();
@@ -209,7 +212,8 @@ namespace CyberToCGS
             else
             {
                 SaveFormClaimRoot sCR = new SaveFormClaimRoot();
-                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance);
+                // FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnline, dblocal);
+                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnline, dblocal);
                 sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
                 bool found;
                

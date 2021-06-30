@@ -68,6 +68,7 @@
     <Compile Include="FinanceSubSystem.cs" />
     <Compile Include="Json\AppConfig.cs" />
     <Compile Include="loadJson.cs" />
+    <Compile Include="PDFLoad\PdfLoader.cs" />
     <Compile Include="product.cs" />
     <Compile Include="ProductSubsystem.cs" />
     <Compile Include="Program.cs" />
