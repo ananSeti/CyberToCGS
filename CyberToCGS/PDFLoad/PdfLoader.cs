@@ -37,5 +37,15 @@ namespace CyberToCGS.PDFLoad
         {
 
         }
+        public string getExtension(string f) {
+            string filename = f;//this.rec["T01File_1"].ToString();
+          return  filename.Substring(filename.LastIndexOf(".")).Replace(".", "");
+          
+        }
+        public string getFileName(string f) {
+
+           return f.Substring(0, f.LastIndexOf(".") - 1);
+
+                  }
     }
 }

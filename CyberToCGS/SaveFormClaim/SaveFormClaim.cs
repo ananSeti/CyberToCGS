@@ -38,6 +38,18 @@ namespace CyberToCGS.SaveFormClaim
         public string remark { get; set; }
         public int considerId { get; set; }
     }
+    public class File
+    {
+        public string fileName { get; set; }
+        public string fileType { get; set; }
+        public string base64 { get; set; }
+    }
+    public class ApplicationDocument
+    {
+        public int documentTypeInfId { get; set; }
+        public List<File> file = new List<File>() ;
+        
+    }
     public class SaveFormClaimRoot
     {
         public int lgId { get; set; }
@@ -73,11 +85,14 @@ namespace CyberToCGS.SaveFormClaim
         public List<ClaimCollateral> claimCollaterals { get; set; }
         public List<ClaimLoan> claimLoans { get; set; }
         public List<PostConsider> postConsider { get; set; }
+        public List<ApplicationDocument> applicationDocuments { get; set; }
+
         public SaveFormClaimRoot()
         {
             this.claimCollaterals = new List<ClaimCollateral>();
             this.claimLoans = new List<ClaimLoan>();
             this.postConsider = new List<PostConsider>();
+            this.applicationDocuments = new List<ApplicationDocument>();
         }
     }
 

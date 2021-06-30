@@ -82,36 +82,96 @@ namespace CyberToCGS
                     saveFormClaim.loanContact = "0";
 
                     //PDF
-                    if (! string.IsNullOrEmpty( this.rec["T01File_2"].ToString())) {
+                  
+                    ///เอกสารเพิ่มเติมประกอบการพิจารณา
+                    if (! string.IsNullOrEmpty( this.rec["T01File_1"].ToString())) {
                         byte[] t1;
-                           PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_1"].ToString());
-                        t1 = p.getPdf();
+                        
+
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_1"].ToString());
+                        //string filename = this.rec["T01File_1"].ToString();
+                        //string ext = filename.Substring(filename.IndexOf(".")).Replace(".","");
+                        t1 =   p.getPdf();
+                        ApplicationDocument a = new ApplicationDocument();
+                        string base64String = Convert.ToBase64String(t1);
+                        File f = new File();
+                        f.fileName = p.getFileName(this.rec["T01File_1"].ToString());
+                        f.fileType = p.getExtension(this.rec["T01File_1"].ToString());
+                        f.base64 = base64String;
+
+                        a.documentTypeInfId = 1112; //สำเนาคำฟ้องและเอกสารแนบท้ายฟ้องที่เจ้าหน้าที่ศาลรับรองความถูกต้อง
+                        a.file.Add(f);
+                        saveFormClaim.applicationDocuments.Add(a);
+                      
                     }
                     if (!string.IsNullOrEmpty(this.rec["T01File_2"].ToString()))
                     {
                         byte[] t1;
                         PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_2"].ToString());
                         t1 = p.getPdf();
+                        ApplicationDocument a = new ApplicationDocument();
+                        string base64String = Convert.ToBase64String(t1);
+                        File f = new File();
+                        f.fileName = p.getFileName(this.rec["T01File_2"].ToString());
+                        f.fileType = p.getExtension(this.rec["T01File_2"].ToString());
+                        f.base64 = base64String;
+
+                        a.documentTypeInfId = 1113; //สำเนาคำพิพากษาที่เจ้าหน้าที่ศาลรับรองความถูกต้อง
+                        a.file.Add(f);
+                        saveFormClaim.applicationDocuments.Add(a);
+
+
                     }
                     if (!string.IsNullOrEmpty(this.rec["T01File_3"].ToString()))
                     {
                         byte[] t1;
                         PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_3"].ToString());
                         t1 = p.getPdf();
+                        ApplicationDocument a = new ApplicationDocument();
+                        string base64String = Convert.ToBase64String(t1);
+                        File f = new File();
+                        f.fileName = p.getFileName(this.rec["T01File_3"].ToString());
+                        f.fileType = p.getExtension(this.rec["T01File_3"].ToString());
+                        f.base64 = base64String;
+
+                        a.documentTypeInfId = 1132; //หนังสือบอกกล่าวทวงถาม
+                        a.file.Add(f);
+                        saveFormClaim.applicationDocuments.Add(a);
                     }
                     if (!string.IsNullOrEmpty(this.rec["T01File_4"].ToString()))
                     {
                         byte[] t1;
                         PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_4"].ToString());
                         t1 = p.getPdf();
+                        ApplicationDocument a = new ApplicationDocument();
+                        string base64String = Convert.ToBase64String(t1);
+                        File f = new File();
+                        f.fileName = p.getFileName(this.rec["T01File_4"].ToString());
+                        f.fileType = p.getExtension(this.rec["T01File_4"].ToString());
+                        f.base64 = base64String;
+
+                        a.documentTypeInfId = 1133; //ใบตอบรับจากไปรษณีย์
+                        a.file.Add(f);
+                        saveFormClaim.applicationDocuments.Add(a);
                     }
                     if (!string.IsNullOrEmpty(this.rec["T01File_5"].ToString()))
                     {
                         byte[] t1;
                         PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_5"].ToString());
                         t1 = p.getPdf();
-                    }
+                        ApplicationDocument a = new ApplicationDocument();
+                        string base64String = Convert.ToBase64String(t1);
+                        File f = new File();
+                        f.fileName = p.getFileName(this.rec["T01File_5"].ToString());
+                        f.fileType = p.getExtension(this.rec["T01File_5"].ToString());
+                        f.base64 = base64String;
 
+                        a.documentTypeInfId = 1125; //สำเนาสัญญาสินเชื่อ
+                        a.file.Add(f);
+                        saveFormClaim.applicationDocuments.Add(a);
+
+                    }
+                  
 
                     //consider
                     PostConsider postConsider;
