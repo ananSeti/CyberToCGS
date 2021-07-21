@@ -43,6 +43,7 @@ namespace CyberToCGS
 
         //private string servicesToken = "/authentication-service/oauth/token";
         private string serviceReq = "/bank/authentication-service/oauth/token";
+        private string servUATReg = "/authentication-service/oauth/token";
         private string serviceIndirecPost = "/bank/request-service/api/external/request";
         private string serviceSaveFormClaim = "/bank/guarantee-service/api/external/saveFormClaim";
         private string serviceSaveFormClaimLocal = "/guarantee-service/api/external/saveFormClaim";
@@ -57,8 +58,8 @@ namespace CyberToCGS
             restClient.BaseUrl = new Uri(url);
                        restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
-            RestRequest restRequest = new RestRequest(serviceReq, Method.POST);
-                         restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            RestRequest restRequest = new RestRequest(serviceReq, Method.POST); //serviceReq
+            restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                          restRequest.AddHeader("Authorization", "Basic eSrTcpfOZ1O6ZmkkN4YbWlSg1X9JYpFexMZSAprl7gM=");
                          restRequest.AddParameter("grant_type", grant_type, ParameterType.GetOrPost);
             
@@ -178,12 +179,12 @@ namespace CyberToCGS
 
         }
        
-        public void SaveRequestClaimPGSPackage(string LGNo, string Token,string url)
+        public void SaveRequestClaimPGSPackage(string LGNo, string ClaimId,string Token,string url)
         {
             string token = Token;
             string dbInstance = "PROD";
-            string dbClaimOnline = "DB_ONLINE_CG";
-            string dbClaimOnlineProd = "DB_ONLINE_CG_PROD";
+            string dbClaimOnline = "DB_ONLINE_CG";   //DB_ONLINE_CG
+            string dbClaimOnlineProd = "DB_ONLINE_CG_PROD"; 
             string dblocal = "localDB";
             var restClient = new RestSharp.RestClient(url);
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
@@ -198,9 +199,10 @@ namespace CyberToCGS
             //this lg found  63071729
             string lgno = LGNo; // "63092355";// "63071729";  //not found in Claim online //"62036859"; //63060917
             Utils databaseUtil = new Utils();
-            Database.Database db = Database.Database.GetInstance(dbClaimOnline);
+           // Database.Database db = Database.Database.GetInstance(dbClaimOnline);///
+            Database.Database db = Database.Database.GetInstance(dbClaimOnlineProd);///
            // int a = db.UpdateT01_request_Online("400", "5858691");
-            string json= null;
+            string json = null;
             loadJson l = new loadJson();
             l.ReadAppConfig();
             if (l.isLoadTestFile())
@@ -213,15 +215,17 @@ namespace CyberToCGS
             {
                 SaveFormClaimRoot sCR = new SaveFormClaimRoot();
                 // FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnline, dblocal);
-                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnline, dblocal);
+                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnlineProd, dblocal);
                 sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
-                bool found;
-               
-                SaveFormClaim.Content lgInfo = GetLgByBank(facade.bankId, facade.lgNo, token, url, out found);
+                bool found=false;
+                ///Test insert Timve
+               // db = Database.Database.GetInstance(dbClaimOnlineProd);
+               // db.InsertTW03_Status("C62004193", "100"); /// test claim ID C62004193
+                                                          ///SaveFormClaim.Content lgInfo = GetLgByBank(facade.bankId, facade.lgNo, token, url, out found);
                 //update lgID get from CGS 
                 if (found)
                 {
-                    sCR.lgId = lgInfo.lgId;
+                   /// sCR.lgId = lgInfo.lgId;
                 }
 
 
@@ -244,7 +248,11 @@ namespace CyberToCGS
                 // update log 
                 databaseUtil.log(lgno,"postclaim","R",restResponse.Content);
                 //update status
-                 //db.UpdateT01_request_Online("400", lgno);
+                db=  Database.Database.GetInstance(dbClaimOnlineProd);
+                db.UpdateT01_request_Online("100", lgno);
+                //insert table
+                db.InsertTW03_Status(ClaimId, "100");
+
 
             }
             catch (Exception ex)

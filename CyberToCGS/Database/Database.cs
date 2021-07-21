@@ -176,7 +176,7 @@ namespace CyberToCGS.Database
 
         public SqlDataReader GetT01_Request_online_lgNo()
         {
-            Sql = " SELECT T01LG_No FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online "
+            Sql = " SELECT T01LG_No,T01Claim_ID  FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online "
                   + " where t01last_status = '010'";
             connection = new SqlConnection(connectionString);
             try
@@ -843,8 +843,8 @@ namespace CyberToCGS.Database
         public int UpdateT01_request_Online(string lastStatus,string lgNo)
         {
             int ret=0;
-            Sql = " Update DB_CLAIM_ONLINE.dbo.TW01_Claim_Online set T01Last_Status = @lastStatus " //400
-                 + " where T01LG_No  = @T01lg_no ;";
+            Sql = " Update DB_CLAIM_ONLINE.dbo.TW01_Claim_Online set T01Last_Status = @lastStatus " //100
+                 + " where T01LG_No  = @T01lg_no and  T01Last_Status ='010' ;";
             connection = new SqlConnection(connectionString);
             try {
                 connection.Open();
@@ -861,6 +861,61 @@ namespace CyberToCGS.Database
             return ret; 
         }
 
+        public int InsertTW03_Status(string claimId,string statusCode) {
+            int ret = 0;
+            Sql = "   INSERT INTO[dbo].[TW03_Status] "
+              + "  ([T03Claim_ID] "
+             + ",[T03Status_Code] "
+             + ",[T03Status_Date] "
+            + " ,[T03Status_Time] "
+            + " ,[T03Status_User] "
+            + " ,[T03Status_Comment1] "
+            + "  ) "
+            + " VALUES "
+             + " ( @T03Claim_ID "
+             + " , @T03Status_Code  "
+             + " , @T03Status_Date "
+             + " , @T03Status_Time  "
+             + " , @T03Status_User  "
+             + " ,@T03Status_Comment1"
+             + ") ";
+           // Sql = " Update DB_CLAIM_ONLINE.dbo.TW01_Claim_Online set T01Last_Status = @lastStatus " //100
+           //      + " where T01LG_No  = @T01lg_no and  T01Last_Status ='010' ;";
+            
+            connection = new SqlConnection(connectionString);
+            try
+            {
+                DateTime dd = CheckBCYear(DateTime.Now);
+                string d = dd.ToString("yyyyMMdd");
+                string t = dd.ToString("HHmmss");
+                connection.Open();
+                 command = new SqlCommand(Sql, connection);
+                command.Parameters.AddWithValue("@T03Claim_ID", claimId);
+                command.Parameters.AddWithValue("@T03Status_Code", statusCode);
+                command.Parameters.AddWithValue("@T03Status_Date", d);
+                command.Parameters.AddWithValue("@T03Status_Time", t);
+                command.Parameters.AddWithValue("@T03Status_User", "99999");
+                command.Parameters.AddWithValue("@T03Status_Comment1", "TCGSYSTEM");
+
+                ret = command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("...can not update TW01_Claim_Online....");
+            }
+            return ret;
+        }
+        private DateTime CheckBCYear(DateTime date)
+        {
+            DateTime returndate = DateTime.Now;
+
+            if (date.Year < 2500 && date.Year > 1950)
+            {
+                returndate = date.AddYears(543);
+            }
+
+            return returndate;
+        }
         public string GetBankId(string bankCode)
         {
             string ret = "";

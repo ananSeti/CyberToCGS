@@ -82,13 +82,14 @@ namespace CyberToCGS
                     saveFormClaim.loanContact = "0";
 
                     //PDF
-                  
+                    string folderPDF = this.rec["T01Claim_ID"].ToString().Substring(1,2);
                     ///เอกสารเพิ่มเติมประกอบการพิจารณา
+                     string aa = this.rec["T01File_1"].ToString();
                     if (! string.IsNullOrEmpty( this.rec["T01File_1"].ToString())) {
                         byte[] t1;
                         
 
-                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_1"].ToString());
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader(folderPDF, this.rec["T01Claim_ID"].ToString(), this.rec["T01File_1"].ToString());
                         //string filename = this.rec["T01File_1"].ToString();
                         //string ext = filename.Substring(filename.IndexOf(".")).Replace(".","");
                         t1 =   p.getPdf();
@@ -107,7 +108,7 @@ namespace CyberToCGS
                     if (!string.IsNullOrEmpty(this.rec["T01File_2"].ToString()))
                     {
                         byte[] t1;
-                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_2"].ToString());
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader(folderPDF, this.rec["T01Claim_ID"].ToString(), this.rec["T01File_2"].ToString());
                         t1 = p.getPdf();
                         ApplicationDocument a = new ApplicationDocument();
                         string base64String = Convert.ToBase64String(t1);
@@ -125,7 +126,7 @@ namespace CyberToCGS
                     if (!string.IsNullOrEmpty(this.rec["T01File_3"].ToString()))
                     {
                         byte[] t1;
-                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_3"].ToString());
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader(folderPDF, this.rec["T01Claim_ID"].ToString(), this.rec["T01File_3"].ToString());
                         t1 = p.getPdf();
                         ApplicationDocument a = new ApplicationDocument();
                         string base64String = Convert.ToBase64String(t1);
@@ -141,7 +142,7 @@ namespace CyberToCGS
                     if (!string.IsNullOrEmpty(this.rec["T01File_4"].ToString()))
                     {
                         byte[] t1;
-                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_4"].ToString());
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader(folderPDF, this.rec["T01Claim_ID"].ToString(), this.rec["T01File_4"].ToString());
                         t1 = p.getPdf();
                         ApplicationDocument a = new ApplicationDocument();
                         string base64String = Convert.ToBase64String(t1);
@@ -157,7 +158,7 @@ namespace CyberToCGS
                     if (!string.IsNullOrEmpty(this.rec["T01File_5"].ToString()))
                     {
                         byte[] t1;
-                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader("64", this.rec["T01Claim_ID"].ToString(), this.rec["T01File_5"].ToString());
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader(folderPDF, this.rec["T01Claim_ID"].ToString(), this.rec["T01File_5"].ToString());
                         t1 = p.getPdf();
                         ApplicationDocument a = new ApplicationDocument();
                         string base64String = Convert.ToBase64String(t1);
@@ -171,7 +172,40 @@ namespace CyberToCGS
                         saveFormClaim.applicationDocuments.Add(a);
 
                     }
-                  
+                    if (!string.IsNullOrEmpty(this.rec["T01File_6"].ToString()))
+                    {
+                        byte[] t1;
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader(folderPDF, this.rec["T01Claim_ID"].ToString(), this.rec["T01File_6"].ToString());
+                        t1 = p.getPdf();
+                        ApplicationDocument a = new ApplicationDocument();
+                        string base64String = Convert.ToBase64String(t1);
+                        File f = new File();
+                        f.fileName = p.getFileName(this.rec["T01File_6"].ToString());
+                        f.fileType = p.getExtension(this.rec["T01File_6"].ToString());
+                        f.base64 = base64String;
+
+                        a.documentTypeInfId = 1116; //Bank Statement หรือหลักฐานการชำระหนี้ ตั้งแต่วันที่ทำสัญญาจนถึงจนถึงวันยื่นคำขอรับเงินค่าประกันชดเชย
+                        a.file.Add(f);
+                        saveFormClaim.applicationDocuments.Add(a);
+
+                    }
+                    if (!string.IsNullOrEmpty(this.rec["T01File_Merge"].ToString()))
+                    {
+                        byte[] t1;
+                        PDFLoad.PdfLoader p = new PDFLoad.PdfLoader(folderPDF, this.rec["T01Claim_ID"].ToString(), this.rec["T01File_Merge"].ToString());
+                        t1 = p.getPdf();
+                        ApplicationDocument a = new ApplicationDocument();
+                        string base64String = Convert.ToBase64String(t1);
+                        File f = new File();
+                        f.fileName = p.getFileName(this.rec["T01File_Merge"].ToString());
+                        f.fileType = p.getExtension(this.rec["T01File_Merge"].ToString());
+                        f.base64 = base64String;
+
+                        a.documentTypeInfId = 53; //เอกสารเพิ่มเติมประกอบการพิจารณา
+                        a.file.Add(f);
+                        saveFormClaim.applicationDocuments.Add(a);
+
+                    }
 
                     //consider
                     PostConsider postConsider;

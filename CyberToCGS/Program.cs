@@ -47,15 +47,19 @@ namespace CyberToCGS
             var urlTCG = "https://cgs.tcg.or.th";
             var urlSBCG = "https://cgs.sbcg.or.th";
             var localSME = "http://localhost:8080";
+            var UAT = "http://192.168.15.17:31380"; // TCG
+            // http://192.168.15.17:31380/authentication-service/oauth/token // UAT
             // /requestservice/api/external/request
             //authentication-service/oauth/token
             loadJson l = new loadJson();
             var cgs = new CGS();
-           cgs.AuthenticationBasics(ref tokenTCG, urlSBCG);
-           // cgs.AuthenticationBasics(ref tokenSME,urlSME);
+          // cgs.AuthenticationBasics(ref tokenTCG, urlSME);
+            cgs.AuthenticationBasics(ref tokenTCG, urlSBCG);
+            // cgs.AuthenticationBasics(ref tokenSME,urlSME);
+            //DB_CLAIM_ONLINE_PROD
+           // Database.Database db= Database.Database.GetInstance("DB_ONLINE_CG"); 
 
-            Database.Database db= Database.Database.GetInstance("DB_ONLINE_CG");
-           // Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG_PROD");
+            Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG_PROD");
             SqlDataReader rec= db.GetT01_Request_online_lgNo();
             //ข้อมูลทดสอบ  "60080702","5910612","60034524","62041574"
             var testLg = new List<string> { "5910612" };   //5619990 5910612 60034524
@@ -111,7 +115,9 @@ namespace CyberToCGS
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
                     while (rec.Read())
-                        //cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(),tokenTCG, urlTCG);
+                       // string cl = rec.GetValue(1).ToString();
+
+                        cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
 
                         // 60034524  
                         //var testLg = new List<string> { "5619990" };
@@ -128,7 +134,7 @@ namespace CyberToCGS
         {
             foreach (string lg in testLg)
             {
-                cgs.SaveRequestClaimPGSPackage(lg, tokenUsed, urlUsed);
+              //  cgs.SaveRequestClaimPGSPackage(lg, tokenUsed, urlUsed);
                 //Branch ANan
             }
         }

@@ -28,7 +28,11 @@ namespace DbOnlinetest
               ///  File.WriteAllBytes(path_to_your_app_data_folder, arr)
    
     }
-        
+        [TestMethod]
+        public void TestThaiDateTime()
+            { 
+            
+            }
     }
     }
 }
