@@ -53,7 +53,11 @@ namespace CyberToCGS.SaveFormClaim
     public class SaveFormClaimRoot
     {
         public int lgId { get; set; }
+        public DateTime? guaPostCreateDt { get; set; }
+        public DateTime? guaPostSendDt { get; set; }
+        public string assignName { get; set; }
         public int? requestClaim { get; set; }
+
         public string payConditionType { get; set; }
         public int? claimPgsModelId { get; set; }
         public int? maxClaimModelId { get; set; }

@@ -39,6 +39,17 @@ namespace DbOnlinetest
                 Console.WriteLine("{0} is not in the correct format.", dateString);
             }
 
+            dateString = "05-29-2015 05:50:06";
+            format = "YYYY-mm-dd HH:mm:ss";
+            try
+            {
+                result = DateTime.ParseExact(dateString, format, provider);
+                Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("{0} is not in the correct format.", dateString);
+            }
         }
     }
 }

@@ -57,12 +57,14 @@ namespace CyberToCGS
             cgs.AuthenticationBasics(ref tokenTCG, urlSBCG);
             // cgs.AuthenticationBasics(ref tokenSME,urlSME);
             //DB_CLAIM_ONLINE_PROD
-           // Database.Database db= Database.Database.GetInstance("DB_ONLINE_CG"); 
+           // TEST CI LG owner....
+            //Database.Database db= Database.Database.GetInstance("DB_ONLINE_CG"); 
 
             Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG_PROD");
-            SqlDataReader rec= db.GetT01_Request_online_lgNo();
+           
+            SqlDataReader rec = db.GetT01_Request_online_lgNo();
             //ข้อมูลทดสอบ  "60080702","5910612","60034524","62041574"
-            var testLg = new List<string> { "5910612" };   //5619990 5910612 60034524
+            var testLg = new List<string> { "62008120" };   //5619990 5910612 60034524
 
             if (string.IsNullOrEmpty(tokenSME ))
             {
@@ -92,7 +94,7 @@ namespace CyberToCGS
                         // cgs.SaveRequestClaimPGSPackage("60080702", tokenSME, urlSME);
                         // 5619990
                        // var testLg = new List<string> { "5619990" };  //{ "5910612", "60080702" };
-                        testingLg(cgs, testLg, tokenSME, urlSME);
+                       // testingLg(cgs, testLg, tokenSME, urlSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, localSME);
                         //  cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), tokenSME, urlSME);
                         // cgs.SaveRequestClaimPGSPackage("222910", tokenSME, urlSME);
@@ -115,27 +117,39 @@ namespace CyberToCGS
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
                     while (rec.Read())
-                       // string cl = rec.GetValue(1).ToString();
+                    {
+                        //// TEST CI LG owner....
+                        ///DB_ONLINE_CG
+                        ///DB_ONLINE_CI
+                        Database.Database dbCI = Database.Database.GetInstance("DB_ONLINE_CI");
+                       // dbCI = Database.Database.GetInstance("DB_ONLINE_CG");
+                       string t01UserCode =  dbCI.GetLGOnwer(rec.GetValue(1).ToString());
+                        ////
 
+                        // string cl = rec.GetValue(1).ToString();
+                       testingLg(cgs, testLg, rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
+                                                                       
                         cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
 
                         // 60034524  
                         //var testLg = new List<string> { "5619990" };
-                        testingLg(cgs, testLg, tokenTCG, urlSBCG);
-                    // cgs.SaveRequestClaimPGSPackage("60034524", tokenTCG, urlTCG);  //60034524   //60080702
-                    // cgs.SaveRequestClaimPGSPackage(token, urlSME);
-                }
+
+                        // cgs.SaveRequestClaimPGSPackage("60034524", tokenTCG, urlTCG);  //60034524   //60080702
+                        // cgs.SaveRequestClaimPGSPackage(token, urlSME);
+                    }
+
+                    }
             }
 
 
         }
 
-        private static void testingLg(CGS cgs, List<string> testLg, string tokenUsed, string urlUsed)
+        private static void testingLg(CGS cgs, List<string> testLg,string lgID, string tokenUsed, string urlUsed)
         {
             foreach (string lg in testLg)
             {
-              //  cgs.SaveRequestClaimPGSPackage(lg, tokenUsed, urlUsed);
-                //Branch ANan
+              cgs.SaveRequestClaimPGSPackage(lg,lgID, tokenUsed, urlUsed);
+                
             }
         }
     }

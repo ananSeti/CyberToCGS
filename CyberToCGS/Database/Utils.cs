@@ -50,7 +50,7 @@ namespace CyberToCGS.Database
             string s = bc;
             const string V = "yyyy-MM-dd";
 
-            if (bc != "")
+            if (bc != "" )
             {
                 string y = s.Substring(0, 4);
                 int c = Convert.ToInt32(y) - 543;
@@ -66,6 +66,32 @@ namespace CyberToCGS.Database
            // string test = s.Replace(y, c.ToString());
            
         }
+        public DateTime? GetT01DateTime(string d, string t)
+        {
+            //DateTime? test;
+            string s = d;
+            const string V = "yyyy-MM-dd HH:mm:ss";
+            if (d != "" && t!="" )
+            {
+                string y = s.Substring(0, 4);
+                int c = Convert.ToInt32(y) ;
+                string mm = s.Substring(4, 2);
+                string dd = s.Substring(6, 2);
+
+                string HH = t.Substring(0,2);
+                string MM = t.Substring(2,2);
+                string SS = t.Substring(4,2);
+                
+               // test = Convert.ToDateTime(string.Format("{0}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", c.ToString(), mm, dd, HH, MM, SS, V, CultureInfo.InvariantCulture)); ;
+                return Convert.ToDateTime(string.Format("{0}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", c.ToString(), mm, dd,HH,MM,SS, V, CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                return null;
+            }
+
+           
+        }
         public int ClaimAmountCheck(System.Data.SqlClient.SqlDataReader rec)
         {
             int ret = 0;
@@ -78,7 +104,7 @@ namespace CyberToCGS.Database
         }
         public void log(string lgno,string logtype,string status,string json)
         {
-            Database db = Database.GetInstance("localDB");
+            Database db = Database.GetInstance("DB_CGS_INTERFACE");  //DB_CGS_INTERFACE localDB
             logData log = new logData();
             log.lgNo = lgno; // "LG123456";
             log.logDate = DateTime.Now;

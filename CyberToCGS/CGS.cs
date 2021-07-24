@@ -186,6 +186,7 @@ namespace CyberToCGS
             string dbClaimOnline = "DB_ONLINE_CG";   //DB_ONLINE_CG
             string dbClaimOnlineProd = "DB_ONLINE_CG_PROD"; 
             string dblocal = "localDB";
+            string dbCgsInterface = "DB_CGS_INTERFACE";
             var restClient = new RestSharp.RestClient(url);
             restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
 
@@ -215,7 +216,7 @@ namespace CyberToCGS
             {
                 SaveFormClaimRoot sCR = new SaveFormClaimRoot();
                 // FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnline, dblocal);
-                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnlineProd, dblocal);
+                FacadeSaveFormClaim facade = new FacadeSaveFormClaim(lgno, dbInstance, dbClaimOnlineProd, dbCgsInterface);  //แทน LocalDB
                 sCR = ClientFacadeSaveFormClaim.ClientCode(facade);
                 bool found=false;
                 ///Test insert Timve
@@ -249,9 +250,10 @@ namespace CyberToCGS
                 databaseUtil.log(lgno,"postclaim","R",restResponse.Content);
                 //update status
                 db=  Database.Database.GetInstance(dbClaimOnlineProd);
-                db.UpdateT01_request_Online("100", lgno);
+                ///รอก่อน  2 Table ยังไม่ update 
+                /////db.UpdateT01_request_Online("100", lgno);
                 //insert table
-                db.InsertTW03_Status(ClaimId, "100");
+                /////// รอก่อน  db.InsertTW03_Status(ClaimId, "100");
 
 
             }

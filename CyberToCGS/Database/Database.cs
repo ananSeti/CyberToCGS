@@ -13,8 +13,10 @@ namespace CyberToCGS.Database
     {
         string db_online = @"server = 192.168.0.83; database = DB_ONLINE_CG; user = sa; password = ABC123abc$; ";
         string db_apiMaster = @"server = 192.168.0.83; database = DB_CGSAPI_MASTER; user = sa; password = ABC123abc$; ";
+        string db_cgs_interface = @"server = 192.168.0.83; database = DB_CGS_INTERFACE; user = sa; password = ABC123abc$; ";
         string db_claim_online = @"server = 192.168.0.83; database = DB_CLAIM_ONLINE; user = sa; password = ABC123abc$; ";
         string db_claim_online_Prod = @"server = 192.168.10.17; database = DB_CLAIM_ONLINE; user = sa; password = sicgcadmin; ";
+        string db_claim_online_CI = @"server = 192.168.0.17; database = DB_CI; user = sa; password = sicgcadmin; ";
         string localDb = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=testDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         string SIT1 = @"DSN=SIT1;uid=CGS;Pwd=tibero";
         string PROD = @"DSN=PROD;uid=cgs;Pwd=tcg2019;";
@@ -59,6 +61,14 @@ namespace CyberToCGS.Database
             if(value == "DB_ONLINE_CG_PROD")
             {
                 connectionString = db_claim_online_Prod;
+            }
+            if (value == "DB_ONLINE_CI")
+            {
+                connectionString = db_claim_online_CI;
+            }
+            if (value == "DB_CGS_INTERFACE")
+            {
+                connectionString = db_cgs_interface;
             }
         }
 
@@ -111,6 +121,14 @@ namespace CyberToCGS.Database
                 if (value == "DB_ONLINE_CG_PROD")
                 {
                     _database.connectionString = _database.db_claim_online_Prod;
+                }
+                if (value == "DB_ONLINE_CI")
+                {
+                    _database.connectionString = _database.db_claim_online_CI;
+                }
+                if (value == "DB_CGS_INTERFACE")
+                {
+                    _database.connectionString = _database.db_cgs_interface;
                 }
             }
             
@@ -191,6 +209,7 @@ namespace CyberToCGS.Database
             }
             return dataReader;
         }
+       
 
         public void GetUser()
         {
@@ -607,6 +626,30 @@ namespace CyberToCGS.Database
             }
             return maxClaimBal;
         }
+        public string GetLGOnwer(string Claim_ID) {
+            string lgOwner="";
+            // select T13User_ID from[dbo].[T13_Assign_Table] where T13Claim_ID = 'C63006877'
+            Sql = "select T13User_ID from [dbo].[T13_Assign_Table] where T13Claim_ID = @ClaimID";
+            connection = new SqlConnection (connectionString);
+            try {
+                command = new SqlCommand(Sql, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@ClaimID",Claim_ID);
+                
+                dataReader = command.ExecuteReader();
+                if (dataReader.HasRows)
+                {
+                    dataReader.Read();
+                    lgOwner = dataReader["T13User_ID"].ToString();
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(" GET CI LG owner error: " + ex.Message.ToString());
+            }
+
+
+            return lgOwner;    
+        }
         public OdbcDataReader GetCourtDateInfo(int lg_id)
         {
             Sql = "  SELECT lg_id ,LG_LOAN_ID, SUE_DATE, UNDECIDE_CASE_NO, DECIDE_CASE_NO, "
@@ -844,14 +887,14 @@ namespace CyberToCGS.Database
         {
             int ret=0;
             Sql = " Update DB_CLAIM_ONLINE.dbo.TW01_Claim_Online set T01Last_Status = @lastStatus " //100
-                 + " where T01LG_No  = @T01lg_no and  T01Last_Status ='010' ;";
+                 + " where T01LG_No  = @T01lg_no  and  T01Last_Status ='010' ;";
             connection = new SqlConnection(connectionString);
             try {
                 connection.Open();
                 command = new SqlCommand(Sql,connection);
                 command.Parameters.AddWithValue("@lastStatus",lastStatus);
                 command.Parameters.AddWithValue("@T01lg_no", lgNo);
-
+               
                 ret = command.ExecuteNonQuery();
             }
             catch( Exception ex )
@@ -902,6 +945,30 @@ namespace CyberToCGS.Database
             catch (Exception ex)
             {
                 Console.WriteLine("...can not update TW01_Claim_Online....");
+            }
+            return ret;
+        }
+        public string GetAssignUser(string userName) {
+            string ret=null;
+            Sql = "SELECT [USER_USERNAME],[USER_FIRST_NAME],[USER_LAST_NAME],[USER_TITLE],[USER_EMAIL] "
+              + ", substring( [USER_EMAIL],1 ,charindex('@',[USER_EMAIL]) - 1 )as 'AssignName' "
+              + " ,[USER_DEPARTMENT] FROM[DB_Pre_Migration].[dbo].[TCG_TBL_MD_USERS] "
+              + " where user_username = @UserName ";
+            connection = new SqlConnection(connectionString);
+            try {
+                connection.Open();
+                command = new SqlCommand(Sql, connection);
+                command.Parameters.AddWithValue("@UserName",userName);
+                dataReader = command.ExecuteReader();
+                if (dataReader.HasRows)
+                {
+                    dataReader.Read();
+                    ret = string.IsNullOrEmpty(dataReader["AssignName"].ToString()) ? null : dataReader["AssignName"].ToString();
+                   // ret = dataReader.GetString(5);
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(" can not select TCG_TBL_MD_USER");
             }
             return ret;
         }
