@@ -62,6 +62,7 @@ namespace CyberToCGS
 
             Database.Database db = Database.Database.GetInstance("DB_ONLINE_CG_PROD");
            
+           
             SqlDataReader rec = db.GetT01_Request_online_lgNo();
             //ข้อมูลทดสอบ  "60080702","5910612","60034524","62041574"
             var testLg = new List<string> { "60104765" };   //5619990 5910612 60034524
@@ -125,12 +126,16 @@ namespace CyberToCGS
                        // dbCI = Database.Database.GetInstance("DB_ONLINE_CG");
                        string t01UserCode =  dbCI.GetLGOnwer(rec.GetValue(1).ToString());
                         ////
+                        ///Check Duplicate
+
 
                         // string cl = rec.GetValue(1).ToString();
-                     // testingLg(cgs, testLg, rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
-                                                                       
-                        cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
-
+                        // testingLg(cgs, testLg, rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
+                        Database.Database dbInterface = Database.Database.GetInstance("DB_CGS_INTERFACE");
+                        if (!dbInterface.isExisting(rec.GetValue(0).ToString()))
+                        {
+                            cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
+                        }
                         // 60034524  
                         //var testLg = new List<string> { "5619990" };
 

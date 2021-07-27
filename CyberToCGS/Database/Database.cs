@@ -209,7 +209,34 @@ namespace CyberToCGS.Database
             }
             return dataReader;
         }
-       
+        public bool isExisting(string lgNO) {
+           
+            Sql = " select  lgno From [DB_CGS_INTERFACE].[dbo].[claimLog] where lgNo = @lgno  group by LgNo ";   ///  010 ใหม่    100 Assign แล้ว
+            connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                command = new SqlCommand(Sql, connection);
+                command.Parameters.AddWithValue("@lgno",lgNO);
+               dataReader = command.ExecuteReader();
+
+                if (dataReader.HasRows)
+                {
+                    return true;
+
+                }
+                else {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("....Get  [DB_CGS_INTERFACE].[dbo].[claimLog] ");
+                return false;
+            }
+           
+        }
 
         public void GetUser()
         {
