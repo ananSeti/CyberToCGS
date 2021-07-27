@@ -195,7 +195,7 @@ namespace CyberToCGS.Database
         public SqlDataReader GetT01_Request_online_lgNo()
         {
             Sql = " SELECT T01LG_No,T01Claim_ID  FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online "
-                  + " where t01last_status = '010'";
+                  + " where t01last_status in ( '100') and T01Active ='1' ";   ///  010 ใหม่    100 Assign แล้ว
             connection = new SqlConnection(connectionString);
             try
             {
@@ -517,7 +517,7 @@ namespace CyberToCGS.Database
                 + " T01Other_Management, T01Finance_1, T01Finance_2, T01Finance_3, T01Finance_4, T01Finance_5, T01Other_Finance, "
                 + " T01Market_1, T01Market_2, T01Market_3, T01Market_4, T01Market_5, T01Other_Market, T01Capital_Asset, T01Judgement,"
                 + " T01Collectral, T01Collectral_Desc, T01IsResend,T01Claim_Amount "
-                + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where 1=1 "     //change status from 010 to 100 //2.
+                + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where 1=1  and  T01Active ='1' "     //change status from 010 to 100 //2.
                 + " and T01LG_No = @T01lg_no ; " ;
 
 
@@ -626,16 +626,19 @@ namespace CyberToCGS.Database
             }
             return maxClaimBal;
         }
-        public string GetLGOnwer(string Claim_ID) {
-            string lgOwner="";
+        public string GetLGOnwer(string Claim_ID)
+        {
+            string lgOwner = "";
             // select T13User_ID from[dbo].[T13_Assign_Table] where T13Claim_ID = 'C63006877'
-            Sql = "select T13User_ID from [dbo].[T13_Assign_Table] where T13Claim_ID = @ClaimID";
-            connection = new SqlConnection (connectionString);
-            try {
+             Sql = "select T13User_ID from [dbo].[T13_Assign_Table] where T13Claim_ID = @ClaimID";
+                  
+            connection = new SqlConnection(connectionString);
+            try
+            {
                 command = new SqlCommand(Sql, connection);
                 connection.Open();
-                command.Parameters.AddWithValue("@ClaimID",Claim_ID);
-                
+                command.Parameters.AddWithValue("@ClaimID", Claim_ID);
+
                 dataReader = command.ExecuteReader();
                 if (dataReader.HasRows)
                 {
@@ -643,12 +646,53 @@ namespace CyberToCGS.Database
                     lgOwner = dataReader["T13User_ID"].ToString();
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" GET CI LG Owner error: " + ex.Message.ToString());
+            }
+            return lgOwner;
+        }
+        public SqlDataReader GetLGOnwerRec(string Claim_ID) {
+           // string lgOwner="";
+            // select T13User_ID from[dbo].[T13_Assign_Table] where T13Claim_ID = 'C63006877'
+           // Sql = "select T13User_ID from [dbo].[T13_Assign_Table] where T13Claim_ID = @ClaimID";
+
+           Sql =" SELECT TOP(10) [T01_Claim_ID] ,[T01_Order_No],[T01_Subject],[T01_LG_No],[T01_Port_No] "
+      + ",[T01_Port_Year],[T01_Project_Type],[T01_Sub_Project_Type],[T01_Bank_Code],[T01_Bank_Name],[T01_Branch_Name] "
+      + ",[T01_Customer_ID],[T01_Customer_Name],[T01_Project_Name],[T01_Project_address],[T01_Approve_Date] "
+      + " ,[T01_LG_Date],[T01_Out_Standing],[T01_Claim_Date],[T01_Request_Date],[T01_Success_Document],[T01_App_Date] "
+      + ",[T01_Process_Day],[T01_Avg_Out],[T01_Claim_Partial],[T01_Max_Claim],[T01_Claim_Max_Part_1],[T01_Claim_Max_Part_2] "
+      + ",[T01_Claim_Percent_Max_Part_1],[T01_Claim_Percent_Max_Part_2],[T01_Real_Claim],[T01_Wait_Claim],[T01_Cancel_Claim] "
+      + ",[T01_Remain_Claim],[T01_Claim_Part_1],[T01_Claim_Part_2],[T01_Claim_Percent_Part_1],[T01_Claim_Percent_Part_2] "
+      + " ,[T01_Total_Claim],[T01_Max_Claim_Remain],[T01_Date_Create],[T01_Time_Create],[T01_User_Create]"
+      + ",[T01_Date_Update],[T01_Time_Update],[T01_User_Update],[T01_Active],[T01_File_Name],[T01_File_Template],[T01_Default_Date] "
+      + ",[T01_Cancel_Date_1],[T01_Cancel_Date_2],[T01_Claim_Online],[T01_Sum_Total_Claim],[T01_Sum_Total_Amount],[T01Business_Running] "
+      +",[T01Management_1],[T01Management_2],[T01Management_3],[T01Management_4],[T01Management_5],[T01Other_Management],[T01Finance_1] "
+      +",[T01Finance_2],[T01Finance_3],[T01Finance_4],[T01Finance_5],[T01Other_Finance],[T01Market_1],[T01Market_2],[T01Market_3] "
+      + ",[T01Market_4],[T01Market_5],[T01Other_Market],[T01Capital_Asset],[T01Judgement],[T01Collectral],"
+      +" [T01Collectral_Desc], [T01Additional_Document] "
+      +" ,[T01Seq_Project] ,[T01Pay_Seq],[T01Description],[T01Assign_RequestNo] "
+      + " FROM[DB_CI].[dbo].[T01_Claim_Insurance] where T01_Claim_Online = @ClaimID" ;
+
+            connection = new SqlConnection (connectionString);
+            try {
+                command = new SqlCommand(Sql, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@ClaimID",Claim_ID);
+                
+                dataReader = command.ExecuteReader();
+                //if (dataReader.HasRows)
+                //{
+                //    dataReader.Read();
+                //    lgOwner = dataReader["T13User_ID"].ToString();
+                //}
+            }
             catch (Exception ex) {
                 Console.WriteLine(" GET CI LG owner error: " + ex.Message.ToString());
             }
 
 
-            return lgOwner;    
+            return dataReader;    
         }
         public OdbcDataReader GetCourtDateInfo(int lg_id)
         {

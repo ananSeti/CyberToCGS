@@ -53,7 +53,7 @@ namespace CyberToCGS.Database
             if (bc != "" )
             {
                 string y = s.Substring(0, 4);
-                int c = Convert.ToInt32(y) - 543;
+                int c = Convert.ToInt32(y) ;
                 string mm = s.Substring(4, 2);
                 string dd = s.Substring(6, 2);
                

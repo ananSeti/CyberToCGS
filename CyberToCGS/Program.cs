@@ -64,7 +64,7 @@ namespace CyberToCGS
            
             SqlDataReader rec = db.GetT01_Request_online_lgNo();
             //ข้อมูลทดสอบ  "60080702","5910612","60034524","62041574"
-            var testLg = new List<string> { "62008120" };   //5619990 5910612 60034524
+            var testLg = new List<string> { "60104765" };   //5619990 5910612 60034524
 
             if (string.IsNullOrEmpty(tokenSME ))
             {
@@ -127,7 +127,7 @@ namespace CyberToCGS
                         ////
 
                         // string cl = rec.GetValue(1).ToString();
-                       testingLg(cgs, testLg, rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
+                     // testingLg(cgs, testLg, rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
                                                                        
                         cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
 

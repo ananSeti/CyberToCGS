@@ -15,6 +15,7 @@ namespace CyberToCGS
     {
         protected SaveFormClaimRoot saveFormClaim = new SaveFormClaimRoot();
         SqlDataReader rec;
+        SqlDataReader CI_REC;
         SqlDataReader recMapp;
         
         OdbcDataReader odbcRec;
@@ -84,13 +85,24 @@ namespace CyberToCGS
 
                     saveFormClaim.guaPostCreateDt = utils.GetT01DateTime(d,t);  // create_Date + Create time
                     saveFormClaim.guaPostSendDt = utils.GetT01DateTime(dS,tS); // send date
-                    dbCI = Database.Database.GetInstance("DB_ONLINE_CI");
-                    string userCode = dbCI.GetLGOnwer(this.rec["T01Claim_ID"].ToString());
-                    
-                    dbInterface = Database.Database.GetInstance("DB_CGS_INTERFACE");
-                    string userAssign = dbInterface.GetAssignUser(userCode);
-                    saveFormClaim.assignName = userAssign;  //  เช่น 'Jirattha'
-                     
+                     //NoTice 1
+
+                    // Check Assign Claim ----
+                    if (this.rec["T01Last_Status"].ToString() == "100")  /// เข้า CI แล้ว
+                    {
+                        dbCI = Database.Database.GetInstance("DB_ONLINE_CI");
+                        CI_REC = dbCI.GetLGOnwerRec(this.rec["T01Claim_ID"].ToString());
+
+                        dbInterface = Database.Database.GetInstance("DB_CGS_INTERFACE");
+                        
+                        // s
+                        if (this.CI_REC.HasRows)
+                        {
+                            this.CI_REC.Read();
+                            string userAssign = dbInterface.GetAssignUser(this.CI_REC["T01_User_Create"].ToString());
+                            saveFormClaim.assignName = userAssign;  //  เช่น 'Jirattha'
+                        }
+                    }  
                     //จนท ผู้ดูแลผู้ให้ขอ้มูล/ผู้ดูแล
                     saveFormClaim.guaCareBy = string.IsNullOrEmpty(this.rec["T01Contract_Name"].ToString()) ? "" : this.rec["T01Contract_Name"].ToString();
                     saveFormClaim.guaCarePostion = string.IsNullOrEmpty(this.rec["T01Contract_Position"].ToString()) ? "" : this.rec["T01Contract_Position"].ToString();

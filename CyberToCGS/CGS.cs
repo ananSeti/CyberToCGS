@@ -253,7 +253,7 @@ namespace CyberToCGS
                 ///รอก่อน  2 Table ยังไม่ update 
                 /////db.UpdateT01_request_Online("100", lgno);
                 //insert table
-                /////// รอก่อน  db.InsertTW03_Status(ClaimId, "100");
+                  db.InsertTW03_Status(ClaimId, "100");
 
 
             }
