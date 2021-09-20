@@ -53,7 +53,12 @@ namespace CyberToCGS
             //authentication-service/oauth/token
             loadJson l = new loadJson();
             var cgs = new CGS();
-          // cgs.AuthenticationBasics(ref tokenTCG, urlSME);
+            // KTB 
+      //      cgs.AuthenticationBasicsKTB(ref tokenSME, urlSME);
+
+            //***********  SIT1
+          //  cgs.AuthenticationBasics(ref tokenTCG, urlSME);
+            //******************
             cgs.AuthenticationBasics(ref tokenTCG, urlSBCG);
             // cgs.AuthenticationBasics(ref tokenSME,urlSME);
             //DB_CLAIM_ONLINE_PROD
@@ -65,8 +70,10 @@ namespace CyberToCGS
            
             SqlDataReader rec = db.GetT01_Request_online_lgNo();
             //ข้อมูลทดสอบ  "60080702","5910612","60034524","62041574"
-            var testLg = new List<string> { "60104765" };   //5619990 5910612 60034524
-
+            //59-30544 
+            var testLg = new List<string> { "61064820" };   //5619990 5910612 60034524
+            ///ครัืงที่ 1 5930544  
+            ///
             if (string.IsNullOrEmpty(tokenSME ))
             {
                 Console.WriteLine("-------- Can not get SME token ------------");
@@ -105,7 +112,7 @@ namespace CyberToCGS
             }
 
             if (string.IsNullOrEmpty(tokenTCG)){
-                Console.WriteLine("======= Can not get TCG token");
+                Console.WriteLine("======= Can not get TCG token ==========");
             }
             else
             {
@@ -113,28 +120,45 @@ namespace CyberToCGS
                 l.ReadAppConfig();
                 if (l.isUrlTCG())
                 {
-
+                    Console.WriteLine("************* Used   TCG  Production ************ ");
                     //P300
                     //get 47.	รายละเอียดคำขอลดวงเงินค้ำประกัน
                     // cgs.GetAdjustGuaLoanByLgId(token, urlTCG);
+                    Database.Database dbCI;
+                    Database.Database dbInterface;
+                    int i = 0;
                     while (rec.Read())
                     {
                         //// TEST CI LG owner....
                         ///DB_ONLINE_CG
                         ///DB_ONLINE_CI
-                        Database.Database dbCI = Database.Database.GetInstance("DB_ONLINE_CI");
+                        dbCI = Database.Database.GetInstance("DB_ONLINE_CI");
                        // dbCI = Database.Database.GetInstance("DB_ONLINE_CG");
                        string t01UserCode =  dbCI.GetLGOnwer(rec.GetValue(1).ToString());
                         ////
                         ///Check Duplicate
-
-
+                        /// Test Exit
+                        
+                        //if (i == 1)
+                        //{
+                        //    System.Environment.Exit(0);
+                        //}
                         // string cl = rec.GetValue(1).ToString();
-                        // testingLg(cgs, testLg, rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
-                        Database.Database dbInterface = Database.Database.GetInstance("DB_CGS_INTERFACE");
+                        //**********************************
+
+                        testingLg(cgs, testLg, rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
+                        //**********************************
+                        dbInterface = Database.Database.GetInstance("DB_CGS_INTERFACE");
                         if (!dbInterface.isExisting(rec.GetValue(0).ToString()))
                         {
                             cgs.SaveRequestClaimPGSPackage(rec.GetValue(0).ToString(), rec.GetValue(1).ToString(), tokenTCG, urlSBCG);
+                            // ยิง ทีละ 500 คำขอ
+                            // วันที่ 29-lujy-2021
+                            i = i + 1;
+                            if (i == 500) {
+                                System.Environment.Exit(0);
+                            }
+                            Console.WriteLine("***** Count Record ******:  " + i);
                         }
                         // 60034524  
                         //var testLg = new List<string> { "5619990" };
@@ -144,6 +168,8 @@ namespace CyberToCGS
                     }
 
                     }
+                Console.WriteLine("*********** OK   Ready ***********   ");
+                Console.ReadLine();
             }
 
 

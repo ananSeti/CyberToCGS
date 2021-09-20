@@ -30,8 +30,8 @@ namespace CyberToCGS
         //private string bodyusername ="crm_system";
         //private string bodypassword = "P@ssw0rd";
 
-        //private string cyberbodyUser = "TCG_SYSTEM";
-        //private string cyberbodypassword = "'P@ssw0rd";
+        private string cyberKTB = "wh3ksZvbqwxUoPRj792ZNg==";
+        private string cyberKTBpassword = "lVRAQCDWxdE3eB68Qn+3Cg==";
 
         /* 
          * username =TCG_SYSTEM
@@ -84,7 +84,39 @@ namespace CyberToCGS
                 }
             }
         }
+        public void AuthenticationBasicsKTB(ref string token, string url)
+        {
+            RestClient restClient = new RestClient();
 
+            restClient.BaseUrl = new Uri(url);
+            restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
+
+            RestRequest restRequest = new RestRequest(serviceReq, Method.POST); //serviceReq
+            restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            restRequest.AddHeader("Authorization", ":Basic eZzOSpIqxPWEsHSVjBpL5ydawYwFfu2FlLt09M5VW7A=");
+            restRequest.AddParameter("grant_type", grant_type, ParameterType.GetOrPost);
+
+            restRequest.AddParameter("username", cyberKTB, ParameterType.GetOrPost);
+            restRequest.AddParameter("password", cyberKTBpassword, ParameterType.GetOrPost);
+
+            try
+            {
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                // Console.WriteLine("Status code: " + restResponse.StatusCode);
+                // Console.WriteLine("Status message " + restResponse.Content);
+                // Access token
+                JObject tk = JObject.Parse(restResponse.Content);
+                string t = (string)tk["access_token"];
+                token = t;
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    ex.InnerException.Message.ToString();
+                }
+            }
+        }
         internal void TEST(CGS cgs, List<string> testLg, string v1, string v2)
         {
             throw new NotImplementedException();
@@ -234,7 +266,7 @@ namespace CyberToCGS
             }
                                
                restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
-               databaseUtil.log(lgno, "postclaim", "J", json);
+              // databaseUtil.log(lgno, "postclaim", "J", json);
             try
             {
                 IRestResponse restResponse = restClient.Execute(restRequest);
@@ -253,7 +285,7 @@ namespace CyberToCGS
                 ///รอก่อน  2 Table ยังไม่ update 
                 /////db.UpdateT01_request_Online("100", lgno);
                 //insert table
-                  db.InsertTW03_Status(ClaimId, "100");
+                 // db.InsertTW03_Status(ClaimId, "100");
 
 
             }

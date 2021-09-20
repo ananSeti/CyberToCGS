@@ -508,6 +508,8 @@ namespace CyberToCGS
                     { /// Package
 
                         OdbcDataReader r = db.GetLginfoPackage(lgNo);
+                    if (r != null)
+                    {
                         if (r.HasRows)
                         {
                             r.Read();
@@ -515,6 +517,7 @@ namespace CyberToCGS
                             saveFormClaim.claimPgsModelId = null; //r[""].ToString()
                             saveFormClaim.maxClaimModelId = null;
                         }
+                    }
                     }
                     //get AVG_YEAR
 

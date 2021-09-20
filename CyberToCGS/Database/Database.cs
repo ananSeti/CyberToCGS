@@ -146,7 +146,7 @@ namespace CyberToCGS.Database
                 command = new SqlCommand(Sql, connection);
                 command.Parameters.AddWithValue("@ClName", ClaimOnlineColumn);
                 dataReader = command.ExecuteReader();
-
+               // connection.Close();
               
             }
             catch (Exception ex)
@@ -195,13 +195,16 @@ namespace CyberToCGS.Database
         public SqlDataReader GetT01_Request_online_lgNo()
         {
             Sql = " SELECT T01LG_No,T01Claim_ID  FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online "
-                  + " where t01last_status in ( '100') and T01Active ='1' ";   ///  010 ใหม่    100 Assign แล้ว
+                  + " where t01last_status in ( '100') and T01Active ='1'  order by T01send_Date,T01Send_Time  ";   ///  010 ใหม่    100 Assign แล้ว
             connection = new SqlConnection(connectionString);
             try
             {
                 connection.Open();
                 command = new SqlCommand(Sql, connection);
                 dataReader = command.ExecuteReader();
+                //close new
+                //ห้าม Close
+                //connection.Close();
             }
             catch(Exception ex)
             {
@@ -210,7 +213,7 @@ namespace CyberToCGS.Database
             return dataReader;
         }
         public bool isExisting(string lgNO) {
-           
+           // connection.Close();
             Sql = " select  lgno From [DB_CGS_INTERFACE].[dbo].[claimLog] where lgNo = @lgno  group by LgNo ";   ///  010 ใหม่    100 Assign แล้ว
             connection = new SqlConnection(connectionString);
             try
@@ -222,10 +225,14 @@ namespace CyberToCGS.Database
 
                 if (dataReader.HasRows)
                 {
+                    //close new
+                    connection.Close();
                     return true;
 
                 }
                 else {
+                    //close new
+                    connection.Close();
                     return false;
                 }
 
@@ -323,6 +330,7 @@ namespace CyberToCGS.Database
 
 
                 dataReader = command.ExecuteReader();
+                connection.Close();
 
             }
             catch (Exception ex)
@@ -400,12 +408,13 @@ namespace CyberToCGS.Database
                 command.Parameters["@toDate"].Value = toDate;
 
                 dataReader = command.ExecuteReader();
-               
+                connection.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Get T01_Request_Online error" + ex.Message.ToString());
             }
+           
             return dataReader;
         }
         public SqlDataReader GetT01_Request_Online(string request_no)
@@ -460,17 +469,9 @@ namespace CyberToCGS.Database
                 
 
                 dataReader = command.ExecuteReader();
-                //Console.WriteLine("------- GetT01_Request_Online() ----------- ");
-                //Console.WriteLine("Param request no :" + request_no );
-               // while (dataReader.Read())
-               // {
-                    //var bb = dataReader["T01Sub_Project_Type"];
-                   // Console.WriteLine(dataReader.GetValue(0) + "-" + dataReader.GetValue(1) + "-" + dataReader.GetValue(2) + "-" + dataReader.GetValue(3) + "-" + dataReader.GetValue(4) + "-" + dataReader.GetValue(5));
-               //     rec = (IDataRecord)dataReader;
-               // }
-               // dataReader.Close();
-               // command.Dispose();
-               // connection.Close();
+                               
+                //close new
+                connection.Close();
             }
             catch (Exception ex)
             {
@@ -496,7 +497,8 @@ namespace CyberToCGS.Database
 
 
                     dataReader = command.ExecuteReader();
-                 
+                // //close new
+                connection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -523,7 +525,9 @@ namespace CyberToCGS.Database
 
 
                 dataReader = command.ExecuteReader();
-               
+                //close new
+                connection.Close();
+
             }
             catch (Exception ex)
             {
@@ -559,7 +563,8 @@ namespace CyberToCGS.Database
 
 
                 dataReader = command.ExecuteReader();
-
+                // //close new
+                //connection.Close();
             }
             catch (Exception ex)
             {
@@ -570,6 +575,7 @@ namespace CyberToCGS.Database
         public OdbcDataReader GetLGInfo(string lgNo)
         {
             //dataReader.Close();
+           // odbcConnection.Close();
             Sql = "SELECT a.lg_id,a.LG_NO , a.BANK_ID ,a.PRODUCT_ID AS p, b.product_id ,b.claim_pgs_model_id,b.max_claim_model_id, "
                 + " c.product_group_id,c.product_name ,b.pay_condition_type  ,d.port_no "
                 + " FROM tbl_rd_lg a "
@@ -586,10 +592,10 @@ namespace CyberToCGS.Database
                 // odbcCommand.Parameters.Add("@lgNo",OdbcType.NVarChar);
                 // odbcCommand.Parameters["@lgNo"].Value = lgNo;
                 // odbcCommand.Parameters.AddWithValue("@lgno", lgNo);
-                 odbcCommand.Parameters.Add("@lg_no", OdbcType.NVarChar).Value =lgNo;
+                odbcCommand.Parameters.Add("@lg_no", OdbcType.NVarChar).Value =lgNo;
                 odbcDataReader = odbcCommand.ExecuteReader();
-             
 
+                //odbcConnection.Close();
             }
             catch (Exception ex) {
                 Console.WriteLine("Get SIT1 or Prod  PGS error: "+ ex.Message.ToString());
@@ -614,7 +620,8 @@ namespace CyberToCGS.Database
                 odbcCommand = new OdbcCommand(Sql, odbcConnection);
                 odbcCommand.Parameters.Add("@lg_no", OdbcType.NVarChar).Value = lgNo;
                 odbcDataReader = odbcCommand.ExecuteReader();
-
+                //close new
+               // odbcConnection.Close();
 
             }
             catch (Exception ex)
@@ -645,6 +652,7 @@ namespace CyberToCGS.Database
                 {
                    odbcDataReader.Read();
                     maxClaimBal= Convert.ToDouble(odbcDataReader["MAX_CLAIM_BAL"]);
+                    odbcConnection.Close();
                 }
 
             }
@@ -658,7 +666,7 @@ namespace CyberToCGS.Database
             string lgOwner = "";
             // select T13User_ID from[dbo].[T13_Assign_Table] where T13Claim_ID = 'C63006877'
              Sql = "select T13User_ID from [dbo].[T13_Assign_Table] where T13Claim_ID = @ClaimID";
-                  
+           // connection.Close();      
             connection = new SqlConnection(connectionString);
             try
             {
@@ -669,8 +677,10 @@ namespace CyberToCGS.Database
                 dataReader = command.ExecuteReader();
                 if (dataReader.HasRows)
                 {
+                   
                     dataReader.Read();
                     lgOwner = dataReader["T13User_ID"].ToString();
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -708,11 +718,7 @@ namespace CyberToCGS.Database
                 command.Parameters.AddWithValue("@ClaimID",Claim_ID);
                 
                 dataReader = command.ExecuteReader();
-                //if (dataReader.HasRows)
-                //{
-                //    dataReader.Read();
-                //    lgOwner = dataReader["T13User_ID"].ToString();
-                //}
+                //connection.Close();
             }
             catch (Exception ex) {
                 Console.WriteLine(" GET CI LG owner error: " + ex.Message.ToString());
@@ -734,7 +740,7 @@ namespace CyberToCGS.Database
                 odbcCommand.Parameters.AddWithValue("@lg_id", lg_id);
                 
                 odbcDataReader = odbcCommand.ExecuteReader();
-                
+                //odbcConnection.Close();
 
             }
             catch (Exception ex)
@@ -762,6 +768,7 @@ namespace CyberToCGS.Database
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
                     avgYear = Convert.ToInt32(odbcDataReader["AVG_YEAR"]);
+                    odbcConnection.Close();
                 }
             }
             catch (Exception ex)
@@ -792,6 +799,7 @@ namespace CyberToCGS.Database
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
                     maxClaim = string.IsNullOrEmpty(odbcDataReader["MAX_CLAIM"].ToString())? 0: Convert.ToDouble(odbcDataReader["MAX_CLAIM"]);
+                    //odbcConnection.Close();
                 }
             }
             catch (Exception ex)
@@ -823,6 +831,7 @@ namespace CyberToCGS.Database
                 {
                     odbcDataReader.Read();
                     adjClaimAccum =  string.IsNullOrEmpty(odbcDataReader["ADJUST_CLAIM_AMT_ACCUM"].ToString())?0 : Convert.ToDouble(odbcDataReader["ADJUST_CLAIM_AMT_ACCUM"]);
+                   // odbcConnection.Close();
                 }
 
             }
@@ -855,6 +864,7 @@ namespace CyberToCGS.Database
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
                     obgAmountAccummul = string.IsNullOrEmpty(odbcDataReader["FILINGDTOBG_AMOUNT_ACCUMUL"].ToString())? 0 : Convert.ToDouble(odbcDataReader["FILINGDTOBG_AMOUNT_ACCUMUL"]);
+                    //odbcConnection.Close();
                 }
 
 
@@ -887,6 +897,7 @@ namespace CyberToCGS.Database
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
                     claimAmtAccum = string.IsNullOrEmpty(odbcDataReader["CLAIM_AMT_ACCUM"].ToString())? 0 : Convert.ToDouble(odbcDataReader["CLAIM_AMT_ACCUM"]);
+                    //odbcConnection.Close();
                 }
                 return claimAmtAccum;
             }
@@ -919,6 +930,7 @@ namespace CyberToCGS.Database
                 if (odbcDataReader.HasRows) {
                     odbcDataReader.Read();
                     previousNpgAccumul = string.IsNullOrEmpty(odbcDataReader["NPG"].ToString())? 0 : Convert.ToDouble(odbcDataReader["NPG"]);
+                    //odbcConnection.Close();
                 }
             }
             catch (Exception ex)
@@ -946,6 +958,7 @@ namespace CyberToCGS.Database
                 {
                     odbcDataReader.Read();
                     loanObgAmount =  string.IsNullOrEmpty(odbcDataReader["LOAN_OBG_AMOUNT"].ToString())? 0: Convert.ToDouble(odbcDataReader["LOAN_OBG_AMOUNT"]);
+                    //odbcConnection.Close();
                 }
             }
             catch (Exception ex)
@@ -972,6 +985,7 @@ namespace CyberToCGS.Database
             {
                 Console.WriteLine( "...can not update TW01_Claim_Online...." );
             }
+            //connection.Close();
             return ret; 
         }
 
@@ -1017,6 +1031,7 @@ namespace CyberToCGS.Database
             {
                 Console.WriteLine("...can not update TW01_Claim_Online....");
             }
+            //connection.Close();
             return ret;
         }
         public string GetAssignUser(string userName) {
@@ -1035,7 +1050,8 @@ namespace CyberToCGS.Database
                 {
                     dataReader.Read();
                     ret = string.IsNullOrEmpty(dataReader["AssignName"].ToString()) ? null : dataReader["AssignName"].ToString();
-                   // ret = dataReader.GetString(5);
+                    // ret = dataReader.GetString(5);
+                    //connection.Close();
                 }
             }
             catch (Exception ex) {
@@ -1072,7 +1088,7 @@ namespace CyberToCGS.Database
             {
                 Console.WriteLine("... get bank id error... " + ex.Message.ToString());
             }
-
+            //connection.Close();
             return ret;
         }
         public int GetProductGroup(int product_id) {
@@ -1089,7 +1105,10 @@ namespace CyberToCGS.Database
                 odbcCommand.Parameters.AddWithValue("@product_group_id", product_id);
                 odbcDataReader = odbcCommand.ExecuteReader();
                 while (odbcDataReader.Read())
+                {
                     ret = Convert.ToInt32(odbcDataReader.GetValue(0));
+                   // odbcConnection.Close();
+                }
             }
             catch (Exception ex)
             {
