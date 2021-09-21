@@ -71,7 +71,7 @@ namespace CyberToCGS
             SqlDataReader rec = db.GetT01_Request_online_lgNo();
             //ข้อมูลทดสอบ  "60080702","5910612","60034524","62041574"
             //59-30544 
-            var testLg = new List<string> { "61064820" };   //5619990 5910612 60034524
+            var testLg = new List<string> { "61065167" };   //5619990 5910612 60034524
             ///ครัืงที่ 1 5930544  
             ///
             if (string.IsNullOrEmpty(tokenSME ))

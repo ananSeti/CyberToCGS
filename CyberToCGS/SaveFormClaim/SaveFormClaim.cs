@@ -31,6 +31,8 @@ namespace CyberToCGS.SaveFormClaim
         public DateTime? defaultDt { get; set; }
         public int? loanPage { get; set; }
         public double? loanObgAmount { get; set; }
+        public DateTime? noticeDt1 { get; set; }
+        public DateTime? noticeDt2 { get; set; }
     }
     public class PostConsider
     {

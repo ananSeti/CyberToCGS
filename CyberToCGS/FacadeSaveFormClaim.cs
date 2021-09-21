@@ -17,7 +17,7 @@ namespace CyberToCGS
         SqlDataReader rec;
         SqlDataReader CI_REC;
         SqlDataReader recMapp;
-
+        SqlDataReader recForAddData;
        
        OdbcDataReader odbcRec;
        public string lgNo;
@@ -53,12 +53,14 @@ namespace CyberToCGS
 
             db2 = Database.Database.GetInstance(dbClaimOnline);
             rec = db2.GetTw01_Claim_Online(lgNo);
+           
 
-            
+
         }
     public SaveFormClaimRoot Operation()
         {
             // List<ClaimCollateral> claimCollaterals = new List<ClaimCollateral>();
+           // recForAddData = db2.GetTw01_Claim_Online(this.lgNo);
             char pad = '0';
             Utils utils = new Utils();
           
@@ -543,8 +545,17 @@ namespace CyberToCGS
                         {
                             ClaimLoan cl = new ClaimLoan();
                             cl.loanId = Convert.ToInt32(rec["LG_LOAN_ID"]);  //TODO loanId
-                            cl.detailType = "1";
+                           
+                           
                             cl.sueDtAct = utils.ConvertYear(this.rec["T01Accuse_Date"].ToString()); // utils.ConvertYear(rec["SUE_DATE"].ToString()); ;// utils.ConvertYear(rec["T01Accuse_Date"].ToString());  //TOTO suedate //วันฟ้อง
+                                if (cl.sueDtAct == null)
+                                {
+                                    cl.detailType = "2";  /// For testing not found sue date 
+                                }
+                                else
+                                {
+                                    cl.detailType = "1";
+                                }
                             cl.courtName = "";//"ศาลแพ่ง กทม.ใต้"; //TODO
                             cl.undecideCaseNo = string.IsNullOrEmpty(rec["UNDECIDE_CASE_NO"].ToString()) ? null : rec["UNDECIDE_CASE_NO"].ToString();//"1/2563"; //TODO เลขที่คดีดำ
                             cl.judgmentDt = utils.ConvertYear(rec["JUDGMENT_DT"].ToString()); // null;//DateTime.Now; //TODO judementDt วันที่พิพากษา
@@ -552,12 +563,15 @@ namespace CyberToCGS
                             cl.finalCaseDt = utils.ConvertYear(rec["FINAL_CASE_DT"].ToString()); //null;//DateTime.Now;// TODO finalCaseDt //วันที่คดีถึงที่สุด
                             cl.auctionDt = utils.ConvertYear(rec["AUCTION_SALE_DT"].ToString()); //null;//DateTime.Now; //TODO auctionDt  //วันที่ขายทอดตลาด
                             cl.filingDtObgAmount = null;//1217477.377; //TODO filingDtObgAmount ภาระหนี้ ณ วันฟ้อง
-                            cl.requestDtObgAmount = 0; //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
+                            cl.requestDtObgAmount =  string.IsNullOrEmpty(this.rec["T01Total_Amount_Duty"].ToString())? 0.0 : Convert.ToDouble(  this.rec["T01Total_Amount_Duty"]);   //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
                             cl.defaultDt = utils.ConvertYear(this.rec["T01Default_Date"].ToString()); ;// DateTime.ParseExact("2020-11-20", "yyyy-mm-dd", CultureInfo.InvariantCulture);//DateTime.Now;//TODO defaultDt วันที่ผิดนัด / ชำระหนี้ครั้งสุดท้าย
                             cl.loanPage = null;//1;//TODO loanPage
                             cl.loanObgAmount = db.GetLoanObgAmount(saveFormClaim.lgId);  // null;//TODO 
-
-                            saveFormClaim.claimLoans.Add(cl);
+                                                                                         // and T01Cancel_Date_1
+                                                                                             // 21-09-2021
+                           cl.noticeDt1 = utils.ConvertYear(this.rec["T01Cancel_Date_1"].ToString());
+                           cl.noticeDt2 = utils.ConvertYear(this.rec["T01Cancel_Date_2"].ToString()); 
+                        saveFormClaim.claimLoans.Add(cl);
                         }
 
                     }

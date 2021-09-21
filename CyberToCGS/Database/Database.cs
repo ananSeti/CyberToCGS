@@ -547,7 +547,7 @@ namespace CyberToCGS.Database
                 + " T01Business_Running, T01Management_1, T01Management_2, T01Management_3, T01Management_4, T01Management_5, "
                 + " T01Other_Management, T01Finance_1, T01Finance_2, T01Finance_3, T01Finance_4, T01Finance_5, T01Other_Finance, "
                 + " T01Market_1, T01Market_2, T01Market_3, T01Market_4, T01Market_5, T01Other_Market, T01Capital_Asset, T01Judgement,"
-                + " T01Collectral, T01Collectral_Desc, T01IsResend,T01Claim_Amount "
+                + " T01Collectral, T01Collectral_Desc, T01IsResend,T01Claim_Amount   "
                 + " FROM DB_CLAIM_ONLINE.dbo.TW01_Claim_Online  where 1=1  and  T01Active ='1' "     //change status from 010 to 100 //2.
                 + " and T01LG_No = @T01lg_no ; " ;
 
@@ -576,6 +576,7 @@ namespace CyberToCGS.Database
         {
             //dataReader.Close();
            // odbcConnection.Close();
+           /*
             Sql = "SELECT a.lg_id,a.LG_NO , a.BANK_ID ,a.PRODUCT_ID AS p, b.product_id ,b.claim_pgs_model_id,b.max_claim_model_id, "
                 + " c.product_group_id,c.product_name ,b.pay_condition_type  ,d.port_no "
                 + " FROM tbl_rd_lg a "
@@ -583,6 +584,14 @@ namespace CyberToCGS.Database
                 + " LEFT outer JOIN TBL_MD_PRODUCT  c ON a.PRODUCT_ID = c.product_id "
                 + " LEFT OUTER JOIN TBL_RD_PRODUCT_ROUND_INF d ON a.product_id = d.product_id "
                 + " WHERE a.status='A' AND  a.lg_no = ? ;";//'" + lgNo +"'"; //'5910612';"; //= @lgNo ;" ;  //5910612
+           */
+            Sql = " SELECT a.lg_id,a.LG_NO,a.BANK_ID,a.PRODUCT_ID AS p,b.product_id,b.claim_pgs_model_id,b.max_claim_model_id,c.product_group_id, "
+             + "  c.product_name, b.pay_condition_type,d.port_no FROM tbl_rd_lg a "
+             + "   JOIN TBL_AS_PRODUCT_CLAIM_PGS b ON a.PRODUCT_ID = b.product_id "
+             + "  LEFT outer JOIN TBL_MD_PRODUCT c ON a.PRODUCT_ID = c.product_id "
+             + " LEFT OUTER JOIN TBL_RD_PRODUCT_ROUND_INF d ON a.product_id = d.product_id and a.PRODUCT_ROUND_INF_ID = d.PRODUCT_ROUND_INF_ID "
+             + " WHERE a.status = 'A' "
+             + " AND a.lg_no = ? ";
 
             // connection = new SqlConnection(connectionString);
             odbcConnection = new OdbcConnection(connectionString);
@@ -731,7 +740,7 @@ namespace CyberToCGS.Database
         {
             Sql = "  SELECT lg_id ,LG_LOAN_ID, SUE_DATE, UNDECIDE_CASE_NO, DECIDE_CASE_NO, "
                 + " JUDGMENT_DT, ESCORT_DT, FINAL_CASE_DT, AUCTION_SALE_DT "
-                + " FROM CGS.TBL_RD_LG_LOAN WHERE lg_id =? ";
+                + " FROM CGS.TBL_RD_LG_LOAN WHERE lg_id =? and STATUS ='A' ";
             odbcConnection = new OdbcConnection(connectionString);
             try
             {
