@@ -563,7 +563,7 @@ namespace CyberToCGS
                             cl.finalCaseDt = utils.ConvertYear(rec["FINAL_CASE_DT"].ToString()); //null;//DateTime.Now;// TODO finalCaseDt //วันที่คดีถึงที่สุด
                             cl.auctionDt = utils.ConvertYear(rec["AUCTION_SALE_DT"].ToString()); //null;//DateTime.Now; //TODO auctionDt  //วันที่ขายทอดตลาด
                             cl.filingDtObgAmount = null;//1217477.377; //TODO filingDtObgAmount ภาระหนี้ ณ วันฟ้อง
-                            cl.requestDtObgAmount =  string.IsNullOrEmpty(this.rec["T01Total_Amount_Duty"].ToString())? 0.0 : Convert.ToDouble(  this.rec["T01Total_Amount_Duty"]);   //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
+                            cl.requestDtObgAmount =  string.IsNullOrEmpty(this.rec["T01Claim_Amount"].ToString())? 0.0 : Convert.ToDouble(  this.rec["T01Claim_Amount"]);   //TODO requestDtObgAmount ภาระหนี้ ณ วันที่ยื่นคำขอรับเงินค่าประกันชดเชย
                             cl.defaultDt = utils.ConvertYear(this.rec["T01Default_Date"].ToString()); ;// DateTime.ParseExact("2020-11-20", "yyyy-mm-dd", CultureInfo.InvariantCulture);//DateTime.Now;//TODO defaultDt วันที่ผิดนัด / ชำระหนี้ครั้งสุดท้าย
                             cl.loanPage = null;//1;//TODO loanPage
                             cl.loanObgAmount = db.GetLoanObgAmount(saveFormClaim.lgId);  // null;//TODO 
