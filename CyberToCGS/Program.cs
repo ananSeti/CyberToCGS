@@ -54,11 +54,18 @@ namespace CyberToCGS
             loadJson l = new loadJson();
             var cgs = new CGS();
             // KTB 
-      //      cgs.AuthenticationBasicsKTB(ref tokenSME, urlSME);
+            //      cgs.AuthenticationBasicsKTB(ref tokenSME, urlSME);
 
+            // Test For Get PDF 
+
+            cgs.AuthenticationBasics(ref tokenSME, urlSME);
+            cgs.GetPDF(tokenSME, urlSME);
+            
             //***********  SIT1
-          //  cgs.AuthenticationBasics(ref tokenTCG, urlSME);
+            //  cgs.AuthenticationBasics(ref tokenTCG, urlSME);
             //******************
+           
+            
             cgs.AuthenticationBasics(ref tokenTCG, urlSBCG);
             // cgs.AuthenticationBasics(ref tokenSME,urlSME);
             //DB_CLAIM_ONLINE_PROD

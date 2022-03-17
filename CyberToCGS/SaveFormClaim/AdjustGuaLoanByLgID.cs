@@ -16,6 +16,12 @@ namespace CyberToCGS.SaveFormClaim
         public string P_DOCUMENT_TYPE_CODE { get; set; }
 
     }
+    public class GetPDF
+    {
+        public int P_LG_ID { get; set; }
+        public string signPDFFlag{ get; set; }
+    }
+
     public class LGInformation
     {
         public string page { get; set; }

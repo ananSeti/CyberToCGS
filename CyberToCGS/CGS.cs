@@ -11,6 +11,7 @@ using RestSharp.Serialization.Json;
 using CyberToCGS.SaveFormClaim;
 using System.Globalization;
 using CyberToCGS.Database;
+using System.IO;
 namespace CyberToCGS
 {
     public class CGS
@@ -23,8 +24,11 @@ namespace CyberToCGS
 
         // private string cyberweb = "web_portal";
         // private string cyberpass = "password";
+        
          private string cyberweb = "JeTwLJALsikYUPXYhQtXag==";
          private string cyberpass ="3UjGoHL3x0kCJ2+Bu0n0Yg==";
+
+        //KTB user
 
         private string grant_type = "password";
         //private string bodyusername ="crm_system";
@@ -50,7 +54,8 @@ namespace CyberToCGS
         private string serviceGetAdjustGuaLonnByLgId = "/bank/guarantee-post-service/api/external/adjust-gua-loan-by-lg-id";
         private string serviceGetLgInfo = "/bank/guarantee-post-service/api/guarantee-post";
         private string serviceGetLgInfoLocal = "/guarantee-post-service/api/guarantee-post";
-
+        private string serviceGetPDF = "/bank/report-service/api/pdf/RPTLG200I001";
+            
         public void AuthenticationBasics(ref string token,string url)
         {
             RestClient restClient = new RestClient();
@@ -427,6 +432,44 @@ namespace CyberToCGS
                 return true;
             }
             return false;
+        }
+    // Get PDF 
+    public void GetPDF(string Token,string url)
+        {
+            string token = Token;
+            var restClient = new RestSharp.RestClient(url);
+            restClient.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyError) => true;
+
+            RestRequest restRequest = new RestRequest(serviceGetPDF, Method.GET);
+            restRequest.RequestFormat = DataFormat.Json;
+            restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.AddHeader("Authorization", "Bearer" + token);
+
+            GetPDF param = new GetPDF();
+            param.P_LG_ID = 158;
+            param.signPDFFlag = "Y";
+
+            restRequest.AddParameter("P_LG_ID", param.P_LG_ID);
+            restRequest.AddParameter("signPDFFlag", param.signPDFFlag);
+
+
+            try
+            {
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                string a =      restResponse.Content ;
+               
+                byte[] bytes = restResponse.RawBytes;
+                System.IO.File.WriteAllBytes("D:\\Code\\VB\\anan"+DateTime.Now.ToString("hh-mm-ss")+".pdf", bytes);
+                
+               
+            }
+            catch(Exception ex)
+            {
+                if(ex.InnerException != null)
+                {
+                    ex.InnerException.Message.ToString();
+                }
+            }
         }
     }
 }
